@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "stephan": {
+    "Sif": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -66,18 +66,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "stephan:build"
+            "browserTarget": "Sif:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "stephan:build:production"
+              "browserTarget": "Sif:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "stephan:build"
+            "browserTarget": "Sif:build"
           }
         },
         "test": {
@@ -111,7 +111,7 @@
         }
       }
     },
-    "stephan-e2e": {
+    "Sif-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -120,11 +120,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "stephan:serve"
+            "devServerTarget": "Sif:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "stephan:serve:production"
+              "devServerTarget": "Sif:serve:production"
             }
           }
         },
@@ -140,5 +140,5 @@
       }
     }
   },
-  "defaultProject": "stephan"
+  "defaultProject": "Sif"
 }
