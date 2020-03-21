@@ -1,0 +1,37 @@
+<form class="comment-form content-container" [formGroup]="commentForm">
+    <div class="info margin-bottom-2">
+        <div *ngIf="isUser">Du bist angemeldet als: 
+            <a>Abmelden</a>
+        </div>
+        <div *ngIf="!isUser">
+            Du schreibst deinen Beitrag als Gast. Bitte geben einen Namen und eine Email an.
+            <a>Anmelden</a>
+        </div>
+    </div>
+    <div class="margin-bottom-2">
+        <textarea  id="comment" formControlName="comment"></textarea>
+        <div *ngIf="comment.invalid && comment.touched">
+            Kein Kommentar ohne Text, schreibe etwas!
+        </div>
+    </div>
+    <div *ngIf="!isUser" class="non-user margin-bottom-2">
+        <div class="input-field">
+            <label for="author">Dein Name:</label>
+            <input class="margin-top-1" id="author" type="text" formControlName="author">
+            <div *ngIf="author.invalid && author.touched">
+                Bitte gebe ein Name an!
+            </div>
+        </div>
+        <div class="input-field">
+            <label for="email">Deine Mail:</label>
+            <input class="margin-top-1" id="email" type="email" formControlName="email">
+            <div *ngIf="email.invalid && email.touched">
+                Bitte gebe eine Email Adresse von dir an!
+            </div>
+        </div>
+    </div>
+    <div class="btn-group">
+        <input class="btn btn-primary btn-large" type="reset" (click)="abortComment()">
+        <input class="btn btn-primary btn-large" type="submit" (click)="saveComment()">
+    </div>
+</form>

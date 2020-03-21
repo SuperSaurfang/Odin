@@ -1,0 +1,167 @@
+@import './variables.scss';
+.btn {
+    border: none;
+    padding: padding(1) padding(2);
+    outline: none;
+    cursor: pointer;
+}
+
+.btn-large {
+    padding: padding(1) padding(8);
+}
+
+.btn-small {
+    padding: padding(1)
+}
+
+.btn-block {
+    width: 100%
+}
+
+.btn-primary {
+    background-color: $primary;
+    color: $white;
+}
+
+.btn-primary:hover {
+    background-color: $primary-dark;
+    color: $white;
+}
+
+.btn-primary:active{
+    background-color: $primary-light;
+    color: $black
+}
+
+.btn-primary:disabled {
+    background-color: $primary-disabled;
+    color: $white;
+}
+
+.btn-primary-outline {
+    border: 1px solid $primary;
+    background-color: transparent;
+}
+
+.btn-primary-outline:hover {
+    background-color: $primary;
+}
+
+.btn-primary-outline:active {
+    background-color: $primary-light;
+    color: $black;
+    border-color: $primary-light
+}
+
+.btn-secondary {
+    background-color: $secondary;
+}
+
+.btn-secondary:hover {
+    background-color: $secondary-dark;
+    color: $white;
+}
+
+.btn-secondary:active{
+    background-color: $secondary-light;
+    color: $black
+}
+
+.btn-secondary-outline {
+    border: 1px solid $secondary;
+    background-color: transparent;
+}
+
+.btn-secondary-outline:hover {
+    background-color: $secondary;
+}
+
+.btn-secondary-outline:active {
+    background-color: $secondary-light;
+    color: $black;
+    border-color: $secondary-light
+}
+
+.btn-light {
+    background-color: $white;
+}
+
+.btn-light:hover {
+    background-color: $grey-1;
+}
+
+.btn-light:active {
+    background-color: $grey-2;
+}
+
+.btn-light-outline {
+    border: 1px solid $grey-1;
+    background-color: transparent;
+}
+
+.btn-light-outline:hover {
+    background-color: $white;
+    border-color: $white
+}
+
+.btn-light-outline:active {
+    background-color: $grey-2;
+    border-color: $grey-2
+}
+
+.btn-dark {
+    background-color: $dark-1;
+    color: $white
+}
+
+.btn-dark:hover {
+    background-color: $dark-2;
+}
+
+.btn-dark:active {
+    background-color: $dark-3
+}
+
+.btn-dark-outline {
+    border: 1px solid $dark-2;
+    background-color: transparent;
+}
+
+.btn-dark-outline:hover {
+    background-color: $dark-1;
+    border-color: $dark-1;
+    color: $white
+}
+
+.btn-dark-outline:active {
+    background-color: $dark-3;
+    border-color: $dark-3;
+    color: $white
+}
+
+.btn-icon {
+    background-color: transparent;
+    padding: 8px 11px;
+    border-radius: 50%;
+}
+
+.btn-icon:hover {
+    background-color: $grey-1;
+}
+
+.btn-icon:active {
+    background-color: $grey-2;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+
+    *{
+        width: 100%;
+    }
+
+    *:not(:last-child) {
+        margin-right: margin(1);
+    }
+}

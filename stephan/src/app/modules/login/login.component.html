@@ -1,0 +1,17 @@
+<div class="login-container">
+  <h1>
+    <fa-icon [icon]="placeHolder" [size]="'3x'"></fa-icon>
+  </h1>
+  <div class="content-container">
+    <form [formGroup]="loginForm">
+      <label class="login-space-small" for="username">Emailaddresse</label>
+      <input class="login-space-3" id="username" type="text" formControlName="userMail">
+
+      <label class="login-space-small" for="password">Passwort</label>
+      <input class="login-space-3" id="password" type="password" formControlName="userPassword">
+
+      <button class="btn btn-primary" type="submit" (click)="login()" [disabled]="!loginForm.valid">Anmelden</button>
+    </form>
+  </div>
+  <button class="btn btn-primary btn-small login-btn-back" (click)="back()">Zurück</button>
+</div>

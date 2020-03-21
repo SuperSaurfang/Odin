@@ -1,0 +1,19 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  .article-header {
+    margin: 0;
+    margin-bottom: margin(2);
+    font-size: 2rem;
+  }
+
+  .article-content,
+  .article-footer {
+    margin-top: margin(4)
+  }
+
+  .article-info,
+  .article-footer {
+    font-size: .9rem
+  }
+}

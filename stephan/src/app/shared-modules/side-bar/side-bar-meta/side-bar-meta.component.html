@@ -1,0 +1,8 @@
+<h2>Meta</h2>
+<div class="link-container">
+  <a *ngIf="isAdmin" [routerLink]="['/dashboard']">Website Administration</a>
+  <a *ngIf="isLoggedIn" [routerLink]="['/login', { logout: true }]">Abmelden</a>
+  <a *ngIf="!isLoggedIn" [routerLink]="['/login']">Anmelden</a>
+</div>
+
+

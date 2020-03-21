@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+@import './app/core/scss/variables.scss';
+@import './app/core/scss/controls.scss';
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: $background;
+}
+
+.primary {
+  background-color: $primary;
+  color: $white !important;
+}
+
+.primary-light {
+  background-color: $primary-light;
+  color: $black !important;
+}
+
+.primary-dark {
+  background-color: $primary-dark;
+  color: $white !important;
+}
+
+.secondary {
+  background-color: $secondary;
+  color: $black !important;
+}
+
+.secondary-light {
+  background-color: $secondary-light;
+  color: $black !important;
+}
+
+.secondary-dark {
+  background-color: $secondary-dark;
+  color: $black !important;
+}
+
+.margin-top-1 {
+  margin-top: padding(1);
+}
+
+.margin-bottom-2 {
+  margin-bottom: padding(2);
+}
+
+.auto-overflow {
+  overflow: auto;
+}
+
+.content-container {
+  background-color: white;
+  padding: padding(2);
+  margin-top: margin(3);
+}
+
+.site-wrapper {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: margin(8);
+}
+

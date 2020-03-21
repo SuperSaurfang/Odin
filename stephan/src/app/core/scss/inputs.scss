@@ -1,0 +1,18 @@
+@import './variables.scss';
+
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"] {
+    border: solid 1px $dark-3;
+    padding: padding(1)
+}
+
+textarea {
+    border: solid 1px $dark-3;
+    padding: padding(1);
+    min-width: 500px;
+    min-height: 150px;
+    max-width: calc(100% - 18px);
+    width: 100%;
+}

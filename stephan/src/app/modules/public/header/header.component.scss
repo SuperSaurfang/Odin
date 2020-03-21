@@ -1,0 +1,22 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  header {
+    background-image: url(src/assets/img/default.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: $secondary;
+  }
+
+  header h1 {
+    margin: 0;
+    padding: 128px 0px 128px 63px;
+  }
+
+  .fixed-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+}

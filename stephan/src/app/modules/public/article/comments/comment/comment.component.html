@@ -1,0 +1,29 @@
+<div class="content-container">
+  <p>{{comment.commentText}}</p>
+  <div>
+      <fa-icon class="comment-actionline-smallspace" [icon]="user"></fa-icon>
+      <span class="comment-actionline-space">{{comment.userName}}</span>
+      <fa-icon class="comment-actionline-smallspace" [icon]="calendar"></fa-icon>
+      <span class="comment-actionline-space">{{comment.creationDate.toLocaleString()}}</span>
+      <a (click)="onShowCommentForm(comment.commentId)" title="Antworten" class="comment-actionline-space">
+          <fa-icon [icon]="share"></fa-icon>
+      </a>
+      <a title="Melden" class="comment-actionline-space">
+          <fa-icon [icon]="exclamation"></fa-icon>
+      </a>
+  </div>
+</div>
+<div *ngIf="comment.answers && comment.answers.length > 0 || comment.commentId === responseTo" class="comment-answer-container">
+  <app-comments-form *ngIf="comment.commentId === responseTo" 
+    [articleId]="articleId" 
+    [commentId]="comment.commentId" 
+    (abort)="onAbort()"
+    (saved)="onSaved($event)"></app-comments-form>
+  <app-comment *ngFor="let answer of comment.answers" 
+    [comment]="answer" 
+    [articleId]="articleId" 
+    [responseTo]="responseTo" 
+    (showCommentForm)="onShowCommentForm($event)" 
+    (abortCommentForm)="onAbort()"></app-comment>
+</div>
+

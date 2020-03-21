@@ -1,0 +1,26 @@
+<div *ngFor="let article of articles" class="content-container">
+  <h1 class="blog-header">
+    <a [routerLink]="['/blog/', article?.title]">{{article?.title}}</a>
+  </h1>
+  <div class="blog-info" *ngIf="article?.hasDateAuthorEnabled">
+    <fa-icon [icon]="user"></fa-icon>
+    {{article?.userName}} /
+    <fa-icon [icon]="calendar"></fa-icon>
+    verfasst am {{parseDate(article.creationDate)}}
+  </div>
+  <div class="blog-content" [innerHTML]="article?.articleText | newline"></div>
+  <div class="blog-footer">
+    <span *ngIf="article?.hasCommentsEnabled">
+      <a>
+        <fa-icon [icon]="comments"></fa-icon>
+        Kommentare
+      </a>
+      <a *ngIf="false">
+        <fa-icon [icon]="edit"></fa-icon>
+        Bearbeiten
+      </a>
+    </span>
+  </div>
+</div>
+<app-side-bar></app-side-bar>
+

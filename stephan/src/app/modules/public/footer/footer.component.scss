@@ -1,0 +1,22 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  overflow: auto;
+  background-color: $primary;
+  color: $white;
+
+  p {
+    text-align: end;
+    margin: margin(1) 0;
+    margin-right: margin(2);
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit
+  }
+}

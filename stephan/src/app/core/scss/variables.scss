@@ -1,0 +1,27 @@
+$primary: #339933;
+$primary-light: #33cc33;
+$primary-dark: #336633;
+$primary-disabled: #33993380;
+
+$secondary: #ffeb3b;
+$secondary-light: #ffff72;
+$secondary-dark: #c8b900;
+$black: #000000;
+$dark-1: lighten($color: $black, $amount: 10);
+$dark-2: lighten($color: $black, $amount: 20);
+$dark-3: lighten($color: $black, $amount: 30);
+$white: #ffffff;
+$grey-1: darken($color: $white, $amount: 10);
+$grey-2: darken($color: $white, $amount: 20);
+$grey-3: darken($color: $white, $amount: 30);
+$background: #f9f9f9;
+$defaultPM: 8px;
+$radius: 4px;
+
+@function padding($exponent) {
+    @return $defaultPM * $exponent;
+}
+
+@function margin($exponent) {
+    @return $defaultPM * $exponent
+}

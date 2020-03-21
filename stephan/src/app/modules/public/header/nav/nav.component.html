@@ -1,0 +1,10 @@
+<ul class="main-nav">
+  <li *ngFor="let navEntry of navEntries" class="main-entry" [ngClass]="{'dropdown': navEntry.isDropdown}">
+    <a [routerLink]="navEntry.routerlink" routerLinkActive="primary-dark">{{navEntry.displayText}}</a>
+    <ul class="child-nav">
+      <li *ngFor="let child of navEntry.childs" class="child-entry">
+        <a [routerLink]="child.routerlink" routerLinkActive="primary-dark">{{child.displayText}}</a>
+      </li>
+    </ul>
+  </li>
+</ul>

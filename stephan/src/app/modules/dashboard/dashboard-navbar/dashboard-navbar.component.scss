@@ -1,0 +1,26 @@
+@import '../../../core/scss/variables.scss';
+:host {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: $dark-1;
+  width: 160px;
+
+  .nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-entry {
+    display: block;
+    padding: padding(1) padding(2);
+    color: $grey-2;
+    text-decoration: none;
+  }
+
+  .nav-entry:hover {
+    background-color: $dark-2;
+  }
+
+}
