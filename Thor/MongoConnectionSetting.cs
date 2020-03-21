@@ -1,6 +1,6 @@
 namespace Thor 
 {
-  class MongoConnectionSetting 
+  public class MongoConnectionSetting 
   {
     public string Host { get; set; }
     public int Port { get; set; }
