@@ -28,13 +28,13 @@ namespace Thor.Services.Mongo
 
     public Task<IEnumerable<Article>> GetPublicBlog()
     {
-      var query = from b in Collection.AsQueryable() where b.Status == "public" select b;
+      var query = from b in Collection.AsQueryable() where b.Status == "public" && b.IsBlog == true select b;
       return Task.FromResult<IEnumerable<Article>>(query.ToList());
     }
 
     public Task<Article> GetSinglePublicPost(string title)
     {
-      var query = from b in Collection.AsQueryable() where b.Title == title select b;
+      var query = from b in Collection.AsQueryable() where b.Title == title && b.IsBlog == true && b.Status == "public" select b;
       return Task.FromResult<Article>(query.FirstOrDefault());
     }
   }
