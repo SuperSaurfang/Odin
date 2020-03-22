@@ -6,6 +6,11 @@
     cursor: pointer;
 }
 
+.btn-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
 .btn-large {
     padding: padding(1) padding(8);
 }
