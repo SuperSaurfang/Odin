@@ -38,8 +38,8 @@ namespace Thor
             break;
           case "mongo":
           case "mongodb":
-            ConfigureMongoDB(services);
-            break;
+            // ConfigureMongoDB(services);
+            // break;
           default:
             throw new Exception("failed to configure database interface");
       }
