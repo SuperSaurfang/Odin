@@ -128,6 +128,7 @@ namespace Thor
     {
       services.Configure<MongoConnectionSetting>(Configuration.GetSection("ConnectionStrings:MongoDB"));
       services.AddSingleton(option => option.GetRequiredService<IOptions<MongoConnectionSetting>>().Value);
+      services.AddSingleton<IMongoConnectionService, MongoConnectionService>();
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
       services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();

@@ -6,23 +6,17 @@ using Thor.Util;
 using MongoDB.Driver;
 using System.Linq;
 
-namespace Thor.Services.Mongo 
+namespace Thor.Services.Mongo
 {
   public class BlogService : IBlogService
   {
-    public BlogService(MongoConnectionSetting connectionSetting) 
+    public BlogService(IMongoConnectionService connectionService)
     {
       UnderlayingDatabase = UnderlayingDatabase.MongoDB;
-      Client = new MongoClient(connectionSetting.GetConnectionString());
-      Database = Client.GetDatabase(connectionSetting.Database);
-      Collection = Database.GetCollection<Article>("article");
+      Collection = connectionService.GetCollection<Article>("article");
     }
 
     public UnderlayingDatabase UnderlayingDatabase { get; }
-
-    private MongoClient Client { get; }
-
-    private IMongoDatabase Database { get; }
 
     private IMongoCollection<Article> Collection { get; }
 

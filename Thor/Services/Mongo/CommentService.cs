@@ -7,30 +7,24 @@ using MongoDB.Driver;
 using System.Linq;
 using System;
 
-namespace Thor.Services.Mongo 
+namespace Thor.Services.Mongo
 {
   public class CommentService : ICommentService
   {
-    public CommentService(MongoConnectionSetting connectionSetting) 
+    public CommentService(IMongoConnectionService connectionService)
     {
       UnderlayingDatabase = UnderlayingDatabase.MongoDB;
-      Client = new MongoClient(connectionSetting.GetConnectionString());
-      Database = Client.GetDatabase(connectionSetting.Database);
-      Collection = Database.GetCollection<Comment>("comment");
+      Collection = connectionService.GetCollection<Comment>("comment");
     }
 
     public UnderlayingDatabase UnderlayingDatabase { get; }
-
-    private MongoClient Client { get; }
-
-    private IMongoDatabase Database { get; }
 
     private IMongoCollection<Comment> Collection { get; }
 
     public Task<IEnumerable<Comment>> GetComments(int articleId)
     {
       var result = (from c in Collection.AsQueryable() where c.ArticleId == articleId select c).ToList();
-      if(result == null) 
+      if (result == null)
       {
         return null;
       }
