@@ -1,15 +1,11 @@
-using System;
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Thor.Models;
-using MySql.Data.MySqlClient;
-using Dapper;
-using System.Data;
 using System.Threading.Tasks;
 using Thor.Services.Api;
 using Thor.Util;
+using System;
 
-namespace Thor.Services.Maria 
+namespace Thor.Services.Maria
 {
   public class BlogService: IBlogService {
 
@@ -21,6 +17,29 @@ namespace Thor.Services.Maria
     }
 
     public UnderlayingDatabase UnderlayingDatabase { get; }
+
+    public async Task<ChangeResponse> CreateBlogPost(Article article)
+    {
+      const string sql = @"INSERT INTO `Article`
+      (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`, `Isblog`) 
+      VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @HasDateAuthorEnabled, @Status, 1)";
+      var response = await executer.ExecuteSql(sql, article);
+      return await ProcessResponse(response);
+    }
+
+    public async Task<ChangeResponse> DeleteBlogPost(int id)
+    {
+      const string sql = @"DELETE FROM Article WHERE `ArticleId` = @id";
+      var response = await executer.ExecuteSql(sql, new {id= id});
+      return await ProcessResponse(response);
+    }
+
+    public async Task<IEnumerable<Article>> GetFullBlog()
+    {
+      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status` 
+      FROM Article, User WHERE Article.UserId = User.UserId AND IsBlog = 1";
+      return await executer.ExecuteSql<Article>(sql);
+    }
 
     public async Task<IEnumerable<Article>> GetPublicBlog()
     {
@@ -34,6 +53,30 @@ namespace Thor.Services.Maria
       const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled` 
       FROM Article, User WHERE Article.UserId = User.UserId AND Status = 'public' AND IsBlog = 1 AND Title = @title";
       return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+    }
+
+    public async Task<ChangeResponse> UpdateBlogPost(Article article)
+    {
+
+      const string sql = @"UPDATE `Article` SET `Title`=@Title,`ArticleText`=@ArticleText, `ModificationDate`=@ModificationDate,
+      `HasCommentsEnabled`=@HasCommentsEnabled,`HasDateAuthorEnabled`=@HasDateAuthorEnabled, `Status`=@Status
+      WHERE `ArticleId` = @ArticleId AND `IsBlog`= 1 AND `IsSite`= 0";
+      article.ModificationDate = DateTime.Now;
+      var result = await executer.ExecuteSql(sql, article);
+      return await ProcessResponse(result);
+    }
+
+    private async Task<ChangeResponse> ProcessResponse(int response)
+    {
+      if (response >= 1)
+      {
+        return await Task.FromResult(ChangeResponse.Change);
+      }
+      else if (response == 0)
+      {
+        return await Task.FromResult(ChangeResponse.NoChange);
+      }
+      return await Task.FromResult(ChangeResponse.Error);
     }
   }
 }

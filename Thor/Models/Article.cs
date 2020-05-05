@@ -6,10 +6,6 @@ namespace Thor.Models
 {
   public class Article
   {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
-
     public int ArticleId { get; set; }
     public int? UserId { get; set; }
     public string Title { get; set; }

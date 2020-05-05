@@ -13,55 +13,95 @@ namespace Thor.Services
   {
     private readonly string connectionString;
 
-    public SqlExecuterService(IConfiguration configuration) {
+    public SqlExecuterService(IConfiguration configuration)
+    {
       connectionString = configuration.GetConnectionString("DefaultConnection");
     }
+
     public async Task<IEnumerable<T>> ExecuteSql<T>(string sql, object param = null)
     {
-      try {
-        using(var connection = new MySqlConnection(connectionString)) 
+      try
+      {
+        using (var connection = new MySqlConnection(connectionString))
         {
-          if(connection.State == ConnectionState.Closed) {
+          if (connection.State == ConnectionState.Closed)
+          {
             connection.Open();
           }
 
-          if(param == null) 
+          if (param == null)
           {
-            return await connection.QueryAsync<T>(sql);  
-          } 
-          else 
+            return await connection.QueryAsync<T>(sql);
+          }
+          else
           {
-            return await connection.QueryAsync<T>(sql, param); 
-          }   
+            return await connection.QueryAsync<T>(sql, param);
+          }
         }
-      } catch (Exception ex) {
+      }
+      catch (Exception ex)
+      {
         Console.WriteLine($"Execption: {ex}");
         return null;
       }
     }
 
-    public async Task<T> ExecuteSqlSingle<T>(string sql, object param = null)
+    public async Task<int> ExecuteSql(string sql, object param = null)
     {
-      try {
-        using(var connection = new MySqlConnection(connectionString)) 
+      try
+      {
+        using (var connection = new MySqlConnection(connectionString))
         {
-          if(connection.State == ConnectionState.Closed) {
+          if (connection.State == ConnectionState.Closed)
+          {
             connection.Open();
           }
 
-          if(param == null) 
+          if (param == null)
           {
-            return await connection.QueryFirstAsync<T>(sql);  
-          } 
-          else 
+            return await connection.ExecuteAsync(sql);
+          }
+          else
           {
-            return await connection.QueryFirstAsync<T>(sql, param);  
-          }  
+            return await connection.ExecuteAsync(sql, param);
+          }
         }
-      } catch (Exception ex) {
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Exception: {ex}");
+        return await Task.FromResult(-1);
+      }
+    }
+
+    public async Task<T> ExecuteSqlSingle<T>(string sql, object param = null)
+    {
+      try
+      {
+        using (var connection = new MySqlConnection(connectionString))
+        {
+          if (connection.State == ConnectionState.Closed)
+          {
+            connection.Open();
+          }
+
+          if (param == null)
+          {
+            return await connection.QueryFirstAsync<T>(sql);
+          }
+          else
+          {
+            return await connection.QueryFirstAsync<T>(sql, param);
+          }
+        }
+      }
+      catch (Exception ex)
+      {
         Console.WriteLine($"Execption: {ex}");
         return default(T);
       }
     }
+
+
   }
 }
