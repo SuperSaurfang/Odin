@@ -5,6 +5,7 @@ import { ReactiveFormsModule} from '@angular/forms';
 import { NewlinePipe } from 'src/app/core/pipes'
 
 import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
+import { ApplicationBarModule} from '../shared-modules/application-bar/application-bar.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
   ], exports: [
     NewlinePipe,
     ReactiveFormsModule,
-    SideBarModule
+    SideBarModule,
+    ApplicationBarModule
   ]
 })
 export class SharedModule { }

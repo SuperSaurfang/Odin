@@ -5,6 +5,7 @@
   flex-direction: column;
   background-color: $dark-1;
   width: 160px;
+  height: calc(100vh - 26px);
 
   .nav-list {
     list-style-type: none;
