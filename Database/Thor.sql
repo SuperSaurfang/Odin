@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 23. Mrz 2020 um 20:23
+-- Erstellungszeit: 09. Mai 2020 um 10:00
 -- Server-Version: 10.1.44-MariaDB-0ubuntu0.18.04.1
--- PHP-Version: 7.2.24-0ubuntu0.18.04.3
+-- PHP-Version: 7.2.24-0ubuntu0.18.04.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -30,7 +30,6 @@ USE `Thor`;
 -- Tabellenstruktur für Tabelle `Article`
 --
 
-DROP TABLE IF EXISTS `Article`;
 CREATE TABLE `Article` (
   `ArticleId` int(11) NOT NULL,
   `UserId` int(11) NOT NULL,
@@ -38,11 +37,11 @@ CREATE TABLE `Article` (
   `ArticleText` longtext NOT NULL,
   `CreationDate` date NOT NULL,
   `ModificationDate` date NOT NULL,
-  `HasCommentsEnabled` tinyint(1) NOT NULL,
-  `HasDateAuthorEnabled` tinyint(1) NOT NULL,
-  `Status` enum('draft','private','public') NOT NULL,
-  `IsBlog` tinyint(1) NOT NULL,
-  `IsSite` tinyint(1) NOT NULL
+  `HasCommentsEnabled` tinyint(1) NOT NULL DEFAULT '1',
+  `HasDateAuthorEnabled` tinyint(1) NOT NULL DEFAULT '1',
+  `Status` enum('draft','private','public','trash') NOT NULL DEFAULT 'draft',
+  `IsBlog` tinyint(1) NOT NULL DEFAULT '0',
+  `IsSite` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -51,7 +50,6 @@ CREATE TABLE `Article` (
 -- Tabellenstruktur für Tabelle `Comment`
 --
 
-DROP TABLE IF EXISTS `Comment`;
 CREATE TABLE `Comment` (
   `CommentId` int(11) NOT NULL,
   `ArticleId` int(11) NOT NULL,
@@ -68,7 +66,6 @@ CREATE TABLE `Comment` (
 -- Tabellenstruktur für Tabelle `User`
 --
 
-DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
   `UserId` int(11) NOT NULL,
   `UserName` varchar(255) NOT NULL,
@@ -114,19 +111,37 @@ ALTER TABLE `User`
 -- AUTO_INCREMENT für Tabelle `Article`
 --
 ALTER TABLE `Article`
-  MODIFY `ArticleId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ArticleId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT für Tabelle `Comment`
 --
 ALTER TABLE `Comment`
-  MODIFY `CommentId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `CommentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `User`
 --
 ALTER TABLE `User`
   MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints der exportierten Tabellen
+--
+
+--
+-- Constraints der Tabelle `Article`
+--
+ALTER TABLE `Article`
+  ADD CONSTRAINT `author_constraint` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`);
+
+--
+-- Constraints der Tabelle `Comment`
+--
+ALTER TABLE `Comment`
+  ADD CONSTRAINT `answer_const` FOREIGN KEY (`AnswerOf`) REFERENCES `Comment` (`CommentId`),
+  ADD CONSTRAINT `article_const` FOREIGN KEY (`ArticleId`) REFERENCES `Article` (`ArticleId`),
+  ADD CONSTRAINT `user_const` FOREIGN KEY (`UserId`) REFERENCES `User` (`UserId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
