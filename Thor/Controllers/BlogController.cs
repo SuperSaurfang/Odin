@@ -83,7 +83,7 @@ namespace Thor.Controllers
     /// <param name="article">The blog post to update</param>
     /// <returns></returns>
     [Produces("application/json")]
-    [HttpPost("admin")]
+    [HttpPut("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> UpdateBlogPost(Article article)
     {
@@ -103,7 +103,7 @@ namespace Thor.Controllers
     /// <param name="article">The data of the new blog post</param>
     /// <returns></returns>
     [Produces("application/json")]
-    [HttpPut("admin")]
+    [HttpPost("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> CreateBlogPost(Article article)
     {
