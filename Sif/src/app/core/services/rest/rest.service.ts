@@ -2,13 +2,13 @@ import { Injectable} from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Article, Comment, User } from '../../models';
+import { Article, Comment, User, ChangeResponse } from '../../models';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class RestService {
 
-  constructor(private httpClient: HttpClient, ) { }
+  constructor(private httpClient: HttpClient) { }
 
 
   public getBlog(): Observable<Article[]> {
@@ -25,6 +25,16 @@ export class RestService {
         return article
       })
     )
+  }
+
+  public getFullBlog(): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${environment.restApi}/blog/admin`).pipe(
+      map(article => this.parseDate(article))
+    )
+  }
+
+  public updateBlog(article: Article): Observable<ChangeResponse> {
+    return this.httpClient.put<ChangeResponse>(`${environment.restApi}/blog/admin`, article)
   }
 
   public getSite(title: string): Observable<Article[]> {
