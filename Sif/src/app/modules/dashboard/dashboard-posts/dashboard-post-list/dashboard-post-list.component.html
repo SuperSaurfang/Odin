@@ -4,6 +4,68 @@
 </h1>
 <p>Blog einträge verwalten und erstellen.</p>
 
+<div class="action-bar">
+  <div class="action-group">
+    <mat-form-field>
+      <mat-label>Aktion wählen</mat-label>
+      <mat-select>
+        <mat-option>In Papierkorb verschieben</mat-option>
+        <mat-option>Auf Entwurf setzen</mat-option>
+        <mat-option>Auf Privat setzen</mat-option>
+        <mat-option>Veröffentlichen</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button color="primary" [disabled]="!selection.hasValue()">Übernehmen</button>
+  </div>
+
+  <div class="action-group">
+    <mat-form-field color="primary">
+      <mat-label>Von</mat-label>
+      <input matInput [matDatepicker]="from" [value]="filter.startDate" [max]="filter.endDate" (dateChange)="updateStartDate($event)">
+      <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+      <mat-datepicker #from></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field color="primary">
+      <mat-label>Bis</mat-label>
+      <input matInput [matDatepicker]="to" [(value)]="filter.endDate" [min]="filter.startDate" (dateChange)="updateEndDate($event)">
+      <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
+      <mat-datepicker #to></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field color="primary">
+      <mat-label>Datumsfilter</mat-label>
+      <mat-select [(value)]="filter.dateType" (selectionChange)="applyFilter()">
+        <mat-option [value]="DateType.Create">Erstell Datum</mat-option>
+        <mat-option [value]="DateType.Modification">Änderungsdatum</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="action-group">
+    <mat-form-field color="primary">
+      <mat-label>Filtern</mat-label>
+      <mat-select [(value)]="filter.status" (selectionChange)="applyFilter()">
+        <mat-option [value]="Status.Trash">Papierkorb</mat-option>
+        <mat-option [value]="Status.All">Alle</mat-option>
+        <mat-option [value]="Status.Draft">Entwurf</mat-option>
+        <mat-option [value]="Status.Private">Privat</mat-option>
+        <mat-option [value]="Status.Public">Veröffentlicht</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="action-group">
+    <button mat-icon-button>
+    </button>
+  </div>
+
+  <div class="action-group">
+    <button mat-stroked-button color="warn">
+      <fa-icon [icon]="trash"></fa-icon>
+      Papierkorb leeren
+    </button>
+  </div>
+</div>
+
 <table mat-table [dataSource]="datasource" matSort class="full-width">
 
   <ng-container matColumnDef="select">

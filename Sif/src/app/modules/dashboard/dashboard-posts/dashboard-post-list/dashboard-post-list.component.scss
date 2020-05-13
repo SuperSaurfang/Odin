@@ -2,40 +2,34 @@
 :host {
   flex: 1;
   padding: padding(1);
-}
 
+  .action-bar {
+    display: flex;
 
-.status-draft {
-  color: $signalerror;
-}
+    .action-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-.status-private {
-  color: $signalwarn;
-}
+    .action-group:not(:last-child) {
+      margin-right: padding(4);
 
-.status-public {
-  color: $signalok;
-}
+      :not(:last-child) {
+        margin-right: padding(1);
+      }
+    }
+  }
 
-.popup {
-  display: none;
-  flex-direction: column;
-  padding: padding(0.5);
-  border: solid 1px $grey-1;
-  width: fit-content;
-  background: $white;
-  box-shadow: 1px 1px 10px 1px $grey-3;
-  position: absolute;
-  left: 25px;
-  top: 20px;
-}
+  .status-draft {
+    color: $signalerror;
+  }
 
-.popup-button {
-  flex: 1;
-  text-align: left;
-  width: 175px;
-}
+  .status-private {
+    color: $signalwarn;
+  }
 
-.popup-open {
-  display: flex;
+  .status-public {
+    color: $signalok;
+  }
 }
