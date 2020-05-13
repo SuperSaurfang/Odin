@@ -12,6 +12,11 @@ import { MatMenuModule } from '@angular/material/menu'
 import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
 import { ApplicationBarModule} from '../shared-modules/application-bar/application-bar.module';
 import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input'
 
 
 @NgModule({
@@ -29,7 +34,15 @@ import { MatSortModule } from '@angular/material/sort';
     MatCheckboxModule,
     MatTableModule,
     MatMenuModule,
-    MatSortModule
+    MatSortModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule
+  ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
   ]
 })
 export class SharedModule { }
