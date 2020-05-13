@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input'
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { MatInputModule } from '@angular/material/input'
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'de-DE'}

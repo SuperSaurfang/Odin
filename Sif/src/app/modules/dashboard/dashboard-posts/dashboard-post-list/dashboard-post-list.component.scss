@@ -20,16 +20,16 @@
       }
     }
   }
+}
 
-  .status-draft {
-    color: $signalerror;
-  }
+.status-draft {
+  color: $signalerror;
+}
 
-  .status-private {
-    color: $signalwarn;
-  }
+.status-private {
+  color: $signalwarn;
+}
 
-  .status-public {
-    color: $signalok;
-  }
+.status-public {
+  color: $signalok;
 }

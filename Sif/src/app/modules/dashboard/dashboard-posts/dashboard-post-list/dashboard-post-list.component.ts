@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { RestService } from 'src/app/core/services';
 import { Article, EChangeResponse, Status } from 'src/app/core';
 
-import { faCircle, faTrash, faFilter, faSlash } from '@fortawesome/free-solid-svg-icons';
+import { faCircle, faTrash, faFilter, faSlash, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -18,6 +18,13 @@ interface Filter {
   endDate?: Date,
   dateType: DateType
   status: number,
+  search: string,
+}
+
+const DEFAULT_FILTER: Filter = {
+  dateType: DateType.Create,
+  status: Status.All,
+  search: ''
 }
 
 @Component({
@@ -35,13 +42,11 @@ export class DashboardPostListComponent implements OnInit {
   public trash = faTrash;
   public iconFilter = faFilter;
   public slash = faSlash;
+  public search = faSearch;
   public datasource = new MatTableDataSource<Article>()
   public selection = new SelectionModel<Article>(true, [])
 
-  public filter: Filter = {
-    dateType: DateType.Create,
-    status: Status.All
-  }
+  public filter = DEFAULT_FILTER
 
   private data: Article[] = [];
   
@@ -61,6 +66,7 @@ export class DashboardPostListComponent implements OnInit {
     this.restService.getFullBlog().subscribe(articles => {
       this.datasource.data = articles;
       this.data = articles;
+      this.applyFilter();
     });
   }
 
@@ -112,6 +118,7 @@ export class DashboardPostListComponent implements OnInit {
   }
 
   public applyFilter() {
+    this.datasource.filter = this.filter.search;
     let filtered = this.data;
     if(this.filter.startDate) {
       if(this.filter.dateType === DateType.Create) {
@@ -125,7 +132,7 @@ export class DashboardPostListComponent implements OnInit {
       if(this.filter.dateType === DateType.Create) {
         filtered = filtered.filter(item => item.creationDate <= this.filter.endDate);
       } else if(this.filter.dateType === DateType.Modification) {
-        filtered = filtered.filter(item => item.modificationDate >= this.filter.endDate);
+        filtered = filtered.filter(item => item.modificationDate <= this.filter.endDate);
       }
     }
 
@@ -147,6 +154,32 @@ export class DashboardPostListComponent implements OnInit {
         filtered = filtered.filter(item => item.status === 'draft' || item.status === 'private' || item.status === 'public');
         break;
     }
-    console.log(filtered);
+
+    this.datasource.data = filtered;
+  }
+
+  public resetFilter() {
+    this.filter = {
+      startDate: null,
+      endDate: null,
+      dateType: DateType.Create,
+      status: Status.All,
+      search: ''
+    }
+    this.datasource.data = this.data;
+    this.datasource.filter = '';
+  }
+
+  public getStatusTooltip(status: string) {
+    switch (status) {
+      case 'draft':
+        return 'Status: Entwurf'
+      case 'private':
+        return 'Status: Privat'
+      case 'public':
+        return 'Status: Veröffentlicht'    
+      default:
+        return 'Mülleimer'
+    }
   }
 }
