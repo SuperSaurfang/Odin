@@ -4,7 +4,7 @@
   </h1>
   <div class="blog-info" *ngIf="article?.hasDateAuthorEnabled">
     <fa-icon [icon]="user"></fa-icon>
-    {{article?.userName}} /
+    {{article?.author}} /
     <fa-icon [icon]="calendar"></fa-icon>
     verfasst am {{parseDate(article.creationDate)}}
   </div>

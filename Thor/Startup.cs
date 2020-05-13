@@ -6,13 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Thor.Services;
 using Microsoft.OpenApi.Models;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Thor.Services.Api;
 using Thor.Services.Maria;
 using Microsoft.Extensions.Options;
+using Thor.Util;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Primitives;
 
 namespace Thor
 {
@@ -28,29 +30,33 @@ namespace Thor
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+
       // setup database connections
       var database = Configuration.GetValue<string>("ConnectionStrings:DefaultDatabase").ToLower();
       switch (database)
       {
-          case "mariadb":
-          case "maria":
-            ConfigureMariaDB(services);
-            break;
-          case "mongo":
-          case "mongodb":
-            ConfigureMongoDB(services);
-            break;
-          default:
-            throw new Exception("failed to configure database interface");
+        case "mariadb":
+        case "maria":
+          ConfigureMariaDB(services);
+          break;
+        case "mongo":
+        case "mongodb":
+        // ConfigureMongoDB(services);
+        // break;
+        default:
+          throw new Exception("failed to configure database interface");
       }
 
-      
+
       services.AddControllers()
         .AddJsonOptions(o =>
         {
           o.JsonSerializerOptions.IgnoreNullValues = true;
+        }).AddNewtonsoftJson(o =>
+        {
+          o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
-        
+
       var value = Configuration.GetValue<string>("AppSettings:Secret");
       byte[] key = Encoding.ASCII.GetBytes(value);
 
@@ -59,7 +65,7 @@ namespace Thor
         o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
       })
-      .AddJwtBearer(o => 
+      .AddJwtBearer(o =>
       {
         o.RequireHttpsMetadata = false;
         o.SaveToken = true;
@@ -72,6 +78,16 @@ namespace Thor
         };
       });
 
+      services.AddAuthorization(o =>
+      {
+        o.AddPolicy("UserPolicy",
+          policy => policy.RequireRole(UserRank.User, UserRank.Moderator, UserRank.Admin));
+        o.AddPolicy("ModeratorPolicy",
+          policy => policy.RequireRole(UserRank.Moderator, UserRank.Admin));
+        o.AddPolicy("AdminPolicy",
+          policy => policy.RequireRole(UserRank.Admin));
+      });
+
       services.AddMvc();
 
       services.AddSwaggerGen(c =>
@@ -81,7 +97,7 @@ namespace Thor
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService)
     {
       if (env.IsDevelopment())
       {
@@ -114,20 +130,21 @@ namespace Thor
         endpoints.MapControllers();
       });
     }
-  
-    private void ConfigureMariaDB(IServiceCollection services) 
+
+    private void ConfigureMariaDB(IServiceCollection services)
     {
       services.AddSingleton<ISqlExecuterService, SqlExecuterService>();
 
-      services.AddTransient<IBlogService,  BlogService>();
+      services.AddTransient<IBlogService, BlogService>();
       services.AddTransient<ICommentService, CommentService>();
       services.AddTransient<IUserService, UserService>();
     }
 
-    private void ConfigureMongoDB(IServiceCollection services) 
+    private void ConfigureMongoDB(IServiceCollection services)
     {
       services.Configure<MongoConnectionSetting>(Configuration.GetSection("ConnectionStrings:MongoDB"));
       services.AddSingleton(option => option.GetRequiredService<IOptions<MongoConnectionSetting>>().Value);
+      services.AddSingleton<IMongoConnectionService, MongoConnectionService>();
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
       services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();

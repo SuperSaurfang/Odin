@@ -10,8 +10,8 @@ export class UserService {
 
   constructor(private restService: RestService) {
     this.currentUser = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(KEY)))
-    
-    if(this.currentUser !== null) {
+
+    if(this.currentUser.value !== null) {
       this.isUserLoggedIn = new BehaviorSubject<boolean>(true);
     } else {
       this.isUserLoggedIn = new BehaviorSubject<boolean>(false);
@@ -50,5 +50,9 @@ export class UserService {
 
   public IsUserLoggedIn(): Observable<boolean> {
     return this.isUserLoggedIn;
+  }
+
+  public IsUserLoggedInValue(): boolean {
+    return this.isUserLoggedIn.value;
   }
 }

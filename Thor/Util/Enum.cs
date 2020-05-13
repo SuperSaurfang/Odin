@@ -6,4 +6,11 @@ namespace Thor.Util
     SQLLite,
     Redis
   }
+
+  public enum ChangeResponse {
+    Change,
+    NoChange,
+    Error
+  }
+
 }
