@@ -8,6 +8,10 @@ html, body {
   background-color: $background;
 }
 
+body { 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
 .primary {
   background-color: $primary;
   color: $white !important;
@@ -62,4 +66,14 @@ html, body {
   margin: 0 auto;
   margin-bottom: margin(8);
 }
+
+.relative {
+  position: relative;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
 

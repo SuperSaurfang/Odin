@@ -1,3 +1,6 @@
-<p>
-  dashboard-post-editor works!
-</p>
+<ckeditor 
+  [editor]="editor" 
+  (change)="onChange($event)">
+</ckeditor>
+
+<button (click)="saveArticle()" class="btn btn-dark">Speichern</button>

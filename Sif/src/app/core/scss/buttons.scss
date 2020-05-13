@@ -6,6 +6,11 @@
     cursor: pointer;
 }
 
+.btn-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
 .btn-large {
     padding: padding(1) padding(8);
 }
@@ -141,16 +146,8 @@
 
 .btn-icon {
     background-color: transparent;
-    padding: 8px 11px;
+    padding:padding(1);
     border-radius: 50%;
-}
-
-.btn-icon:hover {
-    background-color: $grey-1;
-}
-
-.btn-icon:active {
-    background-color: $grey-2;
 }
 
 .btn-group {

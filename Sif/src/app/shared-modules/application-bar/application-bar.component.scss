@@ -1,0 +1,20 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  background-color: $dark-1;
+  padding: 0px padding(1);
+}
+
+.application-bar-link {
+  color: $grey-2;
+  text-decoration: none;
+  padding: padding(0.5) padding(1.5);
+  display: block;
+}
+
+.application-bar-link:hover {
+  background-color: $dark-2;
+}

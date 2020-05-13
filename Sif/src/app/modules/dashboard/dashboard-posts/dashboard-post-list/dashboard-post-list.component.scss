@@ -2,4 +2,34 @@
 :host {
   flex: 1;
   padding: padding(1);
+
+  .action-bar {
+    display: flex;
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .action-group:not(:last-child) {
+      margin-right: padding(4);
+
+      :not(:last-child) {
+        margin-right: padding(1);
+      }
+    }
+  }
+}
+
+.status-draft {
+  color: $signalerror;
+}
+
+.status-private {
+  color: $signalwarn;
+}
+
+.status-public {
+  color: $signalok;
 }
