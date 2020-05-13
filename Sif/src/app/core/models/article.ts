@@ -7,5 +7,13 @@ export class Article {
   modificationDate?: Date;
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
-  status?: string;
+  status?: string
+}
+
+export enum Status {
+  Trash,
+  All,
+  Draft,
+  Private,
+  Public
 }
