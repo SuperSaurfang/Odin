@@ -1,0 +1,9 @@
+<label>
+  <input [indeterminate]="isIndeterminate" [(ngModel)]="isChecked" (click)="stateChanged($event)" type="checkbox">
+  <fa-icon [icon]="unchecked" *ngIf="!isChecked && !isIndeterminate"></fa-icon>
+  <fa-icon [icon]="checked" *ngIf="isChecked && !isIndeterminate"></fa-icon>
+  <fa-icon [icon]="indeterminate" *ngIf="!isChecked && isIndeterminate"></fa-icon>
+  <span>{{label}}</span>
+</label>
+
+
