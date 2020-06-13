@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Article, Comment, User } from '../../models';
 import { environment } from '../../../../environments/environment';
+import { ChangeResponse } from '../../models/changeResponse';
 
 @Injectable()
 export class RestService {
@@ -25,6 +26,16 @@ export class RestService {
         return article
       })
     )
+  }
+
+  public getFullBlog(): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${environment.restApi}/blog/admin`).pipe(
+      map(article => this.parseDate(article))
+    )
+  }
+
+  public updateBlog(article: Article): Observable<ChangeResponse> {
+    return this.httpClient.put<ChangeResponse>(`${environment.restApi}/blog/admin`, article)
   }
 
   public getSite(title: string): Observable<Article[]> {
