@@ -1,10 +1,11 @@
 export class Article {
   articleId?: number;
   title?: string;
-  userName?: string;
+  author?: string;
   articleText?: string;
   creationDate?: Date;
   modificationDate?: Date;
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
+  status?: string
 }
