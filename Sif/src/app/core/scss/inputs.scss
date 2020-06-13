@@ -3,9 +3,20 @@
 input[type="text"],
 input[type="email"],
 input[type="search"],
-input[type="password"] {
+input[type="password"],
+input[type="date"],
+select {
     border: solid 1px $dark-3;
-    padding: padding(1)
+    padding: padding(1);
+    border-radius: $radius;
+    font-family: inherit;
+    box-sizing: border-box;
+    height: 40px;
+    outline: none;
+}
+
+select {
+    background-color: $white;
 }
 
 textarea {
