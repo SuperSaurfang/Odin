@@ -1,5 +1,32 @@
 @import '../../../../core/scss/variables.scss';
 :host {
-  flex: 1;
+  flex: 1 1 auto;
   padding: padding(1);
+
+  .dashboard-post-list-header {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      margin-right: margin(2);
+    } 
+  }
+  .dashboard-post-list-action-bar {
+    margin: margin(2) margin(0);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .date-range-filter {
+      label:last-child {
+        display: inline-block;
+        margin-left: margin(1);
+      }
+
+      span {
+        margin-right: margin(1);
+      }
+    }
+    
+  }
 }

@@ -1,39 +1,79 @@
-<h1>Blog</h1>
+<div class="dashboard-post-list-header">
+  <h1>Blog</h1>
+  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrg</a>
+</div>
+
 <p>Blog einträge verwalten und erstellen.</p>
 
-<a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrg</a>
+<div class="dashboard-post-list-action-bar">
+  <div class="date-range-filter">
+    <div>Zeitraum filtern:</div>
+    <label for="filter-start-date">
+      <span>Start:</span>
+      <input id="filter-start-date" type="date">
+    </label>
+    <label for="filter-end-date">
+      <span>Ende:</span>
+      <input id="filter-end-date" type="date">
+    </label>
+  </div>
+  <div class="status-filer">
+    <div>Status Filter:</div>
+    <select>
+      <option>Alle</option>
+      <option>Öffentlich</option>
+      <option>Privat</option>
+      <option>Entwurf</option>
+    </select>
+  </div>
+  <div class="search-filter">
+    <div>Durchsuchen:</div>
+    <input type="search">
+  </div>
+  <div class="reset-filter">
+    <button>reset
+    </button>
+  </div>
+  <div class="clear-trash">
+    <button class="btn btn-icon">
+      <fa-icon [icon]="trash" size="2x"></fa-icon>
+    </button>
+  </div>
+</div>
 
 <table>
   <thead>
     <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
       <th>Title</th>
       <th>Autor</th>
-      <th>Kommentare</th>
       <th>Status</th>
       <th>Datum</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Test</td>
-      <td>Test</td>
-      <td>Test</td>
-      <td>test</td>
-      <td>Test</td>
-    </tr>
-    <tr>
-      <td>Test</td>
-      <td>Test</td>
-      <td>Test</td>
-      <td>Test</td>
-      <td>test</td>
+    <tr *ngFor="let article of articles; let i = index">
+      <td>
+        <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelected(i)"></app-checkbox>
+      </td>
+      <td>{{article.title}}</td>
+      <td>{{article.author}}</td>
+      <td>{{article.status}}</td>
+      <td>
+        <div>Erstell Datum: {{article.creationDate.toLocaleDateString()}}</div>
+        <div>Zuletzt geändert: {{article.modificationDate.toLocaleDateString()}}</div>
+      </td>
     </tr>
   </tbody>
   <tfoot>
     <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
       <th>Title</th>
       <th>Autor</th>
-      <th>Kommentare</th>
       <th>Status</th>
       <th>Datum</th>
     </tr>
