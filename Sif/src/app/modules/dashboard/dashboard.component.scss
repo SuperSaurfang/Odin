@@ -2,5 +2,10 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+
+  .main-content {
+    display: flex;
+    flex: 1 1 auto;
+  }
 }
