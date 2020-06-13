@@ -1,11 +1,12 @@
 @import '../../../core/scss/variables.scss';
 :host {
   display: flex;
+  flex: 0 1 auto;
   justify-content: space-between;
   flex-direction: column;
   background-color: $dark-1;
+  padding-top: padding(2);
   width: 160px;
-  height: calc(100vh - 26px);
 
   .nav-list {
     list-style-type: none;
