@@ -15,6 +15,11 @@ $grey-1: darken($color: $white, $amount: 10);
 $grey-2: darken($color: $white, $amount: 20);
 $grey-3: darken($color: $white, $amount: 30);
 $background: #f9f9f9;
+$signalwarn: #e8bf28;
+$signaldanger: #a1262d;
+$signalok: #008e5e;
+$signalinfo: #1e2460;
+
 $defaultPM: 8px;
 $radius: 4px;
 
