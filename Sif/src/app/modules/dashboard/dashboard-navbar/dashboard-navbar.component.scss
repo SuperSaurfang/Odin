@@ -6,7 +6,7 @@
   flex-direction: column;
   background-color: $dark-1;
   padding-top: padding(2);
-  width: 160px;
+  min-width: 160px;
 
   .nav-list {
     list-style-type: none;
