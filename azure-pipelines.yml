@@ -12,8 +12,8 @@ pool:
 
 steps:
 - script: |
-    echo '$(Build.BinariesDirectory)'
-    echo '$(Build.ArtifactStagingDirectory)'
+    dir '$(Build.BinariesDirectory)'
+    dir '$(Build.ArtifactStagingDirectory)'
     echo '$(Build.BuildId)'
   displayName: 'Run a multi-line script'
 - task: DotNetCoreCLI@2
