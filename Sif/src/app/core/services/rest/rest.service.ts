@@ -4,8 +4,6 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Article, Comment, User, ChangeResponse } from '../../models';
 import { environment } from '../../../../environments/environment';
-import { ChangeResponse } from '../../models/changeResponse';
-
 @Injectable()
 export class RestService {
 
