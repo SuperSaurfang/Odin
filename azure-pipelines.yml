@@ -32,11 +32,15 @@ steps:
     workingDir: 'Sif'
     customCommand: 'run build-minor'
 
-- task: ArchiveFiles@2
+- task: PublishPipelineArtifact@1
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+    targetPath: 'Thor/bin'
+    artifact: 'Thor'
+    publishLocation: 'pipeline'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'Sif/dist'
+    artifact: 'Sif'
+    publishLocation: 'pipeline'
 
