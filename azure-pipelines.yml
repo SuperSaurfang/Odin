@@ -31,6 +31,14 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    workingDir: 'SIf'
+    workingDir: 'Sif'
     customCommand: 'ng build -prod'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
