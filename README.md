@@ -1,3 +1,4 @@
+https://dev.azure.com/radiergummi90/Odin/_apis/build/status/SuperSaurfang.Odin?branchName=master
 # Stephan
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
