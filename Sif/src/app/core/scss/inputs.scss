@@ -27,3 +27,26 @@ textarea {
     max-width: calc(100% - 18px);
     width: 100%;
 }
+
+.label {
+    display: flex;
+
+    > * {
+        border-top: 1px solid $dark-3;
+        border-bottom: 1px solid $dark-3;
+    }
+
+    > :first-child {
+        border-left: 1px solid $dark-3;
+    }
+
+    > :last-child {
+        border-right: 1px solid $dark-3;
+    }
+
+    > div {
+        display: flex;
+        align-items: center;
+        padding-right: padding(1);
+    }
+}
