@@ -32,7 +32,7 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'Sif'
-    customCommand: 'ng build -prod'
+    customCommand: 'run build-minor'
 
 - task: ArchiveFiles@2
   inputs:
