@@ -8,6 +8,42 @@ html, body {
   background-color: $background;
 }
 
+.danger {
+  background-color: $signaldanger;
+  color: $white !important;
+}
+
+.danger-text {
+  color: $signaldanger !important;
+}
+
+.warn {
+  background-color: $signalwarn;
+  color: $white !important;
+}
+
+.warn-text {
+  color: $signalwarn !important;
+}
+
+.info {
+  background-color: $signalinfo;
+  color: $white !important;
+}
+
+.info-text {
+  color: $signalinfo !important;
+}
+
+.ok {
+  background-color: $signalok;
+  color: $white !important;
+}
+
+.ok-text {
+  color: $signalok !important;
+}
+
 .primary {
   background-color: $primary;
   color: $white !important;
@@ -39,11 +75,15 @@ html, body {
 }
 
 .margin-top-1 {
-  margin-top: padding(1);
+  margin-top: margin(1);
+}
+
+.margin-left-1 {
+  margin-left: margin(1);
 }
 
 .margin-bottom-2 {
-  margin-bottom: padding(2);
+  margin-bottom: margin(2);
 }
 
 .auto-overflow {
@@ -61,5 +101,13 @@ html, body {
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: margin(8);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
