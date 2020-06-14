@@ -149,8 +149,16 @@
 
 .btn-icon {
     background-color: transparent;
-    padding:padding(1);
+    padding:padding(1.5);
     border-radius: 50%;
+}
+
+.btn-icon:hover {
+    background-color: $grey-1;
+}
+
+.btn-icon:active {
+    background-color: $grey-2;
 }
 
 .btn-group {
