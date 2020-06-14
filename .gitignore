@@ -36,3 +36,4 @@ node_modules/
 Thor/wwwroot/index.html
 Thor/appsettings.Development.json
 Thor/appsettings.json
+dist
