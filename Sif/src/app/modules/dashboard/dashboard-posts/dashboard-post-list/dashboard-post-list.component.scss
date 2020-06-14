@@ -1,35 +1,23 @@
 @import '../../../../core/scss/variables.scss';
 :host {
-  flex: 1;
+  flex: 1 1 auto;
   padding: padding(1);
 
-  .action-bar {
+  .dashboard-post-list-header {
     display: flex;
+    align-items: center;
 
-    .action-group {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .action-group:not(:last-child) {
-      margin-right: padding(4);
-
-      :not(:last-child) {
-        margin-right: padding(1);
-      }
-    }
+    h1 {
+      margin-right: margin(2);
+    } 
   }
-}
-
-.status-draft {
-  color: $signalerror;
-}
-
-.status-private {
-  color: $signalwarn;
-}
-
-.status-public {
-  color: $signalok;
+  .dashboard-post-list-action-bar {
+    margin: margin(2) margin(0);
+    display: flex;
+    align-items: flex-end;    
+  }
+  
+  .dashboard-post-list-action-bar > div:not(:last-child) {
+    margin-right: margin(2);
+  }
 }

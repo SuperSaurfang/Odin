@@ -1,0 +1,12 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  fa-icon {
+    color: $dark-1;
+    margin-right: margin(0.5);
+  }
+}

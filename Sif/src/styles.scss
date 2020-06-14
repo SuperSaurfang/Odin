@@ -8,8 +8,40 @@ html, body {
   background-color: $background;
 }
 
-body { 
-  font-family: Roboto, "Helvetica Neue", sans-serif; 
+.danger {
+  background-color: $signaldanger;
+  color: $white !important;
+}
+
+.danger-text {
+  color: $signaldanger !important;
+}
+
+.warn {
+  background-color: $signalwarn;
+  color: $white !important;
+}
+
+.warn-text {
+  color: $signalwarn !important;
+}
+
+.info {
+  background-color: $signalinfo;
+  color: $white !important;
+}
+
+.info-text {
+  color: $signalinfo !important;
+}
+
+.ok {
+  background-color: $signalok;
+  color: $white !important;
+}
+
+.ok-text {
+  color: $signalok !important;
 }
 
 .primary {
@@ -43,11 +75,15 @@ body {
 }
 
 .margin-top-1 {
-  margin-top: padding(1);
+  margin-top: margin(1);
+}
+
+.margin-left-1 {
+  margin-left: margin(1);
 }
 
 .margin-bottom-2 {
-  margin-bottom: padding(2);
+  margin-bottom: margin(2);
 }
 
 .auto-overflow {
@@ -67,13 +103,11 @@ body {
   margin-bottom: margin(8);
 }
 
-.relative {
-  position: relative;
+.flex {
+  display: flex;
 }
 
-.full-width {
-  width: 100%;
+.flex-column {
+  flex-direction: column;
 }
-
-
 

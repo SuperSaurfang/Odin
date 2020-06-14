@@ -9,11 +9,3 @@ export class Article {
   hasDateAuthorEnabled?: boolean;
   status?: string
 }
-
-export enum Status {
-  Trash,
-  All,
-  Draft,
-  Private,
-  Public
-}
