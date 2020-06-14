@@ -1,21 +1,8 @@
 # Starter pipeline
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    workingDirectory: 'Thor'
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-- task: NpmInstall
-  inputs:
-    command: 'install'
-    workingDir: 'Sif'
-
-- task: NpmBuild
-  inputs:
-    command: 'custom'
-    workingDir: 'SIf'
-    customCommand: 'ng build -prod'
 
 trigger:
 - master
@@ -31,3 +18,19 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    workingDirectory: 'Thor'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'Sif'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'SIf'
+    customCommand: 'ng build -prod'
+
