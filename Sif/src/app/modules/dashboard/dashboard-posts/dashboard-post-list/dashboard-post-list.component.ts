@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestService } from 'src/app/core/services';
 import { Article } from 'src/app/core';
 
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -18,7 +18,10 @@ export class DashboardPostListComponent implements OnInit {
   public isIndeterminate = false;
   public selectedArticles: boolean[] = []
 
-  public trash = faTrash;
+  public iconTrash = faTrash;
+  public iconFilter = faFilter;
+  public iconSlash = faSlash;
+  public iconStatus = faCircle;
 
   ngOnInit() {
     this.restService.getFullBlog().subscribe(articles => {

@@ -6,16 +6,34 @@
 <p>Blog einträge verwalten und erstellen.</p>
 
 <div class="dashboard-post-list-action-bar">
-  <div class="date-range-filter">
+  <div class="action">
+    <div>Aktion wählen:</div>
+    <div class="control-group">
+      <select>
+        <option>Veröffentlichen</option>
+        <option>Auf Privat setzen</option>
+        <option>Auf Entwurf setzen</option>
+        <option>In den Papierkorb verschieben</option>
+      </select>
+      <button class="btn btn-dark">Ausführen</button>
+    </div>
+  </div>
+  <div class="date-range-filter flex flex-column">
     <div>Zeitraum filtern:</div>
-    <label for="filter-start-date">
-      <span>Start:</span>
-      <input id="filter-start-date" type="date">
-    </label>
-    <label for="filter-end-date">
-      <span>Ende:</span>
-      <input id="filter-end-date" type="date">
-    </label>
+    <div class="flex">
+      <label class="label control-group" for="filter-start-date">
+        <div>
+          <span>Start:</span>
+        </div>
+        <input id="filter-start-date" type="date">
+      </label>
+      <label class="label control-group margin-left-1 " for="filter-end-date">
+        <div>
+          <span>Ende:</span>
+        </div>
+        <input id="filter-end-date" type="date">
+      </label>
+    </div>
   </div>
   <div class="status-filer">
     <div>Status Filter:</div>
@@ -31,12 +49,16 @@
     <input type="search">
   </div>
   <div class="reset-filter">
-    <button>reset
+    <button class="btn btn-icon">
+      <fa-layers size="2x">
+        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
+        <fa-icon [icon]="iconSlash" ></fa-icon>
+      </fa-layers>
     </button>
   </div>
   <div class="clear-trash">
-    <button class="btn btn-icon">
-      <fa-icon [icon]="trash" size="2x"></fa-icon>
+    <button class="btn btn-icon danger-text">
+      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
     </button>
   </div>
 </div>
