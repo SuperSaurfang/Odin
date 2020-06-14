@@ -1,31 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RestService } from 'src/app/core/services';
-import { Article, EChangeResponse, Status } from 'src/app/core';
+import { Article } from 'src/app/core';
 
-import { faCircle, faTrash, faFilter, faSlash, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-
-enum DateType {
-  Create = 'create',
-  Modification = 'modification'
-}
-
-interface Filter {
-  startDate?: Date,
-  endDate?: Date,
-  dateType: DateType
-  status: number,
-  search: string,
-}
-
-const DEFAULT_FILTER: Filter = {
-  dateType: DateType.Create,
-  status: Status.All,
-  search: ''
-}
+import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -35,139 +12,58 @@ const DEFAULT_FILTER: Filter = {
 export class DashboardPostListComponent implements OnInit {
 
   constructor(private restService: RestService) { }
-  public Status = Status;
-  public DateType = DateType;
-  public displayedColumns: String[] = ['select', 'title', 'author', 'status', 'date']
-  public statusIcon = faCircle;
-  public trash = faTrash;
+
+  public articles: Article[] = [];
+  public isAllSelected = false;
+  public isIndeterminate = false;
+  public selectedArticles: boolean[] = []
+
+  public iconTrash = faTrash;
   public iconFilter = faFilter;
-  public slash = faSlash;
-  public search = faSearch;
-  public datasource = new MatTableDataSource<Article>()
-  public selection = new SelectionModel<Article>(true, [])
+  public iconSlash = faSlash;
+  public iconStatus = faCircle;
 
-  public filter = DEFAULT_FILTER
-
-  private data: Article[] = [];
-  
-  @ViewChild(MatSort, {static: true}) sort: MatSort
-
-  public ngOnInit() {
-    this.datasource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'date':
-          return item.creationDate
-        default:
-          return item[property];
-      }
-    }
-
-    this.datasource.sort = this.sort;
+  ngOnInit() {
     this.restService.getFullBlog().subscribe(articles => {
-      this.datasource.data = articles;
-      this.data = articles;
-      this.applyFilter();
-    });
-  }
-
-  public updateBlogEntry(article: Article) {
-    this.restService.updateBlog(article).subscribe(response => {
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
-          article.modificationDate = new Date(Date.now());
-        case EChangeResponse.NoChange:
-        case EChangeResponse.Error:
-          break;
-        default:
-          break;
-      }
+      this.articles = articles;
+      this.articles.forEach(() => {
+        this.selectedArticles.push(false);
+      })
     })
   }
 
-  public setStatus(id: number, status: string) {
-    if(status === 'draft' || status === 'private'  || status === 'public') {
-      const index = this.datasource.data.findIndex(item => item.articleId === id);
-      this.datasource.data[index].status = status;
-      this.updateBlogEntry(this.datasource.data[index]);
+  public getSelected(index: number) {
+    return this.selectedArticles[index];
+  }
+
+  public setSelected(index: number) {
+    this.selectedArticles[index] = !this.selectedArticles[index]
+    const result = this.selectedArticles.filter(a => a == true);
+    if(result.length === this.articles.length) {
+      this.isAllSelected = true;
+      this.isIndeterminate = false;
+    } else if(result.length === 0) {
+      this.isIndeterminate = false;
+    } else {
+      this.isIndeterminate = true;
+      this.isAllSelected = false;
     }
   }
 
-  public isAllSelected() {
-    const numberOfRows = this.datasource.data.length;
-    const selectedRows = this.selection.selected.length;
-    return numberOfRows === selectedRows;
-  }
-
-  public selectAll() {
-    if(this.isAllSelected()) {
-      this.selection.clear()
-    } 
-    else {
-      this.datasource.data.forEach(row => this.selection.select(row));
-    }
-  }
-
-  public updateStartDate(event: MatDatepickerInputEvent<Date>) {
-    this.filter.startDate = event.value;
-    this.applyFilter();
-  }
-
-  public updateEndDate(event: MatDatepickerInputEvent<Date>) {
-    this.filter.endDate = event.value;
-    this.applyFilter();
-  }
-
-  public applyFilter() {
-    this.datasource.filter = this.filter.search;
-    let filtered = this.data;
-    if(this.filter.startDate) {
-      if(this.filter.dateType === DateType.Create) {
-        filtered = filtered.filter(item => item.creationDate >= this.filter.startDate);
-      } else if(this.filter.dateType === DateType.Modification) {
-        filtered = filtered.filter(item => item.modificationDate >= this.filter.startDate);
+  public setAllSelected(isAllSelected: boolean) {
+    this.isAllSelected = isAllSelected;
+    for (let index = 0; index < this.selectedArticles.length; index++) {
+      this.isIndeterminate = false;
+      if(this.isAllSelected) {
+        this.selectedArticles[index] = true;
+      } else {
+        this.selectedArticles[index] = false;
       }
     }
-
-    if(this.filter.endDate) {
-      if(this.filter.dateType === DateType.Create) {
-        filtered = filtered.filter(item => item.creationDate <= this.filter.endDate);
-      } else if(this.filter.dateType === DateType.Modification) {
-        filtered = filtered.filter(item => item.modificationDate <= this.filter.endDate);
-      }
-    }
-
-    switch (this.filter.status) {
-      case Status.Trash:
-        filtered = filtered.filter(item => item.status === 'trash');
-        break;
-      case Status.Draft:
-        filtered = filtered.filter(item => item.status === 'draft');
-        break;
-      case Status.Private:
-        filtered = filtered.filter(item => item.status === 'private');
-        break;
-      case Status.Public:
-        filtered = filtered.filter(item => item.status === 'public');
-        break;
-      case Status.All:
-      default:
-        filtered = filtered.filter(item => item.status === 'draft' || item.status === 'private' || item.status === 'public');
-        break;
-    }
-
-    this.datasource.data = filtered;
   }
 
-  public resetFilter() {
-    this.filter = {
-      startDate: null,
-      endDate: null,
-      dateType: DateType.Create,
-      status: Status.All,
-      search: ''
-    }
-    this.datasource.data = this.data;
-    this.datasource.filter = '';
+  public test() {
+    console.log("Hello");
   }
 
   public getStatusTooltip(status: string) {

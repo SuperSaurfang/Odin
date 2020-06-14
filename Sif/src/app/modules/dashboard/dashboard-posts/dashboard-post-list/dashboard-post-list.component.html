@@ -1,143 +1,104 @@
-<h1>
-  Blog
-  <a mat-stroked-button color="primary" [routerLink]="['edit']">Neuer Blogeintrg</a>
-</h1>
+<div class="dashboard-post-list-header">
+  <h1>Blog</h1>
+  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrg</a>
+</div>
+
 <p>Blog einträge verwalten und erstellen.</p>
 
-<div class="action-bar">
-  <div class="action-group">
-    <mat-form-field>
-      <mat-label>Aktion wählen</mat-label>
-      <mat-select>
-        <mat-option>In Papierkorb verschieben</mat-option>
-        <mat-option>Auf Entwurf setzen</mat-option>
-        <mat-option>Auf Privat setzen</mat-option>
-        <mat-option>Veröffentlichen</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-stroked-button color="primary" [disabled]="!selection.hasValue()">Übernehmen</button>
+<div class="dashboard-post-list-action-bar">
+  <div class="action">
+    <div>Aktion wählen:</div>
+    <div class="control-group">
+      <select>
+        <option>Veröffentlichen</option>
+        <option>Auf Privat setzen</option>
+        <option>Auf Entwurf setzen</option>
+        <option>In den Papierkorb verschieben</option>
+      </select>
+      <button class="btn btn-dark">Ausführen</button>
+    </div>
   </div>
-
-  <div class="action-group">
-    <mat-form-field color="primary">
-      <mat-label>Von</mat-label>
-      <input matInput [matDatepicker]="from" [value]="filter.startDate" [max]="filter.endDate" (dateChange)="updateStartDate($event)">
-      <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
-      <mat-datepicker #from></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field color="primary">
-      <mat-label>Bis</mat-label>
-      <input matInput [matDatepicker]="to" [(value)]="filter.endDate" [min]="filter.startDate" (dateChange)="updateEndDate($event)">
-      <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
-      <mat-datepicker #to></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field color="primary">
-      <mat-label>Datumsfilter</mat-label>
-      <mat-select [(value)]="filter.dateType" (selectionChange)="applyFilter()">
-        <mat-option [value]="DateType.Create">Erstell Datum</mat-option>
-        <mat-option [value]="DateType.Modification">Änderungsdatum</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div class="date-range-filter flex flex-column">
+    <div>Zeitraum filtern:</div>
+    <div class="flex">
+      <label class="label control-group" for="filter-start-date">
+        <div>
+          <span>Start:</span>
+        </div>
+        <input id="filter-start-date" type="date">
+      </label>
+      <label class="label control-group margin-left-1 " for="filter-end-date">
+        <div>
+          <span>Ende:</span>
+        </div>
+        <input id="filter-end-date" type="date">
+      </label>
+    </div>
   </div>
-
-  <div class="action-group">
-    <mat-form-field color="primary">
-      <mat-label>Filtern</mat-label>
-      <mat-select [(value)]="filter.status" (selectionChange)="applyFilter()">
-        <mat-option [value]="Status.Trash">Papierkorb</mat-option>
-        <mat-option [value]="Status.All">Alle</mat-option>
-        <mat-option [value]="Status.Draft">Entwurf</mat-option>
-        <mat-option [value]="Status.Private">Privat</mat-option>
-        <mat-option [value]="Status.Public">Veröffentlicht</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div class="status-filer">
+    <div>Status Filter:</div>
+    <select>
+      <option>Alle</option>
+      <option>Öffentlich</option>
+      <option>Privat</option>
+      <option>Entwurf</option>
+    </select>
   </div>
-
-  <div class="action-group">
-    <mat-form-field>
-      <mat-label>Durchsuchen...</mat-label>
-      <input matInput [(ngModel)]="filter.search" (input)="applyFilter()">
-      <fa-icon matSuffix [icon]="search"></fa-icon>
-    </mat-form-field>
+  <div class="search-filter">
+    <div>Durchsuchen:</div>
+    <input type="search">
   </div>
-
-  <div class="action-group">
-    <button mat-icon-button (click)="resetFilter()" matTooltip="Filter zurücksetzen">
-      <fa-layers>
-        <fa-icon [icon]="slash" [mask]="iconFilter" transform="down-1.5"></fa-icon>
-        <fa-icon [icon]="slash" ></fa-icon>
+  <div class="reset-filter">
+    <button class="btn btn-icon">
+      <fa-layers size="2x">
+        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
+        <fa-icon [icon]="iconSlash" ></fa-icon>
       </fa-layers>
     </button>
   </div>
-
-  <div class="action-group">
-    <button mat-stroked-button color="warn">
-      <fa-icon [icon]="trash"></fa-icon>
-      Papierkorb leeren
+  <div class="clear-trash">
+    <button class="btn btn-icon danger-text">
+      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
     </button>
   </div>
 </div>
 
-<table mat-table [dataSource]="datasource" matSort class="full-width">
-
-  <ng-container matColumnDef="select">
-    <th mat-header-cell *matHeaderCellDef>
-      <mat-checkbox (change)="$event ? selectAll() : null" [checked]="selection.hasValue() && isAllSelected()"
-        [indeterminate]="selection.hasValue() && !isAllSelected()">
-      </mat-checkbox>
-    </th>
-    <td mat-cell *matCellDef="let row">
-      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-        [checked]="selection.isSelected(row)">
-      </mat-checkbox>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Titel</th>
-    <td mat-cell *matCellDef="let element">{{element.title}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="author">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Autor</th>
-    <td mat-cell *matCellDef="let element">{{element.author}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-icon-button [matMenuTriggerFor]="statusChangeMenu" [matTooltip]="getStatusTooltip(element.status)">
-        <fa-icon [ngClass]="{'status-draft': element.status === 'draft',
-          'status-private': element.status === 'private',
-          'status-public': element.status === 'public'}" [icon]="statusIcon">
-        </fa-icon>
-      </button>
-      <mat-menu #statusChangeMenu="matMenu">
-        <button mat-menu-item (click)="setStatus(element.articleId, 'draft')">
-          <fa-icon class="status-draft" [icon]="statusIcon"></fa-icon>
-          Auf Entwurf setzen
-        </button>
-        <button mat-menu-item (click)="setStatus(element.articleId, 'private')">
-          <fa-icon class="status-private" [icon]="statusIcon"></fa-icon>
-          Auf Privat setzen
-        </button>
-        <button mat-menu-item (click)="setStatus(element.articleId, 'public')">
-          <fa-icon class="status-public" [icon]="statusIcon"></fa-icon>
-          Veröffentlichen
-        </button>
-      </mat-menu>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
-    <td mat-cell *matCellDef="let element">
-      <div>Erstellt am: {{element.creationDate.toLocaleDateString()}}</div>
-      <div>Zuletzt geändert: {{element.modificationDate.toLocaleDateString()}}</div>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+<table>
+  <thead>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Title</th>
+      <th>Autor</th>
+      <th>Status</th>
+      <th>Datum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let article of articles; let i = index">
+      <td>
+        <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelected(i)"></app-checkbox>
+      </td>
+      <td>{{article.title}}</td>
+      <td>{{article.author}}</td>
+      <td>{{article.status}}</td>
+      <td>
+        <div>Erstell Datum: {{article.creationDate.toLocaleDateString()}}</div>
+        <div>Zuletzt geändert: {{article.modificationDate.toLocaleDateString()}}</div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Title</th>
+      <th>Autor</th>
+      <th>Status</th>
+      <th>Datum</th>
+    </tr>
+  </tfoot>
 </table>
 

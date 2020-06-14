@@ -106,6 +106,7 @@ namespace Thor
         app.UseCors(c =>
         {
           c.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+          c.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyMethod();
         });
       }
 

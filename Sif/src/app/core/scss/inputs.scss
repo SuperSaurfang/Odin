@@ -3,9 +3,20 @@
 input[type="text"],
 input[type="email"],
 input[type="search"],
-input[type="password"] {
+input[type="password"],
+input[type="date"],
+select {
     border: solid 1px $dark-3;
-    padding: padding(1)
+    padding: padding(1);
+    border-radius: $radius;
+    font-family: inherit;
+    box-sizing: border-box;
+    height: 40px;
+    outline: none;
+}
+
+select {
+    background-color: $white;
 }
 
 textarea {
@@ -15,4 +26,27 @@ textarea {
     min-height: 150px;
     max-width: calc(100% - 18px);
     width: 100%;
+}
+
+.label {
+    display: flex;
+
+    > * {
+        border-top: 1px solid $dark-3;
+        border-bottom: 1px solid $dark-3;
+    }
+
+    > :first-child {
+        border-left: 1px solid $dark-3;
+    }
+
+    > :last-child {
+        border-right: 1px solid $dark-3;
+    }
+
+    > div {
+        display: flex;
+        align-items: center;
+        padding-right: padding(1);
+    }
 }
