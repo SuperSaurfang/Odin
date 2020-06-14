@@ -1,0 +1,17 @@
+@import './variables.scss';
+
+.control-group {
+  display: flex;
+
+  :first-child {
+    border-radius: 0;
+    border-bottom-left-radius: $radius;
+    border-top-left-radius: $radius;
+  }
+
+  :last-child {
+    border-radius: 0;
+    border-bottom-right-radius: $radius;
+    border-top-right-radius: $radius;
+  }
+}
