@@ -111,3 +111,25 @@ html, body {
   flex-direction: column;
 }
 
+.pos-relative {
+  position: relative;
+}
+
+.tooltip {
+  background-color: #1a1a1acc;
+  color: white;
+  border-radius: 4px;
+  padding: 8px;
+  position: absolute;
+  display: none;
+  width: 140px;
+  text-align: center;
+  left: -45px;
+}
+
+.tooltip-trigger:hover {
+  > .tooltip  {
+    display: block;
+  }
+}
+
