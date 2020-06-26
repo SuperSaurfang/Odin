@@ -9,6 +9,8 @@ import { DashboardRoutes } from './dashboard.routing';
 import { DashboardPostsModule } from './dashboard-posts/dashboard-posts.module';
 import { DashboardNavbarComponent } from './dashboard-navbar/dashboard-navbar.component';
 
+import { ArticleFilterService } from './services/article-filter/article-filter.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -20,7 +22,9 @@ import { DashboardNavbarComponent } from './dashboard-navbar/dashboard-navbar.co
   declarations: [
     DashboardComponent,
     DashboardNavbarComponent
+  ],
+  providers: [
+    ArticleFilterService
   ]
-
 })
 export class DashboardModule { }
