@@ -3,6 +3,7 @@ import { RestService } from 'src/app/core/services';
 import { Article } from 'src/app/core';
 
 import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -11,7 +12,7 @@ import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-sv
 })
 export class DashboardPostListComponent implements OnInit {
 
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService, private articleFilter: ArticleFilterService) { }
 
   public articles: Article[] = [];
   public isAllSelected = false;
@@ -23,10 +24,20 @@ export class DashboardPostListComponent implements OnInit {
   public iconSlash = faSlash;
   public iconStatus = faCircle;
 
+  public selectedAction = ''
+
+  public selectedStatus: string = 'all';
+  public searchTerm: string;
+  public startDate: Date;
+  public endDate: Date;
+
   ngOnInit() {
     this.restService.getFullBlog().subscribe(articles => {
-      this.articles = articles;
-      this.articles.forEach(() => {
+      this.articleFilter.setArticles(articles);
+      this.articleFilter.filtered().subscribe(filteredArticles => {
+        this.articles = filteredArticles;
+      })
+      articles.forEach(() => {
         this.selectedArticles.push(false);
       })
     })
@@ -62,8 +73,46 @@ export class DashboardPostListComponent implements OnInit {
     }
   }
 
-  public test() {
-    console.log("Hello");
+  public changeStatusFilter() {
+    this.articleFilter.updateStatusFilter(this.selectedStatus)
+  }
+
+  public changeSearchterm() {
+    this.articleFilter.searchFilter(this.searchTerm);
+  }
+
+  public changeDateFilter() {
+    const dateFilter: DateFilter = {};
+    if(this.endDate) {
+      dateFilter.endDate = new Date(this.endDate);
+      dateFilter.endDate.setHours(23, 59, 59);
+    }
+    if(this.startDate) {
+      dateFilter.startDate = new Date(this.startDate)
+      dateFilter.startDate.setHours(0,0,0,0,);
+    }
+    this.articleFilter.updateDateFilter(dateFilter);
+  }
+
+  public resetFilter() {
+    this.selectedStatus = 'all';
+    this.startDate = null;
+    this.endDate = null;
+    this.searchTerm = '';
+    this.articleFilter.resetFilter();
+  }
+
+  public executeAction() {
+    if(this.selectedAction === "" || this.selectedArticles.filter(a => a === true).length === 0)  {
+      console.log('Nothing selected')
+      return;
+    }
+
+    console.log(this.selectedAction);
+  }
+
+  public openStatusChange() {
+    console.log('Open')
   }
 
   public getStatusTooltip(status: string) {
@@ -75,7 +124,7 @@ export class DashboardPostListComponent implements OnInit {
       case 'public':
         return 'Status: Veröffentlicht'    
       default:
-        return 'Mülleimer'
+        return 'Papierkorb'
     }
   }
 }
