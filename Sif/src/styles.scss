@@ -6,6 +6,11 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: $background;
+  font-family: Roboto, sans-serif;
+}
+
+th, h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
 }
 
 .danger {
@@ -122,9 +127,10 @@ html, body {
   padding: 8px;
   position: absolute;
   display: none;
-  width: 140px;
+  width: 160px;
   text-align: center;
   left: -45px;
+  z-index: 99;
 }
 
 .tooltip-trigger:hover {
