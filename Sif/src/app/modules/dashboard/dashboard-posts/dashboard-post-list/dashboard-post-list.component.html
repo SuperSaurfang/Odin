@@ -9,13 +9,14 @@
   <div class="action">
     <div>Aktion wählen:</div>
     <div class="control-group">
-      <select>
-        <option>Veröffentlichen</option>
-        <option>Auf Privat setzen</option>
-        <option>Auf Entwurf setzen</option>
-        <option>In den Papierkorb verschieben</option>
+      <select [(ngModel)]="selectedAction">
+        <option value="" disabled selected hidden>-- Aktion wählen --</option>
+        <option value="public">Veröffentlichen</option>
+        <option value="private">Auf Privat setzen</option>
+        <option value="draft">Auf Entwurf setzen</option>
+        <option value="trash">In den Papierkorb verschieben</option>
       </select>
-      <button class="btn btn-dark">Ausführen</button>
+      <button class="btn btn-dark" (click)="executeAction()">Ausführen</button>
     </div>
   </div>
   <div class="date-range-filter flex flex-column">
@@ -25,38 +26,39 @@
         <div>
           <span>Start:</span>
         </div>
-        <input id="filter-start-date" type="date">
+        <input id="filter-start-date" type="date" [(ngModel)]="startDate" (change)="changeDateFilter()" [max]="endDate">
       </label>
       <label class="label control-group margin-left-1 " for="filter-end-date">
         <div>
           <span>Ende:</span>
         </div>
-        <input id="filter-end-date" type="date">
+        <input id="filter-end-date" type="date" [(ngModel)]="endDate" (change)="changeDateFilter()" [min]="startDate">
       </label>
     </div>
   </div>
   <div class="status-filer">
     <div>Status Filter:</div>
-    <select>
-      <option>Alle</option>
-      <option>Öffentlich</option>
-      <option>Privat</option>
-      <option>Entwurf</option>
+    <select [(ngModel)]='selectedStatus' (change)='changeStatusFilter()'>
+      <option value="trash">Papierkorb</option>
+      <option value="all" selected>Alle</option>
+      <option value="public">Öffentlich</option>
+      <option value="private">Privat</option>
+      <option value="draft">Entwurf</option>
     </select>
   </div>
   <div class="search-filter">
     <div>Durchsuchen:</div>
-    <input type="search">
+    <input type="search" [(ngModel)]="searchTerm" (input)="changeSearchterm()">
   </div>
   <div class="reset-filter pos-relative tooltip-trigger">
-    <button class="btn btn-icon">
+    <button class="btn btn-icon" (click)="resetFilter()">
       <fa-layers size="2x">
         <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
         <fa-icon [icon]="iconSlash" transform="up-2 left-2" class="danger-text"></fa-icon>
       </fa-layers>
     </button>
     <div class="tooltip">
-      Filter reseten
+      Filter zurücksetzen
     </div>
   </div>
   <div class="clear-trash pos-relative tooltip-trigger">
@@ -64,7 +66,7 @@
       <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
     </button>
     <div class="tooltip">
-      Papierkorb leeren - Einträge verschwinden ins Nirvana ohne Rückkehr
+      Papierkorb leeren
     </div>
   </div>
 </div>
@@ -88,7 +90,21 @@
       </td>
       <td>{{article.title}}</td>
       <td>{{article.author}}</td>
-      <td>{{article.status}}</td>
+      <td>
+        <div (click)="openStatusChange()" class="pos-relative tooltip-trigger">
+          <fa-icon *ngIf="article.status !== 'trash'" 
+          [icon]="iconStatus"
+          [ngClass]="{
+            'danger-text': article.status === 'draft', 
+            'warn-text': article.status === 'private',
+            'ok-text': article.status === 'public' 
+          }"></fa-icon>
+          <fa-icon class="danger-text" *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <div class="tooltip">
+            {{getStatusTooltip(article.status)}}
+          </div>
+        </div>
+      </td>
       <td>
         <div>Erstell Datum: {{article.creationDate.toLocaleDateString()}}</div>
         <div>Zuletzt geändert: {{article.modificationDate.toLocaleDateString()}}</div>
