@@ -32,6 +32,20 @@ export class RestService {
     )
   }
 
+  public getArticleByTitle(title: string) : Observable<Article> {
+    return this.httpClient.get<Article>(`${environment.restApi}/blog/admin/${title}`).pipe(
+      map(article => {
+        article.creationDate = new Date(article.creationDate);
+        article.modificationDate = new Date(article.modificationDate);
+        return article
+      })
+    )
+  }
+
+  public deleteArticles() : Observable<ChangeResponse> {
+    return this.httpClient.delete<ChangeResponse>(`${environment.restApi}/blog/admin`)
+  }
+
   public updateBlog(article: Article): Observable<ChangeResponse> {
     return this.httpClient.put<ChangeResponse>(`${environment.restApi}/blog/admin`, article)
   }

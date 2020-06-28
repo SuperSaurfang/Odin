@@ -4,6 +4,7 @@ import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
 
 import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -32,12 +33,19 @@ export class DashboardPostListComponent implements OnInit {
   public startDate: Date;
   public endDate: Date;
 
+  public articleFilterSubscription: Subscription;
+
   ngOnInit() {
+    this.loadData();
+  }
+
+  private loadData() {
     this.restService.getFullBlog().subscribe(articles => {
-      this.articleFilter.filtered().subscribe(filteredArticles => {
+      this.articleFilterSubscription = this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
       })
       this.articleFilter.setArticles(articles);
+      this.selectedArticles = [];
       articles.forEach(() => {
         this.selectedArticles.push(false);
       })
@@ -132,11 +140,23 @@ export class DashboardPostListComponent implements OnInit {
           break;
       }
     })
-
-    
-
-    
   }
+
+  public deleteArticles() {
+    this.restService.deleteArticles().subscribe(response => {
+      switch (response.ChangeResponse) {
+        case EChangeResponse.Change:
+          this.articleFilterSubscription.unsubscribe();
+          this.loadData();
+          break;
+        case EChangeResponse.Error:
+        case EChangeResponse.NoChange:
+        default:
+          break;
+      }
+    })
+  }
+
 
   public getStatusTooltip(status: string) {
     switch (status) {

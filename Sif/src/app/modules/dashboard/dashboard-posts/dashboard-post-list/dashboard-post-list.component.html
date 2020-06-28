@@ -62,7 +62,7 @@
     </div>
   </div>
   <div class="clear-trash pos-relative tooltip-trigger">
-    <button class="btn btn-icon danger-text">
+    <button class="btn btn-icon danger-text" (click)="deleteArticles()">
       <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
     </button>
     <div class="tooltip">
@@ -88,7 +88,11 @@
       <td>
         <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelected(i)"></app-checkbox>
       </td>
-      <td>{{article.title}}</td>
+      <td>
+        <a [routerLink]="['edit', article.title]">
+          {{article.title}}
+        </a>
+      </td>
       <td>{{article.author}}</td>
       <td>
         <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger">
