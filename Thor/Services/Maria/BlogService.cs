@@ -18,7 +18,7 @@ namespace Thor.Services.Maria
 
     public UnderlayingDatabase UnderlayingDatabase { get; }
 
-    public async Task<ChangeResponse> CreateBlogPost(Article article)
+    public async Task<ChangeResponse> CreateBlogArticle(Article article)
     {
       const string sql = @"INSERT INTO `Article`
       (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`, `Isblog`) 
@@ -27,10 +27,10 @@ namespace Thor.Services.Maria
       return await ProcessResponse(response);
     }
 
-    public async Task<ChangeResponse> DeleteBlogPost(int id)
+    public async Task<ChangeResponse> DeleteBlogArticle()
     {
-      const string sql = @"DELETE FROM Article WHERE `ArticleId` = @id";
-      var response = await executer.ExecuteSql(sql, new {id= id});
+      const string sql = @"DELETE FROM Article WHERE Status = 'trash'";
+      var response = await executer.ExecuteSql(sql);
       return await ProcessResponse(response);
     }
 
@@ -48,14 +48,21 @@ namespace Thor.Services.Maria
       return await executer.ExecuteSql<Article>(sql);
     }
 
-    public async Task<Article> GetSinglePublicPost(string title)
+    public async Task<Article> GetSingleArticle(string title)
+    {
+      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
+      FROM Article, User WHERE Article.UserId = User.UserId AND IsBlog = 1 AND Title = @title";
+      return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+    }
+
+    public async Task<Article> GetSinglePublicArticle(string title)
     {
       const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled` 
       FROM Article, User WHERE Article.UserId = User.UserId AND Status = 'public' AND IsBlog = 1 AND Title = @title";
       return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
     }
 
-    public async Task<ChangeResponse> UpdateBlogPost(Article article)
+    public async Task<ChangeResponse> UpdateBlogArticle(Article article)
     {
 
       const string sql = @"UPDATE `Article` SET `Title`=@Title,`ArticleText`=@ArticleText, `ModificationDate`=@ModificationDate,
