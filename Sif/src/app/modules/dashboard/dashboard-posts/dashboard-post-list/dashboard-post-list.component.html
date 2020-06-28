@@ -8,7 +8,7 @@
 <div class="dashboard-post-list-action-bar">
   <div class="action">
     <div>Aktion wählen:</div>
-    <div class="control-group">
+    <div class="control-group horizontal-group">
       <select [(ngModel)]="selectedAction">
         <option value="" disabled selected hidden>-- Aktion wählen --</option>
         <option value="public">Veröffentlichen</option>
@@ -91,7 +91,7 @@
       <td>{{article.title}}</td>
       <td>{{article.author}}</td>
       <td>
-        <div (click)="openStatusChange()" class="pos-relative tooltip-trigger">
+        <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger">
           <fa-icon *ngIf="article.status !== 'trash'" 
           [icon]="iconStatus"
           [ngClass]="{
@@ -99,10 +99,30 @@
             'warn-text': article.status === 'private',
             'ok-text': article.status === 'public' 
           }"></fa-icon>
-          <fa-icon class="danger-text" *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
-          <div class="tooltip">
+          <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <div class="tooltip" [ngClass]="{'hide': statusMenuOpen === i}">
             {{getStatusTooltip(article.status)}}
           </div>
+        </div>
+        <div class="menu" [ngClass]="{'display-block': statusMenuOpen === i}" >
+          <div class="control-group vertical-group">
+            <button class="btn btn-light text-left" (click)="updateStatus('draft', i)">
+              <fa-icon class="danger-text" [icon]="iconStatus"></fa-icon>
+              Auf Entwurf setzen
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('private', i)">
+              <fa-icon class="warn-text" [icon]="iconStatus"></fa-icon>
+              Auf Privat setzen
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('public', i)">
+              <fa-icon class="ok-text" [icon]="iconStatus"></fa-icon>
+              Veröffentlichen
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('trash', i)">
+              <fa-icon class="danger-text" [icon]="iconTrash"></fa-icon>
+              In den Papierkorb verschieben
+            </button>
+            </div>
         </div>
       </td>
       <td>

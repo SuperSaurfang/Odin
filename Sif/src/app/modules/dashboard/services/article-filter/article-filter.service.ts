@@ -28,7 +28,7 @@ const BASE_FILTER: Filter = {
 export class ArticleFilterService {
 
   private originArticles: Article[] = [];
-  private filteredArticles: BehaviorSubject<Article[]>
+  private filteredArticles: Subject<Article[]> = new Subject<Article[]>();
 
   private currentFilter: Filter = new Filter(BASE_FILTER)
 
@@ -36,7 +36,7 @@ export class ArticleFilterService {
 
   public setArticles(articles: Article[]) {
     this.originArticles = articles;
-    this.filteredArticles = new BehaviorSubject<Article[]>(articles);
+    this.applyFilter();
   }
 
   public updateDateFilter(dateFilter: DateFilter) {
@@ -78,11 +78,7 @@ export class ArticleFilterService {
     }
 
     //filter status
-    if (this.currentFilter.status === 'all') 
-    {
-      filtered = filtered.filter(article => article.status === 'public' || article.status === 'private' || article.status === 'draft')
-    } 
-    else 
+    if (this.currentFilter.status !== 'all') 
     {
       filtered = filtered.filter(article => article.status === this.currentFilter.status)
     }
