@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from 'src/app/core/services';
-import { Article } from 'src/app/core';
+import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
 
 import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
@@ -25,6 +25,7 @@ export class DashboardPostListComponent implements OnInit {
   public iconStatus = faCircle;
 
   public selectedAction = ''
+  public statusMenuOpen = -1;
 
   public selectedStatus: string = 'all';
   public searchTerm: string;
@@ -33,10 +34,10 @@ export class DashboardPostListComponent implements OnInit {
 
   ngOnInit() {
     this.restService.getFullBlog().subscribe(articles => {
-      this.articleFilter.setArticles(articles);
       this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
       })
+      this.articleFilter.setArticles(articles);
       articles.forEach(() => {
         this.selectedArticles.push(false);
       })
@@ -111,8 +112,30 @@ export class DashboardPostListComponent implements OnInit {
     console.log(this.selectedAction);
   }
 
-  public openStatusChange() {
-    console.log('Open')
+  public openStatusChange(index: number) {
+    this.statusMenuOpen = index;
+  }
+
+  public updateStatus(status: string, index: number) {
+    this.statusMenuOpen = -1;
+    this.articles[index].status = status;
+    this.restService.updateBlog(this.articles[index]).subscribe(response => {
+      switch (response.ChangeResponse) {
+        case EChangeResponse.Change:
+          this.articleFilter.applyFilter();
+          console.log('everything okay');
+          break;
+        case EChangeResponse.Error:
+        case EChangeResponse.NoChange:
+        default:
+          console.log('Something goes wrong')
+          break;
+      }
+    })
+
+    
+
+    
   }
 
   public getStatusTooltip(status: string) {
