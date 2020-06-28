@@ -20,12 +20,12 @@ namespace Thor.Services.Mongo
 
     private IMongoCollection<Article> Collection { get; }
 
-    public Task<ChangeResponse> CreateBlogPost(Article article)
+    public Task<ChangeResponse> CreateBlogArticle(Article article)
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<ChangeResponse> DeleteBlogPost(int id)
+    public Task<ChangeResponse> DeleteBlogArticle()
     {
       throw new System.NotImplementedException();
     }
@@ -41,13 +41,18 @@ namespace Thor.Services.Mongo
       return Task.FromResult<IEnumerable<Article>>(query.ToList());
     }
 
-    public Task<Article> GetSinglePublicPost(string title)
+    public Task<Article> GetSingleArticle(string title)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<Article> GetSinglePublicArticle(string title)
     {
       var query = from b in Collection.AsQueryable() where b.Title == title && b.IsBlog == true && b.Status == "public" select b;
       return Task.FromResult<Article>(query.FirstOrDefault());
     }
 
-    public Task<ChangeResponse> UpdateBlogPost(Article update)
+    public Task<ChangeResponse> UpdateBlogArticle(Article update)
     {
       throw new System.NotImplementedException();
     }
