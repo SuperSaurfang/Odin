@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: '',  children: [
     { path: '',  component: DashboardPostListComponent },
     { path: 'edit', component: DashboardPostEditorComponent },
-    { path: 'edit/:id', component: DashboardPostEditorComponent }
+    { path: 'edit/:title', component: DashboardPostEditorComponent }
   ]}
 ];
 
