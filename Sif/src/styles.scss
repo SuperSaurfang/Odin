@@ -87,6 +87,10 @@ th, h1, h2, h3, h4, h5, h6 {
   margin-left: margin(1);
 }
 
+.margin-bottom-1 {
+  margin-bottom: margin(1);
+}
+
 .margin-bottom-2 {
   margin-bottom: margin(2);
 }
@@ -110,6 +114,14 @@ th, h1, h2, h3, h4, h5, h6 {
 
 .flex {
   display: flex;
+}
+
+.flex-grow {
+  flex: 1 1 auto;
+}
+
+.flex-shrink {
+  flex: 0 1 auto;
 }
 
 .flex-column {
