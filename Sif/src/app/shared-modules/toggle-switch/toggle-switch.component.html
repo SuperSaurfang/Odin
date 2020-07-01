@@ -1,0 +1,8 @@
+<label>
+  <input [(ngModel)]="isToggleOn" (click)="toggle($event)" type="checkbox">
+  <fa-icon [icon]="iconToggleOff" *ngIf="!isToggleOn" size="2x"></fa-icon>
+  <fa-icon class="ok-text" [icon]="iconToggleOn" *ngIf="isToggleOn" size="2x"></fa-icon>
+  <span class="first-span">{{label}}: </span>
+  <span  *ngIf="isToggleOn">An</span>
+  <span *ngIf="!isToggleOn">Aus</span>
+</label>

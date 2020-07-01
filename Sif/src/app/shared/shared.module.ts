@@ -7,6 +7,7 @@ import { NewlinePipe } from 'src/app/core/pipes'
 import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
 import { ApplicationBarModule} from '../shared-modules/application-bar/application-bar.module';
 import { CheckboxModule } from '../shared-modules/checkbox/checkbox.module';
+import { ToggleSwitchModule } from '../shared-modules/toggle-switch/toggle-switch.module';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { CheckboxModule } from '../shared-modules/checkbox/checkbox.module';
     ReactiveFormsModule,
     SideBarModule,
     ApplicationBarModule,
-    CheckboxModule
+    CheckboxModule,
+    ToggleSwitchModule
   ]
 })
 export class SharedModule { }
