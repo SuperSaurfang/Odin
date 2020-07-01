@@ -1,0 +1,22 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+  }
+
+  .first-span {
+    margin-right: margin(0.5);
+  }
+
+  fa-icon {
+    color: $dark-1;
+    display: inline-block;
+    margin-right: margin(0.5);
+  }
+}
