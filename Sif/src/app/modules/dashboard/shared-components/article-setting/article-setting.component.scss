@@ -1,0 +1,27 @@
+@import '../../../../core/scss/variables.scss';
+:host {
+
+  .setting-container {
+    border-top: 1px solid $dark-1;
+
+    .setting-header{
+      padding: padding(1) padding(2);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .setting-header:hover {
+      background-color: $grey-1;
+      cursor: pointer;
+    }
+
+    .setting-body {
+      display: none;
+      padding: padding(1) padding(2);
+    }
+
+    .open {
+      display: block;
+    }
+  }
+}

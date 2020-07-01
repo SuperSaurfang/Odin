@@ -9,6 +9,8 @@ import { DashboardPostsComponent } from './dashboard-posts.component';
 import { DashboardPostRoutes } from './dashboard-post.routing';
 import { DashboardPostListComponent } from './dashboard-post-list/dashboard-post-list.component';
 import { DashboardPostEditorComponent } from './dashboard-post-editor/dashboard-post-editor.component';
+import { ArticleSettingComponent } from '../shared-components/article-setting/article-setting.component';
+
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -24,6 +26,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DashboardPostsComponent,
     DashboardPostListComponent,
     DashboardPostEditorComponent,
+    ArticleSettingComponent
   ]
 })
 export class DashboardPostsModule {
