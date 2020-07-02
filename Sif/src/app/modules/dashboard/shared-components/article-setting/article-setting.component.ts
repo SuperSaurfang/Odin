@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import { getLocaleMonthNames } from '@angular/common';
+import { faAngleUp, faAngleDown, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-article-setting',
@@ -27,8 +26,9 @@ export class ArticleSettingComponent implements OnInit, OnChanges {
     }
   }
 
-  public isSettingOpen = false;
-  public iconStatus = faAngleDown;
+  public isSettingOpen = true;
+  public iconStatus = faAngleUp;
+  public iconCircle = faCircle;
 
   ngOnInit() {
   }
