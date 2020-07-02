@@ -77,6 +77,23 @@ namespace Thor.Controllers
       return Ok(result);
     }
 
+    [Produces("application/json")]
+    [HttpGet("admin/id/{title}")]
+    [Authorize(Policy = "ModeratorPolicy")]
+    public async Task<ActionResult<Article>> GetBlogId(string title)
+    {
+      if (title == null)
+      {
+        return BadRequest("Title cannot be null");
+      }
+      var result = await blogService.GetBlogId(title);
+      if (result == 0)
+      {
+        return InternalError();
+      }
+      return Ok(result);
+    }
+
     /// <summary>
     /// Ge all blog posts for the admin dashboard
     /// </summary>
@@ -124,6 +141,10 @@ namespace Thor.Controllers
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> CreateBlogArticle(Article article)
     {
+      if(article.UserId == 0) {
+        return BadRequest("The user id cannot be zero");
+      }
+
       var result = await blogService.CreateBlogArticle(article);
       if (result == ChangeResponse.Error) {
         return InternalError();
