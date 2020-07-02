@@ -30,6 +30,11 @@ namespace Thor.Services.Mongo
       throw new System.NotImplementedException();
     }
 
+    public Task<int> GetBlogId(string title)
+    {
+      throw new System.NotImplementedException();
+    }
+
     public Task<IEnumerable<Article>> GetFullBlog()
     {
       throw new System.NotImplementedException();

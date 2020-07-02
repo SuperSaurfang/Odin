@@ -10,6 +10,7 @@ namespace Thor.Services.Api
     UnderlayingDatabase UnderlayingDatabase { get; }
     Task<IEnumerable<Article>> GetPublicBlog();
     Task<Article> GetSinglePublicArticle(string title);
+    Task<int> GetBlogId(string title);
     Task<Article> GetSingleArticle(string title);
     Task<IEnumerable<Article>> GetFullBlog();
     Task<ChangeResponse> UpdateBlogArticle(Article update);

@@ -34,6 +34,12 @@ namespace Thor.Services.Maria
       return await ProcessResponse(response);
     }
 
+    public async Task<int> GetBlogId(string title) 
+    {
+      const string sql = @"SELECT `ArticleId` FROM Article WHERE IsBlog = 1 AND Title = @title";
+      return await executer.ExecuteSqlSingle<int>(sql, new {title = title});
+    }
+
     public async Task<IEnumerable<Article>> GetFullBlog()
     {
       const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status` 
