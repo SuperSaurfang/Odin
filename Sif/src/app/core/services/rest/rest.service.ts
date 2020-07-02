@@ -50,6 +50,14 @@ export class RestService {
     return this.httpClient.put<ChangeResponse>(`${environment.restApi}/blog/admin`, article)
   }
 
+  public getBlogId(title: string): Observable<number> {
+    return this.httpClient.get<number>(`${environment.restApi}/blog/admin/id/${title}`);
+  }
+
+  public createBlog(article: Article): Observable<ChangeResponse> {
+    return this.httpClient.post<ChangeResponse>(`${environment.restApi}/blog/admin`, article);
+  }
+
   public getSite(title: string): Observable<Article[]> {
     const params = new HttpParams().set('title', title);
     return this.httpClient.get<Article[]>(environment.restApi + '/site', {params: params});
