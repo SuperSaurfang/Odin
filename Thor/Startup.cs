@@ -30,9 +30,10 @@ namespace Thor
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-
       // setup database connections
-      var database = Configuration.GetValue<string>("ConnectionStrings:DefaultDatabase").ToLower();
+      var database = Configuration.GetValue<string>("ConnectionStrings:Database").ToLower();
+      services.Configure<ConnectionSetting>(Configuration.GetSection("ConnectionStrings:ConnectionSettings"));
+      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionSetting>>().Value);
       switch (database)
       {
         case "mariadb":
@@ -143,8 +144,7 @@ namespace Thor
 
     private void ConfigureMongoDB(IServiceCollection services)
     {
-      services.Configure<MongoConnectionSetting>(Configuration.GetSection("ConnectionStrings:MongoDB"));
-      services.AddSingleton(option => option.GetRequiredService<IOptions<MongoConnectionSetting>>().Value);
+
       services.AddSingleton<IMongoConnectionService, MongoConnectionService>();
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
