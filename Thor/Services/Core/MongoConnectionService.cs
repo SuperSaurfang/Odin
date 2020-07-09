@@ -5,9 +5,9 @@ namespace Thor.Services
 {
   public class MongoConnectionService : IMongoConnectionService
   {
-    public MongoConnectionService(MongoConnectionSetting connectionSetting)
+    public MongoConnectionService(ConnectionSetting connectionSetting)
     {
-      MongoClient = new MongoClient(connectionSetting.GetConnectionString());
+      MongoClient = new MongoClient(connectionSetting.GetMongoConnectionString());
       Database = MongoClient.GetDatabase(connectionSetting.Database);
     }
 
