@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RestService } from 'src/app/core/services';
 import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
 
-import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
 import { Subscription } from 'rxjs';
 
@@ -18,17 +18,17 @@ export class DashboardPostListComponent implements OnInit {
   public articles: Article[] = [];
   public isAllSelected = false;
   public isIndeterminate = false;
-  public selectedArticles: boolean[] = []
+  public selectedArticles: boolean[] = [];
 
   public iconTrash = faTrash;
   public iconFilter = faFilter;
   public iconSlash = faSlash;
   public iconStatus = faCircle;
 
-  public selectedAction = ''
+  public selectedAction = '';
   public statusMenuOpen = -1;
 
-  public selectedStatus: string = 'all';
+  public selectedStatus = 'all';
   public searchTerm: string;
   public startDate: Date;
   public endDate: Date;
@@ -43,13 +43,13 @@ export class DashboardPostListComponent implements OnInit {
     this.restService.getFullBlog().subscribe(articles => {
       this.articleFilterSubscription = this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
-      })
+      });
       this.articleFilter.setArticles(articles);
       this.selectedArticles = [];
       articles.forEach(() => {
         this.selectedArticles.push(false);
-      })
-    })
+      });
+    });
   }
 
   public getSelected(index: number) {
@@ -57,13 +57,14 @@ export class DashboardPostListComponent implements OnInit {
   }
 
   public setSelected(index: number) {
-    this.selectedArticles[index] = !this.selectedArticles[index]
-    const result = this.selectedArticles.filter(a => a == true);
-    if(result.length === this.articles.length) {
+    this.selectedArticles[index] = !this.selectedArticles[index];
+    const result = this.selectedArticles.filter(a => a === true);
+    if (result.length === this.articles.length) {
       this.isAllSelected = true;
       this.isIndeterminate = false;
-    } else if(result.length === 0) {
+    } else if (result.length === 0) {
       this.isIndeterminate = false;
+      this.isAllSelected = false;
     } else {
       this.isIndeterminate = true;
       this.isAllSelected = false;
@@ -74,7 +75,7 @@ export class DashboardPostListComponent implements OnInit {
     this.isAllSelected = isAllSelected;
     for (let index = 0; index < this.selectedArticles.length; index++) {
       this.isIndeterminate = false;
-      if(this.isAllSelected) {
+      if (this.isAllSelected) {
         this.selectedArticles[index] = true;
       } else {
         this.selectedArticles[index] = false;
@@ -83,7 +84,7 @@ export class DashboardPostListComponent implements OnInit {
   }
 
   public changeStatusFilter() {
-    this.articleFilter.updateStatusFilter(this.selectedStatus)
+    this.articleFilter.updateStatusFilter(this.selectedStatus);
   }
 
   public changeSearchterm() {
@@ -92,13 +93,13 @@ export class DashboardPostListComponent implements OnInit {
 
   public changeDateFilter() {
     const dateFilter: DateFilter = {};
-    if(this.endDate) {
+    if (this.endDate) {
       dateFilter.endDate = new Date(this.endDate);
       dateFilter.endDate.setHours(23, 59, 59);
     }
-    if(this.startDate) {
-      dateFilter.startDate = new Date(this.startDate)
-      dateFilter.startDate.setHours(0,0,0,0,);
+    if (this.startDate) {
+      dateFilter.startDate = new Date(this.startDate);
+      dateFilter.startDate.setHours(0, 0, 0, 0);
     }
     this.articleFilter.updateDateFilter(dateFilter);
   }
@@ -112,12 +113,15 @@ export class DashboardPostListComponent implements OnInit {
   }
 
   public executeAction() {
-    if(this.selectedAction === "" || this.selectedArticles.filter(a => a === true).length === 0)  {
-      console.log('Nothing selected')
+    if (this.selectedAction === '' || this.selectedArticles.filter(a => a === true).length === 0)  {
+      console.log('Nothing selected');
       return;
     }
-
-    console.log(this.selectedAction);
+    for (let index = 0; index < this.articles.length; index++) {
+      if (this.selectedArticles[index]) {
+        this.updateStatus(this.selectedAction, index);
+      }
+    }
   }
 
   public openStatusChange(index: number) {
@@ -136,10 +140,10 @@ export class DashboardPostListComponent implements OnInit {
         case EChangeResponse.Error:
         case EChangeResponse.NoChange:
         default:
-          console.log('Something goes wrong')
+          console.log('Something goes wrong');
           break;
       }
-    })
+    });
   }
 
   public deleteArticles() {
@@ -154,20 +158,20 @@ export class DashboardPostListComponent implements OnInit {
         default:
           break;
       }
-    })
+    });
   }
 
 
   public getStatusTooltip(status: string) {
     switch (status) {
       case 'draft':
-        return 'Status: Entwurf'
+        return 'Status: Entwurf';
       case 'private':
-        return 'Status: Privat'
+        return 'Status: Privat';
       case 'public':
-        return 'Status: Veröffentlicht'    
+        return 'Status: Veröffentlicht';
       default:
-        return 'Papierkorb'
+        return 'Papierkorb';
     }
   }
 }

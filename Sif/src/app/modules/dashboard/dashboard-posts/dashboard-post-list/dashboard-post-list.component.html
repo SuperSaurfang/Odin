@@ -22,13 +22,13 @@
   <div class="date-range-filter flex flex-column">
     <div>Zeitraum filtern:</div>
     <div class="flex">
-      <label class="label control-group" for="filter-start-date">
+      <label class="label control-group horizontal-group" for="filter-start-date">
         <div>
           <span>Start:</span>
         </div>
         <input id="filter-start-date" type="date" [(ngModel)]="startDate" (change)="changeDateFilter()" [max]="endDate">
       </label>
-      <label class="label control-group margin-left-1 " for="filter-end-date">
+      <label class="label control-group margin-left-1 horizontal-group" for="filter-end-date">
         <div>
           <span>Ende:</span>
         </div>
@@ -96,12 +96,12 @@
       <td>{{article.author}}</td>
       <td>
         <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger">
-          <fa-icon *ngIf="article.status !== 'trash'" 
+          <fa-icon *ngIf="article.status !== 'trash'"
           [icon]="iconStatus"
           [ngClass]="{
-            'danger-text': article.status === 'draft', 
+            'danger-text': article.status === 'draft',
             'warn-text': article.status === 'private',
-            'ok-text': article.status === 'public' 
+            'ok-text': article.status === 'public'
           }"></fa-icon>
           <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
           <div class="tooltip" [ngClass]="{'hide': statusMenuOpen === i}">
