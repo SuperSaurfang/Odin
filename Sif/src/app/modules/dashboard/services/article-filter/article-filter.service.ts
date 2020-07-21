@@ -22,7 +22,7 @@ const BASE_FILTER: Filter = {
   dateFilter: new DateFilter(),
   searchTerm: '',
   status: 'all'
-}
+};
 
 @Injectable()
 export class ArticleFilterService {
@@ -30,11 +30,12 @@ export class ArticleFilterService {
   private originArticles: Article[] = [];
   private filteredArticles: Subject<Article[]> = new Subject<Article[]>();
 
-  private currentFilter: Filter = new Filter(BASE_FILTER)
+  private currentFilter: Filter = new Filter(BASE_FILTER);
 
   constructor() { }
 
   public setArticles(articles: Article[]) {
+    this.currentFilter = new Filter(BASE_FILTER);
     this.originArticles = articles;
     this.applyFilter();
   }
@@ -62,31 +63,26 @@ export class ArticleFilterService {
 
   public applyFilter() {
     let filtered = this.originArticles;
-    //filter period
-    if (!this.currentFilter.dateFilter.startDate && this.currentFilter.dateFilter.endDate) 
-    {
+    // filter period
+    if (!this.currentFilter.dateFilter.startDate && this.currentFilter.dateFilter.endDate) {
       filtered = filtered.filter(article => article.modificationDate <= this.currentFilter.dateFilter.endDate);
-    } 
-    else if (!this.currentFilter.dateFilter.endDate && this.currentFilter.dateFilter.startDate) 
-    {
+    } else if (!this.currentFilter.dateFilter.endDate && this.currentFilter.dateFilter.startDate) {
       filtered = filtered.filter(article => article.modificationDate >= this.currentFilter.dateFilter.startDate);
-    } 
-    else if(this.currentFilter.dateFilter.endDate && this.currentFilter.dateFilter.startDate) 
-    {
+    } else if (this.currentFilter.dateFilter.endDate && this.currentFilter.dateFilter.startDate) {
       filtered = filtered.filter(article => article.modificationDate >= this.currentFilter.dateFilter.startDate
         && article.modificationDate <= this.currentFilter.dateFilter.endDate);
     }
 
-    //filter status
-    if (this.currentFilter.status !== 'all') 
-    {
-      filtered = filtered.filter(article => article.status === this.currentFilter.status)
+    // filter status
+    if (this.currentFilter.status !== 'all') {
+      filtered = filtered.filter(article => article.status === this.currentFilter.status);
     }
 
-    //simple search
-    if (this.currentFilter.searchTerm.length > 0) 
-    {
-      filtered = filtered.filter(article => article.author.includes(this.currentFilter.searchTerm) || article.title.includes(this.currentFilter.searchTerm))
+    // simple search
+    if (this.currentFilter.searchTerm.length > 0) {
+      filtered = filtered.filter(article =>
+        article.author.includes(this.currentFilter.searchTerm) || article.title.includes(this.currentFilter.searchTerm)
+        );
     }
     this.filteredArticles.next(filtered);
   }
