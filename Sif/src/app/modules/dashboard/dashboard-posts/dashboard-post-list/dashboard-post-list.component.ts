@@ -5,6 +5,7 @@ import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
 import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
 import { Subscription } from 'rxjs';
+import { ListFilterEvent, FilterType } from '../../shared-components/list-action-bar/list-action-bar.component';
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -21,17 +22,9 @@ export class DashboardPostListComponent implements OnInit {
   public selectedArticles: boolean[] = [];
 
   public iconTrash = faTrash;
-  public iconFilter = faFilter;
-  public iconSlash = faSlash;
   public iconStatus = faCircle;
 
-  public selectedAction = '';
   public statusMenuOpen = -1;
-
-  public selectedStatus = 'all';
-  public searchTerm: string;
-  public startDate: Date;
-  public endDate: Date;
 
   public articleFilterSubscription: Subscription;
 
@@ -83,43 +76,58 @@ export class DashboardPostListComponent implements OnInit {
     }
   }
 
-  public changeStatusFilter() {
-    this.articleFilter.updateStatusFilter(this.selectedStatus);
+  public listFilterUpdate(event: ListFilterEvent) {
+    switch (event.filterType) {
+      case FilterType.Date:
+        this.changeDateFilter(event.listFilterModel.startDate, event.listFilterModel.endDate);
+        break;
+      case FilterType.Status:
+        this.changeStatusFilter(event.listFilterModel.selectedStatus);
+        break;
+      case FilterType.SearchTerm:
+        this.changeSearchterm(event.listFilterModel.searchTerm);
+        break;
+      case FilterType.Reset:
+        this.resetFilter();
+        break;
+      default:
+        break;
+    }
   }
 
-  public changeSearchterm() {
-    this.articleFilter.searchFilter(this.searchTerm);
+  public changeStatusFilter(selectedStatus: string) {
+    this.articleFilter.updateStatusFilter(selectedStatus);
   }
 
-  public changeDateFilter() {
+  public changeSearchterm(searchTerm: string) {
+    this.articleFilter.searchFilter(searchTerm);
+  }
+
+  public changeDateFilter(startDate: Date, endDate: Date) {
     const dateFilter: DateFilter = {};
-    if (this.endDate) {
-      dateFilter.endDate = new Date(this.endDate);
+    if (endDate) {
+      dateFilter.endDate = new Date(endDate);
       dateFilter.endDate.setHours(23, 59, 59);
     }
-    if (this.startDate) {
-      dateFilter.startDate = new Date(this.startDate);
+    if (startDate) {
+      dateFilter.startDate = new Date(startDate);
       dateFilter.startDate.setHours(0, 0, 0, 0);
     }
     this.articleFilter.updateDateFilter(dateFilter);
   }
 
   public resetFilter() {
-    this.selectedStatus = 'all';
-    this.startDate = null;
-    this.endDate = null;
-    this.searchTerm = '';
     this.articleFilter.resetFilter();
   }
 
-  public executeAction() {
-    if (this.selectedAction === '' || this.selectedArticles.filter(a => a === true).length === 0)  {
+  public executeAction(event: string) {
+    if (event === '' || this.selectedArticles.filter(a => a === true).length === 0)  {
       console.log('Nothing selected');
       return;
     }
     for (let index = 0; index < this.articles.length; index++) {
       if (this.selectedArticles[index]) {
-        this.updateStatus(this.selectedAction, index);
+        this.updateStatus(event, index);
       }
     }
   }
@@ -160,7 +168,6 @@ export class DashboardPostListComponent implements OnInit {
       }
     });
   }
-
 
   public getStatusTooltip(status: string) {
     switch (status) {
