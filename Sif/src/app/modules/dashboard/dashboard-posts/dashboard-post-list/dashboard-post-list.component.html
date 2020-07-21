@@ -1,75 +1,11 @@
 <div class="dashboard-post-list-header">
   <h1>Blog</h1>
-  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrg</a>
+  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrag</a>
 </div>
 
 <p>Blog einträge verwalten und erstellen.</p>
 
-<div class="dashboard-post-list-action-bar">
-  <div class="action">
-    <div>Aktion wählen:</div>
-    <div class="control-group horizontal-group">
-      <select [(ngModel)]="selectedAction">
-        <option value="" disabled selected hidden>-- Aktion wählen --</option>
-        <option value="public">Veröffentlichen</option>
-        <option value="private">Auf Privat setzen</option>
-        <option value="draft">Auf Entwurf setzen</option>
-        <option value="trash">In den Papierkorb verschieben</option>
-      </select>
-      <button class="btn btn-dark" (click)="executeAction()">Ausführen</button>
-    </div>
-  </div>
-  <div class="date-range-filter flex flex-column">
-    <div>Zeitraum filtern:</div>
-    <div class="flex">
-      <label class="label control-group horizontal-group" for="filter-start-date">
-        <div>
-          <span>Start:</span>
-        </div>
-        <input id="filter-start-date" type="date" [(ngModel)]="startDate" (change)="changeDateFilter()" [max]="endDate">
-      </label>
-      <label class="label control-group margin-left-1 horizontal-group" for="filter-end-date">
-        <div>
-          <span>Ende:</span>
-        </div>
-        <input id="filter-end-date" type="date" [(ngModel)]="endDate" (change)="changeDateFilter()" [min]="startDate">
-      </label>
-    </div>
-  </div>
-  <div class="status-filer">
-    <div>Status Filter:</div>
-    <select [(ngModel)]='selectedStatus' (change)='changeStatusFilter()'>
-      <option value="trash">Papierkorb</option>
-      <option value="all" selected>Alle</option>
-      <option value="public">Öffentlich</option>
-      <option value="private">Privat</option>
-      <option value="draft">Entwurf</option>
-    </select>
-  </div>
-  <div class="search-filter">
-    <div>Durchsuchen:</div>
-    <input type="search" [(ngModel)]="searchTerm" (input)="changeSearchterm()">
-  </div>
-  <div class="reset-filter pos-relative tooltip-trigger">
-    <button class="btn btn-icon" (click)="resetFilter()">
-      <fa-layers size="2x">
-        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
-        <fa-icon [icon]="iconSlash" transform="up-2 left-2" class="danger-text"></fa-icon>
-      </fa-layers>
-    </button>
-    <div class="tooltip">
-      Filter zurücksetzen
-    </div>
-  </div>
-  <div class="clear-trash pos-relative tooltip-trigger">
-    <button class="btn btn-icon danger-text" (click)="deleteArticles()">
-      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
-    </button>
-    <div class="tooltip">
-      Papierkorb leeren
-    </div>
-  </div>
-</div>
+<app-list-action-bar (ExecuteAction)="executeAction($event)" (ListFilterUpdate)="listFilterUpdate($event)" (ClearTrash)="deleteArticles()"></app-list-action-bar>
 
 <table>
   <thead>
