@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ListFilterEvent } from '../../shared-components/list-action-bar/list-action-bar.component';
+import { ListFilterEvent } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 import { ArticleFilterService } from '../../services/article-filter/article-filter.service';
 
 @Component({
-  selector: 'app-dashboard-sites-list',
-  templateUrl: './dashboard-sites-list.component.html',
-  styleUrls: ['./dashboard-sites-list.component.scss']
+  selector: 'app-dashboard-pages-list',
+  templateUrl: './dashboard-pages-list.component.html',
+  styleUrls: ['./dashboard-pages-list.component.scss']
 })
-export class DashboardSitesListComponent implements OnInit {
+export class DashboardPagesListComponent implements OnInit {
 
   constructor(private articleFilter: ArticleFilterService) { }
 
