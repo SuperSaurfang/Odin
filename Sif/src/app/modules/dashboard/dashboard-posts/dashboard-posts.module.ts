@@ -5,13 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ArticleSettingModule } from '../shared-components/article-setting/article-setting.module';
+import { ArticleSettingModule } from '../shared-dashboard-modules/article-setting/article-setting.module';
 
 import { DashboardPostsComponent } from './dashboard-posts.component';
 import { DashboardPostRoutes } from './dashboard-post.routing';
 import { DashboardPostListComponent } from './dashboard-post-list/dashboard-post-list.component';
 import { DashboardPostEditorComponent } from './dashboard-post-editor/dashboard-post-editor.component';
-import { ListActionBarModule } from '../shared-components/list-action-bar/list-action-bar.module';
+import { ListActionBarModule } from '../shared-dashboard-modules/list-action-bar/list-action-bar.module';
 
 
 
