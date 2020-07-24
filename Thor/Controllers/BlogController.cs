@@ -31,7 +31,7 @@ namespace Thor.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllPublicBlog()
     {
-      var result = await blogService.GetPublicBlog();
+      var result = await blogService.GetAllPublicArticles();
       if (result == null)
       {
         return InternalError();
@@ -52,7 +52,7 @@ namespace Thor.Controllers
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetSinglePublicArticle(title);
+      var result = await blogService.GetPublicArticleByTitle(title);
       if (result == null)
       {
         return InternalError();
@@ -69,7 +69,7 @@ namespace Thor.Controllers
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetSingleArticle(title);
+      var result = await blogService.GetArticleByTitle(title);
       if (result == null)
       {
         return InternalError();
@@ -80,13 +80,13 @@ namespace Thor.Controllers
     [Produces("application/json")]
     [HttpGet("admin/id/{title}")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult<Article>> GetBlogId(string title)
+    public async Task<ActionResult<int>> GetBlogId(string title)
     {
       if (title == null)
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetBlogId(title);
+      var result = await blogService.GetArticleId(title);
       if (result == 0)
       {
         return InternalError();
@@ -101,9 +101,9 @@ namespace Thor.Controllers
     [Produces("application/json")]
     [HttpGet("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult> GetFullBlog()
+    public async Task<ActionResult<IEnumerable<Article>>> GetFullBlog()
     {
-      var result = await blogService.GetFullBlog();
+      var result = await blogService.GetAllArticles();
       if (result == null)
       {
         return InternalError();
@@ -126,7 +126,7 @@ namespace Thor.Controllers
         return BadRequest("the article id cannot be zero.");
       }
 
-      var result = await blogService.UpdateBlogArticle(article);
+      var result = await blogService.UpdateArticle(article);
       JObject response = CreateJson(result);
       return Ok(response);
     }
@@ -145,10 +145,7 @@ namespace Thor.Controllers
         return BadRequest("The user id cannot be zero");
       }
 
-      var result = await blogService.CreateBlogArticle(article);
-      if (result == ChangeResponse.Error) {
-        return InternalError();
-      }
+      var result = await blogService.CreateArticle(article);
       JObject response = CreateJson(result);
       return Ok(response);
     }
@@ -163,10 +160,7 @@ namespace Thor.Controllers
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> DeleteBlogArticle()
     {
-      var result = await blogService.DeleteBlogArticle();
-      if (result == ChangeResponse.Error) {
-        return InternalError();
-      }
+      var result = await blogService.DeleteArticle();
       JObject response = CreateJson(result);
       return Ok(response);
     }
