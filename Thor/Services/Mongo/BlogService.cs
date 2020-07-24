@@ -20,44 +20,44 @@ namespace Thor.Services.Mongo
 
     private IMongoCollection<Article> Collection { get; }
 
-    public Task<ChangeResponse> CreateBlogArticle(Article article)
+    public Task<ChangeResponse> CreateArticle(Article article)
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<ChangeResponse> DeleteBlogArticle()
+    public Task<ChangeResponse> DeleteArticle()
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<int> GetBlogId(string title)
+    public Task<int> GetArticleId(string title)
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<IEnumerable<Article>> GetFullBlog()
+    public Task<IEnumerable<Article>> GetAllArticles()
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<IEnumerable<Article>> GetPublicBlog()
+    public Task<IEnumerable<Article>> GetAllPublicArticles()
     {
       var query = from b in Collection.AsQueryable() where b.Status == "public" && b.IsBlog == true select b;
       return Task.FromResult<IEnumerable<Article>>(query.ToList());
     }
 
-    public Task<Article> GetSingleArticle(string title)
+    public Task<Article> GetArticleByTitle(string title)
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<Article> GetSinglePublicArticle(string title)
+    public Task<Article> GetPublicArticleByTitle(string title)
     {
       var query = from b in Collection.AsQueryable() where b.Title == title && b.IsBlog == true && b.Status == "public" select b;
       return Task.FromResult<Article>(query.FirstOrDefault());
     }
 
-    public Task<ChangeResponse> UpdateBlogArticle(Article update)
+    public Task<ChangeResponse> UpdateArticle(Article update)
     {
       throw new System.NotImplementedException();
     }

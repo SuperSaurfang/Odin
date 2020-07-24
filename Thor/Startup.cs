@@ -138,6 +138,7 @@ namespace Thor
       services.AddSingleton<ISqlExecuterService, SqlExecuterService>();
 
       services.AddTransient<IBlogService, BlogService>();
+      services.AddTransient<IPageService, PageService>();
       services.AddTransient<ICommentService, CommentService>();
       services.AddTransient<IUserService, UserService>();
     }
