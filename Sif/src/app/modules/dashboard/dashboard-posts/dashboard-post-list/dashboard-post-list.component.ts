@@ -5,7 +5,7 @@ import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
 import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
 import { Subscription } from 'rxjs';
-import { ListFilterEvent, FilterType } from '../../shared-components/list-action-bar/list-action-bar.component';
+import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 
 @Component({
   selector: 'app-dashboard-post-list',
