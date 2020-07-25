@@ -24,9 +24,6 @@ import { ArticleFilterService } from './services/article-filter/article-filter.s
   declarations: [
     DashboardComponent,
     DashboardNavbarComponent
-  ],
-  providers: [
-    ArticleFilterService
   ]
 })
 export class DashboardModule { }
