@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { faSpinner, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -6,8 +6,9 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { timer } from 'rxjs';
 
-import { RestService, UserService } from 'src/app/core/services';
+import { UserService } from 'src/app/core/services';
 import { Article, EChangeResponse } from 'src/app/core';
+import { RestPostsService } from '../../services';
 
 @Component({
   selector: 'app-dashboard-post-editor',
@@ -31,7 +32,7 @@ export class DashboardPostEditorComponent implements OnInit {
   public blogEditor: CKEditorComponent;
 
   constructor(private route: ActivatedRoute,
-    private restService: RestService,
+    private restService: RestPostsService,
     private userService: UserService) {
     this.article = {
       creationDate: new Date(),

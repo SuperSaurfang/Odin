@@ -12,6 +12,9 @@ import { DashboardPostRoutes } from './dashboard-post.routing';
 import { DashboardPostListComponent } from './dashboard-post-list/dashboard-post-list.component';
 import { DashboardPostEditorComponent } from './dashboard-post-editor/dashboard-post-editor.component';
 import { ListActionBarModule } from '../shared-dashboard-modules/list-action-bar/list-action-bar.module';
+import { ArticleFilterService } from '../services';
+import { RestPostsService } from '../services/rest-posts/rest-posts.service';
+import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
 
 
 
@@ -25,12 +28,17 @@ import { ListActionBarModule } from '../shared-dashboard-modules/list-action-bar
     SharedModule,
     FontAwesomeModule,
     ArticleSettingModule,
-    ListActionBarModule
+    ListActionBarModule,
+    StatusChangeMenuModule
   ],
   declarations: [
     DashboardPostsComponent,
     DashboardPostListComponent,
     DashboardPostEditorComponent,
+  ],
+  providers: [
+    ArticleFilterService,
+    RestPostsService
   ]
 })
 export class DashboardPostsModule {
