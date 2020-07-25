@@ -1,0 +1,23 @@
+@import '../../core/scss/variables.scss';
+:host {
+
+  .menu {
+    display: none;
+    position: absolute;
+    border: 1px solid $dark-1;
+    z-index: 99;
+    background-color: $white;
+    border-radius: $radius;
+  }
+
+  .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: padding(1);
+  }
+
+  .menu-display {
+    display: block;
+  }
+}
