@@ -28,5 +28,5 @@ Open another terminal and navigate to the sif folder, then execute 'npm install'
 output is 'compiled successfully' open your browser and navigate to localhost:42000. The website should be loaded.
 
 ### Add a user
-At the moment there is no mechanism create an user. You have to do this manually by insert a new row into 'user' table. The webapi use bcrypt to hash passwords, so you
-have to generate one with a bcrypt generator for exampe here: https://bcrypt-generator.com/. 
+At the moment there is no mechanism to create an user. You have to do this manually by insert a new row into 'user' table. The webapi use bcrypt to hash passwords, so
+you have to generate one with a bcrypt generator for exampe here: https://bcrypt-generator.com/. 
