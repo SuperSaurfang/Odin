@@ -159,16 +159,6 @@ th, h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.menu {
-  display: none;
-  padding: padding(1) 0;
-  position: absolute;
-  border: 1px solid $dark-1;
-  z-index: 99;
-  background-color: $white;
-  border-radius: $radius;
-}
-
 .hide {
   display: none;
 }
@@ -179,5 +169,9 @@ th, h1, h2, h3, h4, h5, h6 {
 
 .text-left {
   text-align: left;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
