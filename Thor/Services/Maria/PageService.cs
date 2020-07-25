@@ -35,7 +35,7 @@ namespace Thor.Services.Maria {
 
     public async Task<ChangeResponse> DeleteArticle()
     {
-      const string sql = @"DELETE FROM Article WHERE Status = 'trash' ABD IsPage = 1";
+      const string sql = @"DELETE FROM Article WHERE Status = 'trash' AND IsPage = 1";
       var response = await executer.ExecuteSql(sql);
       return await ProcessResponse(response);
     }
@@ -77,7 +77,7 @@ namespace Thor.Services.Maria {
     {
       const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `ModificationDate`= @ModificationDate,
       `HasCommentsEnabled`= @HasCommentsEnabled,`HasDateAuthorEnabled`= @HasDateAuthorEnabled, `Status`= @Status
-      WHERE `ArticleId` = @ArticleId AND `IsBlog`= 0 AND `IsSite`= 1";
+      WHERE `ArticleId` = @ArticleId AND `IsBlog`= 0 AND `IsPage`= 1";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
       return await ProcessResponse(result);
