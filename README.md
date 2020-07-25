@@ -16,7 +16,7 @@ machine.
 Import the SQL file into the Database and if need, create a database user
 
 ### Setup Webapi
-open the appsetting.blank.json add a secret under the appsettings section. Under the connectionstrings section add the setting for the database and connectionsettings. 
+Open the appsetting.blank.json add a secret under the appsettings section. Under the connectionstrings section add the setting for the database and connectionsettings. 
 Currently only 'maria' and 'mariadb' are supported for the database property otherwise the webapi crash with the execption 'failed to configure database interface'. 
 Save the file as 'appsetting.json' or 'appsetting.Development.json'
 Open a terminal and navigate to the thor folder, then execute 'dotnet restore' and after thar 'dotnet run' to restore the dependencies and start the server. Keep this
