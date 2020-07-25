@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RestService } from 'src/app/core/services';
-import { Article, ChangeResponse, EChangeResponse } from 'src/app/core';
+import { Article, EChangeResponse } from 'src/app/core';
 
-import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
+import { faTrash, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { ArticleFilterService, DateFilter, RestPostsService } from '../../services';
 import { Subscription } from 'rxjs';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 
@@ -14,7 +13,7 @@ import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list
 })
 export class DashboardPostListComponent implements OnInit {
 
-  constructor(private restService: RestService, private articleFilter: ArticleFilterService) { }
+  constructor(private restService: RestPostsService, private articleFilter: ArticleFilterService) { }
 
   public articles: Article[] = [];
   public isAllSelected = false;
@@ -167,6 +166,12 @@ export class DashboardPostListComponent implements OnInit {
           break;
       }
     });
+  }
+
+  public onMenuClose(event: boolean) {
+    if (!event) {
+      this.statusMenuOpen = -1;
+    }
   }
 
   public getStatusTooltip(status: string) {
