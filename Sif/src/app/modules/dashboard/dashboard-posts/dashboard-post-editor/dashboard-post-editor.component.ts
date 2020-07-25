@@ -49,7 +49,9 @@ export class DashboardPostEditorComponent implements OnInit {
       if (params['title']) {
         this.restService.getArticleByTitle(params['title']).subscribe(response => {
           this.article = response;
-          this.blogEditor.editorInstance.setData(this.article.articleText);
+          if (this.article.articleText) {
+            this.blogEditor.editorInstance.setData(this.article.articleText);
+          }
           this.isEdit = true;
         });
       }
