@@ -19,7 +19,7 @@ Import the SQL file into the Database and if need, create a database user
 Open the appsetting.blank.json add a secret under the appsettings section. Under the connectionstrings section add the setting for the database and connectionsettings. 
 Currently only 'maria' and 'mariadb' are supported for the database property otherwise the webapi crash with the execption 'failed to configure database interface'. 
 Save the file as 'appsetting.json' or 'appsetting.Development.json'
-Open a terminal and navigate to the thor folder, then execute 'dotnet restore' and after thar 'dotnet run' to restore the dependencies and start the server. Keep this
+Open a terminal and navigate to the thor folder, then execute 'dotnet restore' and after thar 'dotnet run' to restore the dependencies and start the server. Keep
 the terminal open. Open a browser and navigate to localhost:5000/swagger if a page is loaded you can test the endpoints of the webapi. Test api/blog endpoint under the
 'Blog' section. If the http response is 200, the server runs fine
 
