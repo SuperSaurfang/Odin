@@ -9,9 +9,9 @@ const KEY = 'currentUser';
 export class UserService {
 
   constructor(private restService: RestService) {
-    this.currentUser = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(KEY)))
+    this.currentUser = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(KEY)));
 
-    if(this.currentUser.value !== null) {
+    if (this.currentUser.value !== null) {
       this.isUserLoggedIn = new BehaviorSubject<boolean>(true);
     } else {
       this.isUserLoggedIn = new BehaviorSubject<boolean>(false);
@@ -23,22 +23,22 @@ export class UserService {
 
   public login(user: User) {
     this.restService.postLogin(user).subscribe(response => {
-      if(!response.userId) {
+      if (!response.userId) {
         localStorage.removeItem(KEY);
         this.currentUser.next(null);
         this.isUserLoggedIn.next(false);
-        return
+        return;
       }
       localStorage.setItem(KEY, JSON.stringify(response));
       this.currentUser.next(response);
       this.isUserLoggedIn.next(true);
-    })
+    });
   }
 
   public logout() {
     localStorage.removeItem(KEY);
     this.currentUser.next(null);
-    this.isUserLoggedIn.next(false)
+    this.isUserLoggedIn.next(false);
   }
 
   public CurrentUser(): Observable<User> {
