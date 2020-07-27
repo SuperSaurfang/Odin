@@ -15,14 +15,9 @@ namespace Thor.Services.Maria {
     public PageService(ISqlExecuterService executer)
     {
       this.executer = executer;
+      this.UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
-    public UnderlayingDatabase UnderlayingDatabase
-    {
-      get
-      {
-        return UnderlayingDatabase.MariaDB;
-      }
-    }
+    public UnderlayingDatabase UnderlayingDatabase{get;}
 
     public async Task<ChangeResponse> CreateArticle(Article article)
     {
