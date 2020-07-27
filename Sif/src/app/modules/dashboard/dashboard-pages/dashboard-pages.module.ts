@@ -13,6 +13,7 @@ import { DashboardPagesListComponent } from './dashboard-pages-list/dashboard-pa
 import { DashboardPagesEditorComponent } from './dashboard-pages-editor/dashboard-pages-editor.component';
 import { RestPageService, ArticleFilterService } from '../services';
 import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-chang
     ArticleSettingModule,
     SharedModule,
     StatusChangeMenuModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CKEditorModule
   ],
   declarations: [
     DashboardPagesComponent,
