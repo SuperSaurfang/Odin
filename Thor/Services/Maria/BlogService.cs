@@ -71,7 +71,7 @@ namespace Thor.Services.Maria
     public async Task<ChangeResponse> UpdateArticle(Article article)
     {
 
-      const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `ModificationDate`= @ModificationDate,
+      const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `CreationDate` = @CreationDate, `ModificationDate`= @ModificationDate,
       `HasCommentsEnabled`= @HasCommentsEnabled,`HasDateAuthorEnabled`= @HasDateAuthorEnabled, `Status`= @Status
       WHERE `ArticleId` = @ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
       article.ModificationDate = DateTime.Now;
