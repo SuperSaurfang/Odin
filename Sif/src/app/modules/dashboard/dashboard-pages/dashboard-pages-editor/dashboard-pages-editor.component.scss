@@ -1,0 +1,33 @@
+@import '../../../../core/scss/variables.scss';
+:host {
+  flex: 1;
+  padding: padding(1);
+
+  .editor-head-container {
+    display: flex;
+    align-items: center;
+
+    .status-container {
+      border-radius: $radius;
+      padding: padding(1) padding(2);
+    }
+  }
+
+  .title-input {
+    height: auto;
+    font-weight: 500;
+    font-size: 2em;
+    width: 100%;
+  }
+
+  .article-setting-container  {
+    border-radius: $radius;
+    background-color: $white;
+    min-width: 300px;
+
+    h2 {
+      margin: 0;
+      padding: padding(1) padding(2);
+    }
+  }
+}

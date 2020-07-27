@@ -1,3 +1,31 @@
-<p>
-  dashboard-sites-editor works!
-</p>
+<div class="editor-head-container">
+  <h1 class="margin-right-2">Seite editieren</h1>
+  <div *ngIf="isSaving || isSaved || isFailed">
+    <fa-icon *ngIf="isSaving" [icon]="iconSpinner" [pulse]="isSaving"></fa-icon>
+    <div *ngIf="isSaved && !isSaving" class="status-container ok">
+      <fa-icon class="margin-right-1"  [icon]="iconCheck"></fa-icon>
+      <span>Erfolgreich gespeichert</span>
+    </div>
+    <div *ngIf="isFailed && !isSaving" class="status-container danger">
+      <fa-icon class="margin-right-1"  [icon]="iconTimes"></fa-icon>
+      <span>Speichern fehlgeschlagen</span>
+    </div>
+  </div>
+</div>
+
+<input type="text" class="title-input margin-bottom-1" [(ngModel)]="article.title" placeholder="Titel der Seite" (change)="onUpdateArticleTitle()">
+<div class="flex margin-bottom-1">
+  <div class="flex-grow">
+    <ckeditor
+      #pageEditor
+      [editor]="editor"
+      (blur)="onUpdateArticleText($event)"
+    ></ckeditor>
+  </div>
+  <div class="article-setting-container flex-shrink margin-left-1">
+    <h2>Einstellungen</h2>
+    <app-article-setting name='Status' type='select' [setting]="article.status" (settingChange)="onUpdateStatus($event)"></app-article-setting>
+    <app-article-setting name='Kommentare' type='switch' label='Kommentare erlauben' [setting]="article.hasCommentsEnabled" (settingChange)="onUpdateAllowComment($event)"></app-article-setting>
+    <app-article-setting name='Erstelldatum' type='date' [setting]="article.creationDate" (settingChange)="onUpdateCreationDate($event)"></app-article-setting>
+  </div>
+</div>
