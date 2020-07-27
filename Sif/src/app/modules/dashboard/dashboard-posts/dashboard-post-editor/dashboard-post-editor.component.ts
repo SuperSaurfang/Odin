@@ -59,15 +59,10 @@ export class DashboardPostEditorComponent implements OnInit {
   }
 
   private saveArticle() {
-    const hideTimer = timer(5000);
-    const hideSubscribtion =  hideTimer.subscribe(() => {
-      this.isSaved = false;
-      this.isFailed = false;
-      hideSubscribtion.unsubscribe();
-    });
     if (!this.isEdit && this.article.title) {
       this.isSaving = true;
       this.restService.createBlog(this.article).subscribe(response => {
+
         switch (response.ChangeResponse) {
           case EChangeResponse.Change:
             this.restService.getBlogId(this.article.title).subscribe(id => {
@@ -75,6 +70,7 @@ export class DashboardPostEditorComponent implements OnInit {
               this.isEdit = true;
               this.isSaving = false;
               this.isSaved = true;
+              this.createHideTimer();
             });
             break;
           case EChangeResponse.Error:
@@ -82,6 +78,7 @@ export class DashboardPostEditorComponent implements OnInit {
           default:
             this.isSaving = false;
             this.isFailed = true;
+            this.createHideTimer();
             break;
         }
       });
@@ -91,8 +88,18 @@ export class DashboardPostEditorComponent implements OnInit {
     }
   }
 
+  private createHideTimer() {
+    const hideTimer = timer(5000);
+    const hideSubscribtion =  hideTimer.subscribe(() => {
+      this.isSaved = false;
+      this.isFailed = false;
+      hideSubscribtion.unsubscribe();
+    });
+  }
+
   private updateArticle() {
     this.restService.updateBlog(this.article).subscribe(response => {
+      this.createHideTimer();
       switch (response.ChangeResponse) {
         case EChangeResponse.Change:
           this.isSaving = false;
