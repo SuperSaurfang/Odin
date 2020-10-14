@@ -1,0 +1,35 @@
+<h1>Nav Menu Editor</h1>
+
+<p>Hier kannst du dein Nav Menu verwalten und Seiten zugänglich machen.</p>
+
+<div class="flex">
+  <div class="outer-container">
+    <div class="content-container">
+      <h2>Neues Menu Element hinzufügen</h2>
+      <form [formGroup]="addPageForm" (ngSubmit)="saveMenu()" class="page-selection">
+        <label>
+          Seite wählen
+          <select formControlName="selectedArticle">
+            <option value="" disabled selected hidden>---</option>
+            <option *ngFor="let article of articles" [ngValue]="article.articleId">{{article.title}}</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn-dark" [ngClass]="{'btn-disabled': !addPageForm.valid}" [disabled]="!addPageForm.valid">Speichern</button>
+      </form>
+    </div>
+  </div>
+  <div class="outer-container">
+    <div class="content-container">
+      <h2>Struktur deines Nav Menu</h2>
+      <div class="navmenu-entry"
+      draggable="true"
+      (dragstart)="onDragStart($event, navmenu)"
+      (dragend)="onDragEnd($event, navmenu)"
+      (dragover)="onDragOver($event, navmenu)"
+      (drop)="onDrop($event)"
+      *ngFor="let navmenu of navMenuList">
+        <div class="navmenu-entry-header">Menuelement: {{navmenu.displayText || navmenu.title}}</div>
+      </div>
+    </div>
+  </div>
+</div>
