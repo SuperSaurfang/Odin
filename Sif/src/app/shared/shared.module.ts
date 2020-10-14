@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { NewlinePipe } from 'src/app/core/pipes';
 
@@ -24,7 +25,8 @@ import { MenuModule } from '../shared-modules/menu/menu.module';
     ApplicationBarModule,
     CheckboxModule,
     ToggleSwitchModule,
-    MenuModule
+    MenuModule,
+    DragDropModule
   ]
 })
 export class SharedModule { }

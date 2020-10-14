@@ -1,0 +1,26 @@
+@import '../../../core/scss/variables.scss';
+:host {
+  flex: 1 1 auto;
+  padding: padding(1);
+
+  .outer-container {
+    flex: 1 1 auto;
+    padding: padding(1);
+  }
+
+  .page-selection {
+    padding: padding(1);
+    border: solid 1px $dark-1
+  }
+
+  label {
+    display: block;
+    margin-bottom: margin(2);
+  }
+
+  .navmenu-entry {
+    border: solid 1px $dark-1;
+    background-color: $grey-1;
+    padding: padding(1);
+  }
+}

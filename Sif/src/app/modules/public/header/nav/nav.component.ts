@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RestService } from 'src/app/core/services';
+import { NavMenu } from 'src/app/core';
 
 interface NavEntry {
   routerlink: string | string[];
@@ -33,7 +35,12 @@ export class NavComponent implements OnInit {
     displayText: 'Meine Projekte',
     isDropdown: false
   }];
-  constructor() { }
+  public navMenu: NavMenu[] = [];
+  constructor(private restService: RestService) {
+    this.restService.getNavMenu().subscribe(response => {
+      this.navMenu = response;
+    });
+  }
 
   ngOnInit() {
   }

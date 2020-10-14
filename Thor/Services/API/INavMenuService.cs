@@ -9,7 +9,9 @@ namespace Thor.Services.Api
   {
     UnderlayingDatabase UnderlayingDatabase { get; }
 
-    Task<IEnumerable<NavMenu>> GetNavMenus();
+    Task<IEnumerable<NavMenu>> GetNavMenu();
+
+    Task<IEnumerable<Article>> GetArticleList();
 
     Task<StatusResponse> CreateNavMenu(NavMenu navMenu);
 
