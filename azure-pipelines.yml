@@ -37,9 +37,9 @@ steps:
     artifact: 'Thor'
     publishLocation: 'pipeline'
 
-- task: PublishPipelineArtifact@1
+- task: PublishBuildArtifacts@1
   inputs:
-    targetPath: 'Sif/dist'
-    artifact: 'Sif'
-    publishLocation: 'pipeline'
+    PathtoPublish: 'Database'
+    ArtifactName: 'Database'
+    publishLocation: 'Container'
 
