@@ -17,7 +17,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: 'configuration Release'
+    arguments: '--configuration Release'
     workingDirectory: 'Thor'
 
 - task: Npm@1
