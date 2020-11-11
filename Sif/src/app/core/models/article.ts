@@ -2,6 +2,7 @@ export class Article {
   articleId?: number;
   title?: string;
   author?: string;
+  userId?: number;
   articleText?: string;
   creationDate?: Date;
   modificationDate?: Date;

@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
+import { faSpinner, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
+import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { timer } from 'rxjs';
+
+import { UserService } from 'src/app/core/services';
+import { Article, EChangeResponse } from 'src/app/core';
+import { RestPostsService } from '../../services';
 
 @Component({
   selector: 'app-dashboard-post-editor',
@@ -9,20 +16,130 @@ import { ChangeEvent } from '@ckeditor/ckeditor5-angular';
   styleUrls: ['./dashboard-post-editor.component.scss']
 })
 export class DashboardPostEditorComponent implements OnInit {
+  public article: Article = new Article();
   public editor = ClassicEditor;
-  public data = "<p>Hello, world!</p>";
-  constructor() { }
+  public isEdit = false;
+
+  public iconSpinner = faSpinner;
+  public iconCheck = faCheck;
+  public iconTimes = faTimes;
+
+  public isSaving = false;
+  public isSaved = false;
+  public isFailed = false;
+
+  @ViewChild('blogEditor')
+  public blogEditor: CKEditorComponent;
+
+  constructor(private route: ActivatedRoute,
+    private restService: RestPostsService,
+    private userService: UserService) {
+    this.article = {
+      creationDate: new Date(),
+      modificationDate: new Date(),
+      status: 'draft',
+      hasCommentsEnabled: true,
+      hasDateAuthorEnabled: true,
+      userId: this.userService.CurrentUserValue().userId
+    };
+  }
 
   ngOnInit() {
-    console.log('Hello')
+    this.route.params.subscribe(params => {
+      if (params['title']) {
+        this.restService.getArticleByTitle(params['title']).subscribe(response => {
+          this.article = response;
+          if (this.article.articleText) {
+            this.blogEditor.editorInstance.setData(this.article.articleText);
+          }
+          this.isEdit = true;
+        });
+      }
+    });
   }
 
-  saveArticle() {
-    console.log(this.data);
+  private saveArticle() {
+    const hideTimer = timer(5000);
+    const hideSubscribtion =  hideTimer.subscribe(() => {
+      this.isSaved = false;
+      this.isFailed = false;
+      hideSubscribtion.unsubscribe();
+    });
+    if (!this.isEdit && this.article.title) {
+      this.isSaving = true;
+      this.restService.createBlog(this.article).subscribe(response => {
+        switch (response.ChangeResponse) {
+          case EChangeResponse.Change:
+            this.restService.getBlogId(this.article.title).subscribe(id => {
+              this.article.articleId = id;
+              this.isEdit = true;
+              this.isSaving = false;
+              this.isSaved = true;
+            });
+            break;
+          case EChangeResponse.Error:
+          case EChangeResponse.NoChange:
+          default:
+            this.isSaving = false;
+            this.isFailed = true;
+            break;
+        }
+      });
+    } else if (this.isEdit && (this.article.articleId !== null || this.article.articleId !== undefined)) {
+      this.isSaving = true;
+      this.updateArticle();
+    }
   }
 
-  onChange( {editor}: ChangeEvent) 
-  {
-    this.data = editor.getData();
+  private updateArticle() {
+    this.restService.updateBlog(this.article).subscribe(response => {
+      switch (response.ChangeResponse) {
+        case EChangeResponse.Change:
+          this.isSaving = false;
+          this.isSaved = true;
+          break;
+        case EChangeResponse.Error:
+        case EChangeResponse.NoChange:
+        default:
+          this.isSaving = false;
+          this.isFailed = true;
+          break;
+      }
+    });
+  }
+
+  onChange( {editor}: ChangeEvent) {
+    this.article.articleText = editor.getData();
+  }
+
+  public onUpdateArticleTitle() {
+    this.saveArticle();
+  }
+
+  public onUpdateArticleText({editor}: ChangeEvent) {
+    this.article.articleText = editor.getData();
+    this.saveArticle();
+  }
+
+  public onStatusUpdate(event: string) {
+    this.article.status = event;
+    this.saveArticle();
+  }
+
+  onCommentAllowUpdate(event: boolean) {
+    this.article.hasCommentsEnabled = event;
+    this.saveArticle();
+  }
+
+  onDisplayAuthorDateUpdate(event: boolean) {
+    this.article.hasDateAuthorEnabled = event;
+    this.saveArticle();
+  }
+
+  public parseUpdatedDate(event: string) {
+    this.article.creationDate.setDate(new Date(event).getDate());
+    this.article.creationDate.setMonth(new Date(event).getMonth());
+    this.article.creationDate.setFullYear(new Date(event).getFullYear());
+    this.saveArticle();
   }
 }

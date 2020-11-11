@@ -1,0 +1,11 @@
+<div class="menu" [ngClass]="{'menu-display': isOpen}">
+  <div class="menu-header">
+    <div>{{menuTitle}}</div>
+    <button class="btn btn-light" (click)="onClose()">
+      <fa-icon [icon]="iconExit"></fa-icon>
+    </button>
+  </div>
+  <div class="menu-body">
+    <ng-content></ng-content>
+  </div>
+</div>

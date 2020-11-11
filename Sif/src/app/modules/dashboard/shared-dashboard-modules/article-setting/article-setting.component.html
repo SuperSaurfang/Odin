@@ -1,0 +1,24 @@
+<div class="setting-container">
+  <div class="setting-header" (click)="openStatusSettings()">
+    <span>{{name}}</span>
+    <span>
+      <fa-icon [icon]="iconStatus"></fa-icon>
+    </span>
+  </div>
+  <div class="setting-body" [ngClass]="{'open': isSettingOpen === true}">
+    <div *ngIf="type === 'select'">
+      <select [ngModel]="setting" (ngModelChange)="settingChange.emit($event)" class="margin-right-1">
+        <option value="public">Öffentlich</option>
+        <option value="private">Privat</option>
+        <option value="draft" selected>Entwurf</option>
+      </select>
+      <fa-icon [ngClass]="{'danger-text': setting === 'draft', 
+                'warn-text': setting === 'private',
+                'ok-text': setting === 'public'}" [icon]="iconCircle"></fa-icon>
+    </div>
+    
+    <app-toggle-switch *ngIf="type === 'switch'" [isToggleOn]="setting" (isToggleOnChange)="settingChange.emit($event)" [label]="label"></app-toggle-switch>
+
+    <input *ngIf="type === 'date'" type="date" [value]="setting" [ngModel]="setting" (ngModelChange)="settingChange.emit($event)">
+  </div>
+</div>

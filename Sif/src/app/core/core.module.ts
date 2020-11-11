@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RestService, UserService } from './services'
+import { RestService, UserService } from './services';
 import { AuthGuard } from './guard';
 import { InterceptorService } from './services/http/Interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';

@@ -1,6 +1,8 @@
-namespace Thor 
+using System.Text;
+
+namespace Thor
 {
-  public class MongoConnectionSetting 
+  public class ConnectionSetting
   {
     public string Host { get; set; }
     public int Port { get; set; }
@@ -8,9 +10,14 @@ namespace Thor
     public string User { get; set; }
     public string Password { get; set; }
 
-    public string GetConnectionString()
+    public string GetMongoConnectionString()
     {
         return $@"mongodb://{User}:{Password}@{Host}:{Port}/{Database}";
+    }
+
+    public string GetMariaConnectionString()
+    {
+      return $"Server={Host};Port={Port};Database={Database};Uid={User};password={Password};";
     }
   }
 }
