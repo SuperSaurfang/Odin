@@ -29,9 +29,9 @@ namespace Thor.Controllers
     /// <returns></returns>
     [Produces("application/json")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> GetAllPublicPost()
+    public async Task<ActionResult<IEnumerable<Article>>> GetAllPublicBlog()
     {
-      var result = await blogService.GetPublicBlog();
+      var result = await blogService.GetAllPublicArticles();
       if (result == null)
       {
         return InternalError();
@@ -46,14 +46,48 @@ namespace Thor.Controllers
     /// <returns></returns>
     [Produces("application/json")]
     [HttpGet("{title}")]
-    public async Task<ActionResult<Article>> GetSinglePublicPost(string title)
+    public async Task<ActionResult<Article>> GetSinglePublicArticle(string title)
     {
       if (title == null)
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetSinglePublicPost(title);
+      var result = await blogService.GetPublicArticleByTitle(title);
       if (result == null)
+      {
+        return InternalError();
+      }
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpGet("admin/{title}")]
+    [Authorize(Policy = "ModeratorPolicy")]
+    public async Task<ActionResult<Article>> GetSingleArticle(string title)
+    {
+      if (title == null)
+      {
+        return BadRequest("Title cannot be null");
+      }
+      var result = await blogService.GetArticleByTitle(title);
+      if (result == null)
+      {
+        return InternalError();
+      }
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpGet("admin/id/{title}")]
+    [Authorize(Policy = "ModeratorPolicy")]
+    public async Task<ActionResult<int>> GetBlogId(string title)
+    {
+      if (title == null)
+      {
+        return BadRequest("Title cannot be null");
+      }
+      var result = await blogService.GetArticleId(title);
+      if (result == 0)
       {
         return InternalError();
       }
@@ -67,9 +101,9 @@ namespace Thor.Controllers
     [Produces("application/json")]
     [HttpGet("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult> GetFullBlog()
+    public async Task<ActionResult<IEnumerable<Article>>> GetFullBlog()
     {
-      var result = await blogService.GetFullBlog();
+      var result = await blogService.GetAllArticles();
       if (result == null)
       {
         return InternalError();
@@ -85,14 +119,14 @@ namespace Thor.Controllers
     [Produces("application/json")]
     [HttpPut("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult> UpdateBlogPost(Article article)
+    public async Task<ActionResult> UpdateBlogArticle(Article article)
     {
       if (article.ArticleId == 0)
       {
         return BadRequest("the article id cannot be zero.");
       }
 
-      var result = await blogService.UpdateBlogPost(article);
+      var result = await blogService.UpdateArticle(article);
       JObject response = CreateJson(result);
       return Ok(response);
     }
@@ -105,12 +139,13 @@ namespace Thor.Controllers
     [Produces("application/json")]
     [HttpPost("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult> CreateBlogPost(Article article)
+    public async Task<ActionResult> CreateBlogArticle(Article article)
     {
-      var result = await blogService.CreateBlogPost(article);
-      if (result == ChangeResponse.Error) {
-        return InternalError();
+      if(article.UserId == 0) {
+        return BadRequest("The user id cannot be zero");
       }
+
+      var result = await blogService.CreateArticle(article);
       JObject response = CreateJson(result);
       return Ok(response);
     }
@@ -121,19 +156,11 @@ namespace Thor.Controllers
     /// <param name="id">The id of the blogpost to delete</param>
     /// <returns></returns>
     [Produces("application/json")]
-    [HttpDelete("admin/{id}")]
+    [HttpDelete("admin")]
     [Authorize(Policy = "ModeratorPolicy")]
-    public async Task<ActionResult> DeleteBlogPost(int id)
+    public async Task<ActionResult> DeleteBlogArticle()
     {
-      if(id == 0 || id < -1) 
-      {
-        return BadRequest("id cannot be zero or negative");
-      }
-
-      var result = await blogService.DeleteBlogPost(id);
-      if (result == ChangeResponse.Error) {
-        return InternalError();
-      }
+      var result = await blogService.DeleteArticle();
       JObject response = CreateJson(result);
       return Ok(response);
     }

@@ -1,67 +1,11 @@
 <div class="dashboard-post-list-header">
   <h1>Blog</h1>
-  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrg</a>
+  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neuer Blogeintrag</a>
 </div>
 
 <p>Blog einträge verwalten und erstellen.</p>
 
-<div class="dashboard-post-list-action-bar">
-  <div class="action">
-    <div>Aktion wählen:</div>
-    <div class="control-group">
-      <select>
-        <option>Veröffentlichen</option>
-        <option>Auf Privat setzen</option>
-        <option>Auf Entwurf setzen</option>
-        <option>In den Papierkorb verschieben</option>
-      </select>
-      <button class="btn btn-dark">Ausführen</button>
-    </div>
-  </div>
-  <div class="date-range-filter flex flex-column">
-    <div>Zeitraum filtern:</div>
-    <div class="flex">
-      <label class="label control-group" for="filter-start-date">
-        <div>
-          <span>Start:</span>
-        </div>
-        <input id="filter-start-date" type="date">
-      </label>
-      <label class="label control-group margin-left-1 " for="filter-end-date">
-        <div>
-          <span>Ende:</span>
-        </div>
-        <input id="filter-end-date" type="date">
-      </label>
-    </div>
-  </div>
-  <div class="status-filer">
-    <div>Status Filter:</div>
-    <select>
-      <option>Alle</option>
-      <option>Öffentlich</option>
-      <option>Privat</option>
-      <option>Entwurf</option>
-    </select>
-  </div>
-  <div class="search-filter">
-    <div>Durchsuchen:</div>
-    <input type="search">
-  </div>
-  <div class="reset-filter">
-    <button class="btn btn-icon">
-      <fa-layers size="2x">
-        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
-        <fa-icon [icon]="iconSlash" transform="up-2 left-2" class="danger-text"></fa-icon>
-      </fa-layers>
-    </button>
-  </div>
-  <div class="clear-trash">
-    <button class="btn btn-icon danger-text">
-      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
-    </button>
-  </div>
-</div>
+<app-list-action-bar (ExecuteAction)="executeAction($event)" (ListFilterUpdate)="listFilterUpdate($event)" (ClearTrash)="deleteArticles()"></app-list-action-bar>
 
 <table>
   <thead>
@@ -80,9 +24,28 @@
       <td>
         <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelected(i)"></app-checkbox>
       </td>
-      <td>{{article.title}}</td>
+      <td>
+        <a [routerLink]="['edit', article.title]">
+          {{article.title}}
+        </a>
+      </td>
       <td>{{article.author}}</td>
-      <td>{{article.status}}</td>
+      <td>
+        <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger cursor-pointer">
+          <fa-icon *ngIf="article.status !== 'trash'"
+          [icon]="iconStatus"
+          [ngClass]="{
+            'danger-text': article.status === 'draft',
+            'warn-text': article.status === 'private',
+            'ok-text': article.status === 'public'
+          }"></fa-icon>
+          <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <div class="tooltip" [ngClass]="{'hide': statusMenuOpen === i}">
+            {{getStatusTooltip(article.status)}}
+          </div>
+        </div>
+        <app-status-change-menu [isOpen]="statusMenuOpen === i" (isOpenChange)="onMenuClose($event)" (updateStatus)="updateStatus($event, i)"></app-status-change-menu>
+      </td>
       <td>
         <div>Erstell Datum: {{article.creationDate.toLocaleDateString()}}</div>
         <div>Zuletzt geändert: {{article.modificationDate.toLocaleDateString()}}</div>
@@ -101,4 +64,3 @@
     </tr>
   </tfoot>
 </table>
-

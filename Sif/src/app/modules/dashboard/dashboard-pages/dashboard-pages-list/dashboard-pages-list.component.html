@@ -1,0 +1,64 @@
+<div class="dashboard-sites-list-header">
+  <h1>Seiten</h1>
+  <a [routerLink]="['edit']" class="btn btn-dark btn-link">Neue Seite</a>
+</div>
+
+<p>Seiten verwalten und erstellen. Denke daran, die Seite über ein Menu zugänglich zu machen!</p>
+
+<app-list-action-bar (ListFilterUpdate)="listFilterUpdate($event)" (ExecuteAction)="executeAction($event)" (ClearTrash)="clearTrash()"></app-list-action-bar>
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminete" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Titel</th>
+      <th>Autor</th>
+      <th>Status</th>
+      <th>Datun</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let article of articles; let i = index">
+      <td>
+        <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelectedArticle(i)"></app-checkbox>
+      </td>
+      <td>
+        <a [routerLink]="['edit', article.title]">
+          {{article.title}}
+        </a>
+      </td>
+      <td>{{article.author}}</td>
+      <td>
+        <div class="pos-relative cursor-pointer tooltip-trigger" (click)="openStatusChangeMenu(i)">
+          <fa-icon *ngIf="article.status !== 'trash'"
+            [icon]="iconStatus"
+            [ngClass]="{'danger-text': article.status === 'draft',
+                        'warn-text': article.status === 'private',
+                        'ok-text': article.status === 'public'}"></fa-icon>
+          <fa-icon *ngIf="article.status === 'trash'" class="danger-text" [icon]="iconTrash"></fa-icon>
+        <div class="tooltip">{{getStatusTooltip(article.status)}}</div>
+        </div>
+        <app-status-change-menu [isOpen]="statusMenuOpen === i" (isOpenChange)="onMenuClose($event)" (updateStatus)="updateStatus($event, i)"></app-status-change-menu>
+      </td>
+      <td>
+        <div>Erstell Datum: {{article.creationDate.toLocaleDateString()}}</div>
+        <div>Zuletzt geändert: {{article.modificationDate.toLocaleDateString()}}</div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminete" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Titel</th>
+      <th>Autor</th>
+      <th>Status</th>
+      <th>Datun</th>
+    </tr>
+  </tfoot>
+</table>
+
+

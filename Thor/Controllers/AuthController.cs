@@ -52,8 +52,9 @@ namespace Thor.Controllers
         result = userService.Authenticate(result);
         return Ok(result);
       }
-      catch (Exception)
+      catch (Exception ex)
       {
+        Console.WriteLine(ex.Message);
         return InternalError();
       }
     }

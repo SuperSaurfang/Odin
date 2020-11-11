@@ -7,7 +7,8 @@ const routes: Routes = [
     path: 'dashboard', component: DashboardComponent, children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: DashboardOverviewComponent },
-      { path: 'posts', loadChildren: () => import('./dashboard-posts/dashboard-posts.module').then(m => m.DashboardPostsModule) }
+      { path: 'posts', loadChildren: () => import('./dashboard-posts/dashboard-posts.module').then(m => m.DashboardPostsModule) },
+      { path: 'pages', loadChildren: () => import('./dashboard-pages/dashboard-pages.module').then(m => m.DashboardPagesModule) }
     ]
   },
 ];

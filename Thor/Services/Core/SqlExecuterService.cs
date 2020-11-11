@@ -13,9 +13,9 @@ namespace Thor.Services
   {
     private readonly string connectionString;
 
-    public SqlExecuterService(IConfiguration configuration)
+    public SqlExecuterService(ConnectionSetting connectionSetting)
     {
-      connectionString = configuration.GetConnectionString("DefaultConnection");
+      connectionString = connectionSetting.GetMariaConnectionString();
     }
 
     public async Task<IEnumerable<T>> ExecuteSql<T>(string sql, object param = null)

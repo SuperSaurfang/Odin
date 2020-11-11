@@ -2,7 +2,8 @@
 
 :host {
   input[type="checkbox"] {
-    display: none;
+    position: absolute;
+    left: -10000px;
   }
 
   fa-icon {
