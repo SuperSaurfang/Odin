@@ -3,13 +3,17 @@
 <p>Hier kannst du dein Nav Menu verwalten und Seiten zugänglich machen.</p>
 
 <div class="flex">
-  <div class="outer-container">
+  <div class="outer-container w-400">
     <div class="content-container">
       <h2>Neues Menu Element hinzufügen</h2>
       <form [formGroup]="addPageForm" (ngSubmit)="saveMenu()" class="page-selection">
-        <label>
-          Seite wählen
-          <select formControlName="selectedArticle">
+        <label for="articile-selection" class="label control-group horizontal-group margin-bottom-2">
+          <div>
+            <span>
+              Seite wählen
+            </span>
+          </div>
+          <select id="articile-selection" formControlName="selectedArticle">
             <option value="" disabled selected hidden>---</option>
             <option *ngFor="let article of articles" [ngValue]="article.articleId">{{article.title}}</option>
           </select>
@@ -20,16 +24,8 @@
   </div>
   <div class="outer-container">
     <div class="content-container">
-      <h2>Struktur deines Nav Menu</h2>
-      <div class="navmenu-entry"
-      draggable="true"
-      (dragstart)="onDragStart($event, navmenu)"
-      (dragend)="onDragEnd($event, navmenu)"
-      (dragover)="onDragOver($event, navmenu)"
-      (drop)="onDrop($event)"
-      *ngFor="let navmenu of navMenuList">
-        <div class="navmenu-entry-header">Menuelement: {{navmenu.displayText || navmenu.title}}</div>
-      </div>
+      <h2>Struktur des Navigations Menu</h2>
+        <app-dashboard-navmenu-entry *ngFor="let navMenu of navMenuList" [navMenuEntry]="navMenu"></app-dashboard-navmenu-entry>
     </div>
   </div>
 </div>

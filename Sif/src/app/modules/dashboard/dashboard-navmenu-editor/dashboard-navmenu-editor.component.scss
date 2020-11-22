@@ -8,19 +8,12 @@
     padding: padding(1);
   }
 
-  .page-selection {
-    padding: padding(1);
-    border: solid 1px $dark-1
-  }
-
-  label {
+  .form-field {
     display: block;
     margin-bottom: margin(2);
   }
 
-  .navmenu-entry {
-    border: solid 1px $dark-1;
-    background-color: $grey-1;
-    padding: padding(1);
+  .w-400 {
+    max-width: 400px;
   }
 }

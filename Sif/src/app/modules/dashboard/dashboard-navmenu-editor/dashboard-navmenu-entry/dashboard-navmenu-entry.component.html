@@ -1,0 +1,45 @@
+<div class="navmenu-entry">
+  <div class="header-container">
+    <span>{{navMenuEntry.displayText || navMenuEntry.title}}</span>
+    <button class="btn btn-icon" (click)="expand()">
+      <fa-icon [icon]="currentExpandIcon"></fa-icon>
+    </button>
+  </div>
+  <div class="form-container" *ngIf="isExpanded">
+    <form [formGroup]="navMenuForm" (ngSubmit)="saveChanges()" (reset)="abortEdit()">
+      <div class="control-container control-group horizontal-group margin-bottom-2">
+        <label for="display-text-{{navMenuEntry.navMenuId}}">
+            Anzeige Text
+        </label>
+        <input type="text" id="display-text-{{navMenuEntry.navMenuId}}" formControlName="displayText" (input)="onDisplayTextChange($event)">
+      </div>
+
+      <div class="control-container control-group horizontal-group margin-bottom-2">
+        <label for="parent-select-{{navMenuEntry.navMenuId}}">
+          Übergeordnetes Menuelemt
+        </label>
+        <select id="parent-select-{{navMenuEntry.navMenuId}}" formControlName="selectedParent" (change)="setParent()">
+          <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navMenuId" [selected]="navMenu.navMenuId === navMenuEntry.parentId">{{navMenu.displayText || navMenu.title}}</option>
+        </select>
+        <button type="button" class="btn btn-icon" (click)="removeParent()">
+          <fa-icon [icon]="removeIcon"></fa-icon>
+        </button>
+      </div>
+
+      <div class="action-container">
+        <button type="submit" class="btn btn-icon">
+          <fa-icon [icon]="saveIcon"></fa-icon>
+        </button>
+        <button type="button" class="btn btn-icon" (click)="deleteEntry()">
+          <fa-icon [icon]="trashIcon"></fa-icon>
+        </button>
+        <button type="reset" class="btn btn-icon">
+          <fa-icon [icon]="abortIcon"></fa-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="child-entry-list" *ngIf="children.length > 0">
+  <app-dashboard-navmenu-entry *ngFor="let navMenu of children" [navMenuEntry]="navMenu"></app-dashboard-navmenu-entry>
+</div>
