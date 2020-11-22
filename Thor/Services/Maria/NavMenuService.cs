@@ -48,7 +48,7 @@ namespace Thor.Services
 
     public async Task<IEnumerable<NavMenu>> GetNavMenu()
     {
-      const string sql = "SELECT `NavMenuId`, `article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`navmenu`.`ParentId`, 'true', 'false') AS 'IsDropdown' FROM `navmenu`, `article` WHERE `PageId` = `article`.`ArticleId`";
+      const string sql = "SELECT `NavMenuId`, `article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId` FROM `navmenu`, `article` WHERE `PageId` = `article`.`ArticleId`";
       List<NavMenu> result = (List<NavMenu>)await executer.ExecuteSql<NavMenu>(sql);
 
       result.Sort((a, b) => b.NavMenuOrder.CompareTo(a.NavMenuOrder));
@@ -63,6 +63,7 @@ namespace Thor.Services
             parent.Children = new List<NavMenu>();
           }
           parent.Children.Insert(0, menuItem);
+          parent.IsDropdowm = true;
         }
       }
       result.RemoveAll(r => r.ParentId != null);
