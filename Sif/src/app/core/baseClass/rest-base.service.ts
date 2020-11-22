@@ -1,12 +1,12 @@
 import { HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
-import { Article, ChangeResponse, EChangeResponse } from '../models';
+import { Article, ChangeResponseOld, EChangeResponse } from '../models';
 
 export abstract class RestBase {
   protected basePath: string;
 
-  protected errorResponse: ChangeResponse = {
+  protected errorResponse: ChangeResponseOld = {
     ChangeResponse: EChangeResponse.Error
   };
 
