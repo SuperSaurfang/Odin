@@ -2,7 +2,7 @@
   <li class="main-entry">
     <a routerLink="/blog" routerLinkActive="primary-dark">Startseite</a>
   </li>
-  <li *ngFor="let menu of navMenu" class="main-entry" [ngClass]="{'dropdown': menu.isDropdown}">
+  <li *ngFor="let menu of navMenu" class="main-entry" [ngClass]="menu.isDropdown ? '': 'dropdown'">
     <a [routerLink]="['/page', menu.title]" routerLinkActive="primary-dark">{{menu.displayText || menu.title}}</a>
     <ul class="child-nav">
       <li *ngFor="let child of menu.children" class="child-entry">
