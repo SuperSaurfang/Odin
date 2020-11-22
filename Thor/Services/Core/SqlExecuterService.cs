@@ -42,7 +42,7 @@ namespace Thor.Services
       catch (Exception ex)
       {
         Console.WriteLine($"Execption: {ex}");
-        return null;
+        return new List<T>();
       }
     }
 
@@ -70,7 +70,7 @@ namespace Thor.Services
       catch (Exception ex)
       {
         Console.WriteLine($"Exception: {ex}");
-        return await Task.FromResult(-1);
+        return -1;
       }
     }
 

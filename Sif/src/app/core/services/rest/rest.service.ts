@@ -2,7 +2,7 @@ import { Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Article, Comment, User, ChangeResponse } from '../../models';
+import { Article, Comment, User, ChangeResponse, NavMenu } from '../../models';
 import { RestBase } from '../../baseClass';
 
 
@@ -27,8 +27,17 @@ export class RestService extends RestBase {
     );
   }
 
-  public getPage(title: string): Observable<Article[]> {
-    return this.httpClient.get<Article[]>(`${this.basePath}/page/${title}`);
+  public getPage(title: string): Observable<Article> {
+    return this.httpClient.get<Article>(`${this.basePath}/page/${title}`).pipe(
+      map(article => this.parseDate(article)),
+      catchError(this.handleError<Article>('Failed to load page', new Article()))
+    );
+  }
+
+  public getNavMenu(): Observable<NavMenu[]> {
+    return this.httpClient.get<NavMenu[]>(`${this.basePath}/navmenu`).pipe(
+      catchError(this.handleError<NavMenu[]>('Failed to load navmenu', []))
+    );
   }
 
   public getComment(articleId: number): Observable<Comment[]> {

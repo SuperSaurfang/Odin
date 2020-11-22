@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RestBase } from 'src/app/core/baseClass';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Article, ChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse, ChangeResponseOld } from 'src/app/core';
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
@@ -32,21 +32,21 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public createBlog(article: Article): Observable<ChangeResponse> {
-    return this.httpClient.post<ChangeResponse>(`${this.basePath}/blog/admin`, article).pipe(
-      catchError(this.handleError<ChangeResponse>('Failed to load blog', this.errorResponse))
+  public createBlog(article: Article): Observable<ChangeResponseOld> {
+    return this.httpClient.post<ChangeResponseOld>(`${this.basePath}/blog/admin`, article).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Failed to load blog', this.errorResponse))
     );
   }
 
-  public updateBlog(article: Article): Observable<ChangeResponse> {
-    return this.httpClient.put<ChangeResponse>(`${this.basePath}/blog/admin`, article).pipe(
-      catchError(this.handleError<ChangeResponse>('Failed to load blog', this.errorResponse))
+  public updateBlog(article: Article): Observable<ChangeResponseOld> {
+    return this.httpClient.put<ChangeResponseOld>(`${this.basePath}/blog/admin`, article).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Failed to load blog', this.errorResponse))
     );
   }
 
-  public deleteArticles(): Observable<ChangeResponse> {
-    return this.httpClient.delete<ChangeResponse>(`${this.basePath}/blog/admin`).pipe(
-      catchError(this.handleError<ChangeResponse>('Failed to load blog', this.errorResponse))
+  public deleteArticles(): Observable<ChangeResponseOld> {
+    return this.httpClient.delete<ChangeResponseOld>(`${this.basePath}/blog/admin`).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Failed to load blog', this.errorResponse))
     );
   }
 

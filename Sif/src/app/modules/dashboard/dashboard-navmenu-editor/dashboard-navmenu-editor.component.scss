@@ -1,0 +1,19 @@
+@import '../../../core/scss/variables.scss';
+:host {
+  flex: 1 1 auto;
+  padding: padding(1);
+
+  .outer-container {
+    flex: 1 1 auto;
+    padding: padding(1);
+  }
+
+  .form-field {
+    display: block;
+    margin-bottom: margin(2);
+  }
+
+  .w-400 {
+    max-width: 400px;
+  }
+}

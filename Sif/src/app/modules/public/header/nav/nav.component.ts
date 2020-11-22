@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface NavEntry {
-  routerlink: string | string[];
-  displayText: string;
-  isDropdown: boolean
-  childs?: NavEntry[];
-}
+import { RestService } from 'src/app/core/services';
+import { NavMenu } from 'src/app/core';
 
 @Component({
   selector: 'app-nav',
@@ -15,27 +10,15 @@ interface NavEntry {
 export class NavComponent implements OnInit {
 
   public isHover = false;
-  public navEntries: NavEntry[] = [{
-    routerlink: '/blog',
-    isDropdown: false,
-    displayText: 'Home',
-  }, {
-    routerlink: ['/site', 'Das bin ich'],
-    isDropdown: true,
-    displayText: 'Über mich',
-    childs: [{
-      displayText: 'Das mache ich!',
-      isDropdown: false,
-      routerlink: ['/site', 'Das mache ich']
-    }]
-  }, {
-    routerlink: ['/site', 'Meine Projekte'],
-    displayText: 'Meine Projekte',
-    isDropdown: false
-  }];
-  constructor() { }
+  public navMenu: NavMenu[] = [];
+  constructor(private restService: RestService) {
+
+  }
 
   ngOnInit() {
+    this.restService.getNavMenu().subscribe(response => {
+      this.navMenu = response;
+    });
   }
 
   public onHover() {

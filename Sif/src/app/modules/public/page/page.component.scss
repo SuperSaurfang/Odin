@@ -1,0 +1,20 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  .page-header {
+    margin: 0;
+    margin-bottom: margin(2);
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .page-content,
+  .page-footer {
+    margin-top: margin(4)
+  }
+
+  .page-info,
+  .page-footer {
+    font-size: .9rem
+  }
+}

@@ -1,0 +1,33 @@
+@import '../../../../core/scss/variables.scss';
+
+:host {
+  display: block;
+
+  .navmenu-entry {
+    border: 1px solid $dark-1;
+    border-radius: $radius;
+    margin-bottom: margin(1);
+    max-width: 500px;
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    padding: padding(1);
+    justify-content: space-between;
+    background-color: $grey-1;
+  }
+
+  .form-container {
+    padding: padding(1);
+  }
+
+  .action-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .child-entry-list {
+    padding-left: padding(3);
+  }
+}

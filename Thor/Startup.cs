@@ -139,6 +139,7 @@ namespace Thor
 
       services.AddTransient<IBlogService, BlogService>();
       services.AddTransient<IPageService, PageService>();
+      services.AddTransient<INavMenuService, NavMenuService>();
       services.AddTransient<ICommentService, CommentService>();
       services.AddTransient<IUserService, UserService>();
     }

@@ -79,6 +79,14 @@ th, h1, h2, h3, h4, h5, h6 {
   color: $black !important;
 }
 
+.radius {
+  border-radius: $radius;
+}
+
+.padding-1 {
+  padding: padding(1);
+}
+
 .margin-top-1 {
   margin-top: margin(1);
 }
@@ -111,6 +119,7 @@ th, h1, h2, h3, h4, h5, h6 {
   background-color: white;
   padding: padding(2);
   margin-top: margin(3);
+  border-radius: $radius;
 }
 
 .site-wrapper {
@@ -143,8 +152,8 @@ th, h1, h2, h3, h4, h5, h6 {
 .tooltip {
   background-color: #1a1a1acc;
   color: white;
-  border-radius: 4px;
-  padding: 8px;
+  border-radius: $radius;
+  padding: padding(1);
   position: absolute;
   display: none;
   width: 160px;

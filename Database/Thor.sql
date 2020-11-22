@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 25. Jul 2020 um 22:53
+-- Erstellungszeit: 22. Nov 2020 um 17:10
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -60,6 +60,20 @@ CREATE TABLE `comment` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `navmenu`
+--
+
+CREATE TABLE `navmenu` (
+  `NavMenuId` int(11) NOT NULL,
+  `PageId` int(11) NOT NULL,
+  `ParentId` int(11) DEFAULT NULL,
+  `NavMenuOrder` int(11) NOT NULL,
+  `DisplayText` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user`
 --
 
@@ -94,6 +108,15 @@ ALTER TABLE `comment`
   ADD KEY `answer_const` (`AnswerOf`);
 
 --
+-- Indizes für die Tabelle `navmenu`
+--
+ALTER TABLE `navmenu`
+  ADD PRIMARY KEY (`NavMenuId`),
+  ADD UNIQUE KEY `NavMenuOrder` (`NavMenuOrder`),
+  ADD KEY `parent_const` (`ParentId`),
+  ADD KEY `page_const` (`PageId`);
+
+--
 -- Indizes für die Tabelle `user`
 --
 ALTER TABLE `user`
@@ -115,6 +138,12 @@ ALTER TABLE `article`
 --
 ALTER TABLE `comment`
   MODIFY `CommentId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `navmenu`
+--
+ALTER TABLE `navmenu`
+  MODIFY `NavMenuId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `user`
@@ -139,6 +168,13 @@ ALTER TABLE `comment`
   ADD CONSTRAINT `answer_const` FOREIGN KEY (`AnswerOf`) REFERENCES `comment` (`CommentId`),
   ADD CONSTRAINT `article_const` FOREIGN KEY (`ArticleId`) REFERENCES `article` (`ArticleId`),
   ADD CONSTRAINT `user_const` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`);
+
+--
+-- Constraints der Tabelle `navmenu`
+--
+ALTER TABLE `navmenu`
+  ADD CONSTRAINT `page_const` FOREIGN KEY (`PageId`) REFERENCES `article` (`ArticleId`),
+  ADD CONSTRAINT `parent_const` FOREIGN KEY (`ParentId`) REFERENCES `navmenu` (`NavMenuId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
