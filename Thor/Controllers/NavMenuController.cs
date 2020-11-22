@@ -3,6 +3,8 @@ using Thor.Models;
 using Thor.Services.Api;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Thor.Controllers
 {
@@ -28,6 +30,7 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpGet("admin/article-list")]
+    [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticleList()
     {
       var result = await navMenuService.GetArticleList();
@@ -35,7 +38,17 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
+    [HttpGet("admin")]
+    [Authorize(Policy = "ModeratorPolicy")]
+    public async Task<ActionResult<IEnumerable<NavMenu>>> GetFlatList()
+    {
+      var result = await navMenuService.GetFlatList();
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
     [HttpPost("admin")]
+    [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult<StatusResponse>> CreateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.PageId == 0)
@@ -48,6 +61,7 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpPut("admin")]
+    [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult<StatusResponse>> UpdateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.NavMenuId == 0)
@@ -60,6 +74,7 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpDelete("admin/{id}")]
+    [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult<StatusResponse>> DeleteNavMenuEntry(int id)
     {
       var result = await navMenuService.DeleteNavMenu(id);

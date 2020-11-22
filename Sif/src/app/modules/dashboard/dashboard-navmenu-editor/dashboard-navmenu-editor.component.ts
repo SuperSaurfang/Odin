@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Article, NavMenu } from 'src/app/core';
-import { RestNavmenuService } from '../services';
+import { NavmenuService, RestNavmenuService } from '../services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { RestService } from 'src/app/core/services';
 
 @Component({
   selector: 'app-dashboard-navmenu-editor',
@@ -11,12 +10,11 @@ import { RestService } from 'src/app/core/services';
 })
 export class DashboardNavmenuEditorComponent implements OnInit {
 
-  constructor(private restNavmenuService: RestNavmenuService, private restService: RestService) {
+  constructor(private restNavmenuService: RestNavmenuService, private navMenuService: NavmenuService) {
   }
 
   public articles: Article[] = [];
   public navMenuList: NavMenu[] = [];
-  public draggingNavmenu: NavMenu;
 
   public addPageForm = new FormGroup({
     selectedArticle: new FormControl('', {validators: Validators.required})
@@ -26,44 +24,24 @@ export class DashboardNavmenuEditorComponent implements OnInit {
     this.restNavmenuService.GetArticleList().subscribe(response => {
       this.articles = response;
     });
-    this.loadNavMenu();
-  }
-
-  private loadNavMenu() {
-    this.restService.getNavMenu().subscribe(response => {
-      this.navMenuList = response;
+    this.navMenuService.getList().subscribe(list => {
+      this.navMenuList = list;
+    });
+    this.navMenuService.getMessage().subscribe(message => {
+      if (message) {
+        console.log(message);
+      }
     });
   }
 
   public saveMenu() {
     const navMenu = new NavMenu();
     navMenu.pageId = this.addPageForm.value['selectedArticle'];
+    navMenu.navMenuOrder = this.navMenuList.length + 1;
     this.restNavmenuService.CreateNavMenu(navMenu).subscribe(response => {
       console.log(response);
-      this.loadNavMenu();
+      this.navMenuService.loadNavMenu();
     });
-  }
-
-  public onDragStart(event: DragEvent, item: NavMenu) {
-    event.dataTransfer.effectAllowed = 'move';
-    this.draggingNavmenu = item;
-  }
-
-  public onDragEnd(event: DragEvent, item: NavMenu) {
-    this.draggingNavmenu = undefined;
-  }
-
-  public onDragOver(event: DragEvent, item: NavMenu) {
-    if (this.draggingNavmenu) {
-      event.preventDefault();
-    }
-  }
-
-  public onDrop(event: DragEvent) {
-    const index = this.navMenuList.indexOf(this.draggingNavmenu);
-    this.navMenuList.splice(index, 1);
-    this.navMenuList.push(this.draggingNavmenu);
-    this.draggingNavmenu = undefined;
   }
 
 }

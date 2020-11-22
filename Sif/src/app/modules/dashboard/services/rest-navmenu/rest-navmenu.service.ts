@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { RestBase } from 'src/app/core/baseClass';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Article, StatusResponse, NavMenu, EChangeResponse } from 'src/app/core';
+import { Article, StatusResponse, NavMenu, ChangeResponse } from 'src/app/core';
 import { catchError } from 'rxjs/operators';
 
 const StatusError: StatusResponse = {
-  change: EChangeResponse.Error,
+  change: ChangeResponse.Error,
   message: 'Http error'
 };
 
@@ -23,6 +23,12 @@ constructor(protected httpClient: HttpClient) {
    );
  }
 
+ public GetFlatList(): Observable<NavMenu[]> {
+   return this.httpClient.get<NavMenu[]>(`${this.basePath}`).pipe(
+     catchError(this.handleError<NavMenu[]>('Unable to get flat navmenu list', []))
+   );
+ }
+
  public CreateNavMenu(navMenu: NavMenu): Observable<StatusResponse> {
    return this.httpClient.post<StatusResponse>(`${this.basePath}`, navMenu).pipe(
      catchError(this.handleError<StatusResponse>('Unable to create navmenu', StatusError))
@@ -36,7 +42,7 @@ constructor(protected httpClient: HttpClient) {
  }
 
  public DeleteNavMenu(id: number): Observable<StatusResponse> {
-   return this.httpClient.get<StatusResponse>(`${this.basePath}/${id}`);
+   return this.httpClient.delete<StatusResponse>(`${this.basePath}/${id}`);
  }
 
 }

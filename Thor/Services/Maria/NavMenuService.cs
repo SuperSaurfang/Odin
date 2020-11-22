@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thor.Models;
@@ -45,7 +46,32 @@ namespace Thor.Services
       return executer.ExecuteSql<Article>(sql);
     }
 
-    public Task<IEnumerable<NavMenu>> GetNavMenu()
+    public async Task<IEnumerable<NavMenu>> GetNavMenu()
+    {
+      const string sql = "SELECT `NavMenuId`, `article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`navmenu`.`ParentId`, 'true', 'false') AS 'IsDropdown' FROM `navmenu`, `article` WHERE `PageId` = `article`.`ArticleId`";
+      List<NavMenu> result = (List<NavMenu>)await executer.ExecuteSql<NavMenu>(sql);
+
+      result.Sort((a, b) => b.NavMenuOrder.CompareTo(a.NavMenuOrder));
+
+      foreach(var menuItem in result)
+      {
+        if(menuItem.ParentId != null)
+        {
+          var parent = result.Find(f => f.NavMenuId == menuItem.ParentId);
+          if(parent.Children == null)
+          {
+            parent.Children = new List<NavMenu>();
+          }
+          parent.Children.Insert(0, menuItem);
+        }
+      }
+      result.RemoveAll(r => r.ParentId != null);
+      result.Reverse();
+
+      return result;
+    }
+
+    public Task<IEnumerable<NavMenu>> GetFlatList()
     {
       const string sql = "SELECT `NavMenuId`, `article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`navmenu`.`ParentId`, 'true', 'false') AS 'IsDropdown' FROM `navmenu`, `article` WHERE `PageId` = `article`.`ArticleId`";
       return executer.ExecuteSql<NavMenu>(sql);
