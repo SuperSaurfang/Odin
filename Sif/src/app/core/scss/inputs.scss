@@ -22,12 +22,14 @@ select {
 textarea {
     border: solid 1px $dark-3;
     padding: padding(1);
+    border-radius: $radius;
     min-width: 500px;
     min-height: 150px;
     max-width: calc(100% - 18px);
     width: 100%;
 }
 
+.control-container,
 .label {
     display: flex;
 
@@ -44,6 +46,7 @@ textarea {
         border-right: 1px solid $dark-3;
     }
 
+    > label,
     > div {
         display: flex;
         align-items: center;

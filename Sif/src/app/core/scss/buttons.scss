@@ -173,3 +173,9 @@
         margin-right: margin(1);
     }
 }
+
+.btn-disabled {
+  background-color: #bfbfbf !important;
+  color: #ffffff !important;
+  cursor: default;
+}

@@ -15,20 +15,15 @@ namespace Thor.Services.Maria {
     public PageService(ISqlExecuterService executer)
     {
       this.executer = executer;
+      this.UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
-    public UnderlayingDatabase UnderlayingDatabase
-    {
-      get
-      {
-        return UnderlayingDatabase.MariaDB;
-      }
-    }
+    public UnderlayingDatabase UnderlayingDatabase{get;}
 
     public async Task<ChangeResponse> CreateArticle(Article article)
     {
       const string sql = @"INSERT INTO `Article`
-      (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`, `IsPage`)
-      VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @HasDateAuthorEnabled, @Status, 1)";
+      (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `Status`, `IsPage`)
+      VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @Status, 1)";
       var response = await executer.ExecuteSql(sql, article);
       return await ProcessResponse(response);
     }
@@ -75,8 +70,8 @@ namespace Thor.Services.Maria {
 
     public async Task<ChangeResponse> UpdateArticle(Article article)
     {
-      const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `ModificationDate`= @ModificationDate,
-      `HasCommentsEnabled`= @HasCommentsEnabled,`HasDateAuthorEnabled`= @HasDateAuthorEnabled, `Status`= @Status
+      const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `CreationDate` = @CreationDate, `ModificationDate`= @ModificationDate,
+      `HasCommentsEnabled`= @HasCommentsEnabled, `Status`= @Status
       WHERE `ArticleId` = @ArticleId AND `IsBlog`= 0 AND `IsPage`= 1";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);

@@ -32,7 +32,7 @@ export class ArticleSettingComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.type === 'date') {
       const temp = new Date(this.setting);
-      const month = temp.getMonth();
+      const month = temp.getMonth() + 1;
       const date = temp.getDate();
       let monthString = `${month}`;
       let dateString = `${date}`;

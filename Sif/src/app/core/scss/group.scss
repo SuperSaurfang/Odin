@@ -5,6 +5,10 @@
   > .btn, select, input{
     border-radius: 0;
   }
+
+  > .btn-icon {
+    padding: padding(1) padding(2);
+  }
 }
 
 .horizontal-group {
