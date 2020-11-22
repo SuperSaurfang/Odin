@@ -68,6 +68,10 @@ export class NavmenuService {
     return this.messageSubject;
   }
 
+  public getLength(): number {
+    return this.navMenuList.length;
+  }
+
   /**
    * Get an observable list of the first level nav menu entries
    */
