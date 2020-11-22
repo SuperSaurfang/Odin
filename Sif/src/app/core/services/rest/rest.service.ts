@@ -27,8 +27,11 @@ export class RestService extends RestBase {
     );
   }
 
-  public getPage(title: string): Observable<Article[]> {
-    return this.httpClient.get<Article[]>(`${this.basePath}/page/${title}`);
+  public getPage(title: string): Observable<Article> {
+    return this.httpClient.get<Article>(`${this.basePath}/page/${title}`).pipe(
+      map(article => this.parseDate(article)),
+      catchError(this.handleError<Article>('Failed to load page', new Article()))
+    );
   }
 
   public getNavMenu(): Observable<NavMenu[]> {
