@@ -28,6 +28,7 @@ textarea {
     width: 100%;
 }
 
+.control-container,
 .label {
     display: flex;
 
@@ -44,6 +45,7 @@ textarea {
         border-right: 1px solid $dark-3;
     }
 
+    > label,
     > div {
         display: flex;
         align-items: center;
