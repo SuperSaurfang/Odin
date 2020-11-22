@@ -5,7 +5,7 @@
   <li *ngFor="let menu of navMenu" class="main-entry" [ngClass]="{'dropdown': menu.isDropdown}">
     <a [routerLink]="['/page', menu.title]" routerLinkActive="primary-dark">{{menu.displayText || menu.title}}</a>
     <ul class="child-nav">
-      <li *ngFor="let child of menu.childs" class="child-entry">
+      <li *ngFor="let child of menu.children" class="child-entry">
         <a [routerLink]="['/page', child.title]" routerLinkActive="primary-dark">{{child.displayText || child.title}}</a>
       </li>
     </ul>
