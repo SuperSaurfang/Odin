@@ -79,6 +79,14 @@ th, h1, h2, h3, h4, h5, h6 {
   color: $black !important;
 }
 
+.radius {
+  border-radius: $radius;
+}
+
+.padding-1 {
+  padding: padding(1);
+}
+
 .margin-top-1 {
   margin-top: margin(1);
 }
