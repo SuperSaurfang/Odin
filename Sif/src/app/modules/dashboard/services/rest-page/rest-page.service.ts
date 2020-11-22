@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestBase } from 'src/app/core/baseClass';
 import { HttpClient } from '@angular/common/http';
-import { Article, ChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse, ChangeResponseOld } from 'src/app/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -32,21 +32,21 @@ export class RestPageService extends RestBase {
     );
   }
 
-  public savePage(article: Article): Observable<ChangeResponse> {
-    return this.httpClient.post<ChangeResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<ChangeResponse>('Unable to save page', this.errorResponse))
+  public savePage(article: Article): Observable<ChangeResponseOld> {
+    return this.httpClient.post<ChangeResponseOld>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Unable to save page', this.errorResponse))
     );
   }
 
-  public updatePage(article: Article): Observable<ChangeResponse> {
-    return this.httpClient.put<ChangeResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<ChangeResponse>('Unable to update page', this.errorResponse))
+  public updatePage(article: Article): Observable<ChangeResponseOld> {
+    return this.httpClient.put<ChangeResponseOld>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Unable to update page', this.errorResponse))
     );
   }
 
-  public deletePages(): Observable<ChangeResponse> {
-    return this.httpClient.delete<ChangeResponse>(`${this.basePath}`).pipe(
-      catchError(this.handleError<ChangeResponse>('Unable to delete pages', this.errorResponse))
+  public deletePages(): Observable<ChangeResponseOld> {
+    return this.httpClient.delete<ChangeResponseOld>(`${this.basePath}`).pipe(
+      catchError(this.handleError<ChangeResponseOld>('Unable to delete pages', this.errorResponse))
     );
   }
 
