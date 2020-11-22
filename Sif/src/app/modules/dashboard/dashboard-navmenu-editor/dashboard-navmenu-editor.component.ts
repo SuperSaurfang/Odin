@@ -37,7 +37,7 @@ export class DashboardNavmenuEditorComponent implements OnInit {
   public saveMenu() {
     const navMenu = new NavMenu();
     navMenu.pageId = this.addPageForm.value['selectedArticle'];
-    navMenu.navMenuOrder = this.navMenuList.length + 1;
+    navMenu.navMenuOrder = this.navMenuService.getLength() + 1;
     this.restNavmenuService.CreateNavMenu(navMenu).subscribe(response => {
       console.log(response);
       this.navMenuService.loadNavMenu();
