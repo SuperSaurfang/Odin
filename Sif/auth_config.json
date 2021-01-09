@@ -1,0 +1,7 @@
+{
+  "domain": "sif.eu.auth0.com",
+  "clientId": "flfNQyH1P1c0jQYe3vX2u0Vu10BqATl2",
+  "audience": "thor",
+  "apiUri": "http://localhost:5000",
+  "appUri": "http://localhost:4200"
+}
