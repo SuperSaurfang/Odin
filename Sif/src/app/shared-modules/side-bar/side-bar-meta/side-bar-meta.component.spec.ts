@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SideBarMetaComponent } from './side-bar-meta.component';
 
@@ -6,7 +6,7 @@ describe('SideBarMetaComponent', () => {
   let component: SideBarMetaComponent;
   let fixture: ComponentFixture<SideBarMetaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SideBarMetaComponent ]
     })
