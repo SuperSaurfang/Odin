@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Thor.Services;
+using Thor.Authorization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -31,8 +32,8 @@ namespace Thor
     public void ConfigureServices(IServiceCollection services)
     {
       // setup database connections
-      var database = Configuration.GetValue<string>("ConnectionStrings:Database").ToLower();
-      services.Configure<ConnectionSetting>(Configuration.GetSection("ConnectionStrings:ConnectionSettings"));
+      var database = Configuration.GetValue<string>("DatabaseSettings:Database").ToLower();
+      services.Configure<ConnectionSetting>(Configuration.GetSection("DatabaseSettings:ConnectionSettings"));
       services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionSetting>>().Value);
       switch (database)
       {
@@ -53,14 +54,14 @@ namespace Thor
         .AddJsonOptions(o =>
         {
           o.JsonSerializerOptions.IgnoreNullValues = true;
-        }).AddNewtonsoftJson(o =>
+        })
+        .AddNewtonsoftJson(o =>
         {
           o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
 
-      var value = Configuration.GetValue<string>("AppSettings:Secret");
-      byte[] key = Encoding.ASCII.GetBytes(value);
 
+      /** deprecated authentication
       services.AddAuthentication(o =>
       {
         o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,8 +78,22 @@ namespace Thor
           ValidateIssuer = false,
           ValidateAudience = false
         };
-      });
+      });*/
+      var auth0 = Configuration.GetSection("Auth0");
+      var authority = auth0.GetValue<string>("Authority");
+      var domain = $"https://{authority}/";
+      services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = domain;
+            options.Audience = auth0.GetValue<string>("Audience");
+        });
 
+      /** deprecated authorization
       services.AddAuthorization(o =>
       {
         o.AddPolicy("UserPolicy",
@@ -87,6 +102,12 @@ namespace Thor
           policy => policy.RequireRole(UserRank.Moderator, UserRank.Admin));
         o.AddPolicy("AdminPolicy",
           policy => policy.RequireRole(UserRank.Admin));
+      });*/
+      services.AddAuthorization(o =>
+      {
+        o.AddPolicy("Admin", policy => policy.Requirements.Add(new HasPermissionRequirement("Admin", domain)));
+        o.AddPolicy("Moderator", policy => policy.Requirements.Add(new HasPermissionRequirement("Moderator", domain)));
+        o.AddPolicy("User", policy => policy.Requirements.Add(new HasPermissionRequirement("User", domain)));
       });
 
       services.AddMvc();
