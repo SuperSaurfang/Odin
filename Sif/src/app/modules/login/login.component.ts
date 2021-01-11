@@ -32,16 +32,9 @@ export class LoginComponent implements OnInit {
     if(this.activatedRoute.snapshot.params['logout']) {
       this.userService.logout();
     }
-    this.userService.CurrentUser().subscribe(user => {
-      if(user) {
-        this.router.navigateByUrl("/");
-      }
-    })
   }
 
   login() {
-    let user: User = this.loginForm.value;
-    this.userService.login(user)
   }
 
   back() {

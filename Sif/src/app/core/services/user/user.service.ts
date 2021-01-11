@@ -1,44 +1,48 @@
 import { Injectable } from '@angular/core';
-import { RestService } from '../rest/rest.service';
 import { User } from '../../models';
-import { of, Observable, BehaviorSubject } from 'rxjs';
-
-const KEY = 'currentUser';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
+import { ACCESS_TOKEN_KEY } from '../../const';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable()
 export class UserService {
 
-  constructor(private restService: RestService) {
-    this.currentUser = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(KEY)));
-
-    if (this.currentUser.value !== null) {
-      this.isUserLoggedIn = new BehaviorSubject<boolean>(true);
-    } else {
-      this.isUserLoggedIn = new BehaviorSubject<boolean>(false);
-    }
+  constructor(private authService: AuthService, private helper: JwtHelperService) {
+    this.authService.isAuthenticated$.subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.authService.getAccessTokenSilently().subscribe(token => {
+          if (token) {
+            localStorage.setItem(ACCESS_TOKEN_KEY, token);
+          }
+        });
+      } else {
+            localStorage.removeItem(ACCESS_TOKEN_KEY);
+          }
+    });
   }
 
   private currentUser: BehaviorSubject<User>;
   private isUserLoggedIn: BehaviorSubject<boolean>;
 
-  public login(user: User) {
-    this.restService.postLogin(user).subscribe(response => {
-      if (!response.userId) {
-        localStorage.removeItem(KEY);
-        this.currentUser.next(null);
-        this.isUserLoggedIn.next(false);
-        return;
-      }
-      localStorage.setItem(KEY, JSON.stringify(response));
-      this.currentUser.next(response);
-      this.isUserLoggedIn.next(true);
-    });
+  public loginWithRedirect() {
+    this.authService.loginWithRedirect();
   }
 
   public logout() {
-    localStorage.removeItem(KEY);
-    this.currentUser.next(null);
-    this.isUserLoggedIn.next(false);
+    this.authService.logout();
+  }
+
+  public getUser(): Observable<User> {
+    return this.authService.user$;
+  }
+
+  public isAuthenticated() {
+    return this.authService.isAuthenticated$;
+  }
+
+  public isLoading() {
+    return this.authService.isLoading$;
   }
 
   public CurrentUser(): Observable<User> {
@@ -48,11 +52,27 @@ export class UserService {
     return this.currentUser.value;
   }
 
-  public IsUserLoggedIn(): Observable<boolean> {
-    return this.isUserLoggedIn;
-  }
-
   public IsUserLoggedInValue(): boolean {
     return this.isUserLoggedIn.value;
+  }
+
+  public hasUserPermission(permission: string | string[]): boolean {
+    const decodedToken = this.helper.decodeToken();
+    if (!decodedToken) {
+      return false;
+    }
+    const permissions: string[] = decodedToken['permissions'];
+    if (Array.isArray(permission)) {
+      let isInclude = false;
+      for (let index = 0; index < permissions.length; index++) {
+        isInclude = permission.includes(permissions[index]);
+        if (isInclude) {
+          break;
+        }
+      }
+      return isInclude;
+    } else {
+      return permissions.includes(permission);
+    }
   }
 }
