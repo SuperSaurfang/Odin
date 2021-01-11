@@ -22,14 +22,7 @@ export class ApplicationBarComponent implements OnInit {
   public showAdminpageLink = false;
 
   ngOnInit() {
-    this.userService.CurrentUser().subscribe(user => {
-      if (user) {
-        if (Rank.Admin.toString() === user.userRank) {
-          this.isAdmin = true;
-        }
-      }
-    });
-
+    this.isAdmin = this.userService.hasUserPermission('author');
     if (this.route.url.includes('/dashboard')) {
       this.showStartpageLink = true;
     } else if (this.route.url.includes('/blog') || this.route.url.includes('/page')) {

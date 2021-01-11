@@ -4,4 +4,19 @@
   .link-container a{
     display: block;
   }
+
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-info {
+    display: flex;
+  }
+
+  .user-profile-picture {
+    min-width: 64px;
+    height: 64px;
+    border-radius: 50%;
+  }
 }

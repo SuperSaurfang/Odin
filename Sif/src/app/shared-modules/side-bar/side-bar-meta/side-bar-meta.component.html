@@ -1,8 +1,16 @@
 <h2>Meta</h2>
-<div class="link-container">
-  <a *ngIf="isAdmin" [routerLink]="['/dashboard']">Website Administration</a>
-  <a *ngIf="isLoggedIn" [routerLink]="['/login', { logout: true }]">Abmelden</a>
-  <a *ngIf="!isLoggedIn" [routerLink]="['/login']">Anmelden</a>
+<div class="profile-container mb-2">
+  <div class="profile-info mb-2" *ngIf="user && isAuthenticated">
+    <img class="user-profile-picture" [src]="user.picture">
+    <div class="ml-2">
+      <div>Hallo, {{user.name}}</div>
+      <div>Profil verwalten</div>
+      <div>Letzter Login: {{user.updated_at}}</div>
+    </div>
+  </div>
+  <button class="btn btn-primary" (click)="logout()" *ngIf="isAuthenticated">Logout</button>
+  <button class="btn btn-primary" (click)="login()" *ngIf="!isAuthenticated">Login</button>
 </div>
+<a [routerLink]="['/dashboard']" *ngIf="isAdmin()">Website Administration</a>
 
 
