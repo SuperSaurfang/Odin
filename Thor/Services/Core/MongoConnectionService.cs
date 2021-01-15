@@ -1,11 +1,12 @@
 using MongoDB.Driver;
 using Thor.Services.Api;
+using Thor.Models.Config;
 
 namespace Thor.Services
 {
   public class MongoConnectionService : IMongoConnectionService
   {
-    public MongoConnectionService(ConnectionSetting connectionSetting)
+    public MongoConnectionService(ConnectionConfig connectionSetting)
     {
       MongoClient = new MongoClient(connectionSetting.GetMongoConnectionString());
       Database = MongoClient.GetDatabase(connectionSetting.Database);

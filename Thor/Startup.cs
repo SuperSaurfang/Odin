@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Thor.Services;
 using Thor.Authorization;
+using Thor.Models.Config;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +17,8 @@ using Microsoft.Extensions.Options;
 using Thor.Util;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Thor
 {
@@ -31,11 +34,15 @@ namespace Thor
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // setup database connections
-      var database = Configuration.GetValue<string>("DatabaseSettings:Database").ToLower();
-      services.Configure<ConnectionSetting>(Configuration.GetSection("DatabaseSettings:ConnectionSettings"));
-      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionSetting>>().Value);
-      switch (database)
+      // set config
+      services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseSettings:ConnectionSettings"));
+      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
+
+      services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
+      services.AddSingleton(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
+
+      var DatabaseType = Configuration.GetValue<string>("DatabaseSettings:DatabaseType").ToLower();
+      switch (DatabaseType)
       {
         case "mariadb":
         case "maria":
@@ -91,6 +98,10 @@ namespace Thor
         {
             options.Authority = domain;
             options.Audience = auth0.GetValue<string>("Audience");
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+              NameClaimType = ClaimTypes.NameIdentifier
+            };
         });
 
       /** deprecated authorization
@@ -105,10 +116,14 @@ namespace Thor
       });*/
       services.AddAuthorization(o =>
       {
-        o.AddPolicy("Admin", policy => policy.Requirements.Add(new HasPermissionRequirement("Admin", domain)));
-        o.AddPolicy("Moderator", policy => policy.Requirements.Add(new HasPermissionRequirement("Moderator", domain)));
-        o.AddPolicy("User", policy => policy.Requirements.Add(new HasPermissionRequirement("User", domain)));
+        o.AddPolicy("create:blog", policy => policy.Requirements.Add(new HasScopeRequirement("create:blog", domain)));
+        o.AddPolicy("edit:blog", policy => policy.Requirements.Add(new HasScopeRequirement("edit:blog", domain)));
+        o.AddPolicy("delete:blog", policy => policy.Requirements.Add(new HasScopeRequirement("delete:blog", domain)));
+        o.AddPolicy("read:blog", policy => policy.Requirements.Add(new HasScopeRequirement("read:blog", domain)));
+        o.AddPolicy("Moderator", policy => policy.Requirements.Add(new HasScopeRequirement("Moderator", domain)));
+        o.AddPolicy("User", policy => policy.Requirements.Add(new HasScopeRequirement("User", domain)));
       });
+      services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
       services.AddMvc();
 
