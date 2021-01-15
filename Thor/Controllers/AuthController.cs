@@ -11,9 +11,7 @@ using Thor.Util;
 
 namespace Thor.Controllers
 {
-
-  [ApiController]
-  [Route("api/[controller]")]
+  [Obsolete]
   public class AuthController : ControllerBase
   {
 
