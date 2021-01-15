@@ -6,6 +6,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Thor.Services.Api;
+using Thor.Models.Config;
 
 namespace Thor.Services
 {
@@ -13,7 +14,7 @@ namespace Thor.Services
   {
     private readonly string connectionString;
 
-    public SqlExecuterService(ConnectionSetting connectionSetting)
+    public SqlExecuterService(ConnectionConfig connectionSetting)
     {
       connectionString = connectionSetting.GetMariaConnectionString();
     }

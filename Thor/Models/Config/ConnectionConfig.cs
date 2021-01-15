@@ -1,8 +1,8 @@
 using System.Text;
 
-namespace Thor
+namespace Thor.Models.Config
 {
-  public class ConnectionSetting
+  public class ConnectionConfig
   {
     public string Host { get; set; }
     public int Port { get; set; }
