@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Article, EChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse } from 'src/app/core';
 
 import { faTrash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, DateFilter, RestPostsService } from '../../services';
@@ -139,15 +139,15 @@ export class DashboardPostListComponent implements OnInit {
     this.statusMenuOpen = -1;
     this.articles[index].status = status;
     this.restService.updateBlog(this.articles[index]).subscribe(response => {
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.articleFilter.applyFilter();
-          console.log('everything okay');
+          console.log(response.message);
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
-          console.log('Something goes wrong');
+          console.log(response.message);
           break;
       }
     });
@@ -155,13 +155,13 @@ export class DashboardPostListComponent implements OnInit {
 
   public deleteArticles() {
     this.restService.deleteArticles().subscribe(response => {
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.articleFilterSubscription.unsubscribe();
           this.loadData();
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
           break;
       }

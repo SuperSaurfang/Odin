@@ -7,7 +7,7 @@ import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { timer } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
-import { Article, EChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse } from 'src/app/core';
 import { RestPostsService } from '../../services';
 
 @Component({
@@ -34,25 +34,31 @@ export class DashboardPostEditorComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private restService: RestPostsService,
     private userService: UserService) {
-    this.article = {
-      creationDate: new Date(),
-      modificationDate: new Date(),
-      status: 'draft',
-      hasCommentsEnabled: true,
-      hasDateAuthorEnabled: true,
-      userId: this.userService.CurrentUserValue().userId
-    };
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['title']) {
         this.restService.getArticleByTitle(params['title']).subscribe(response => {
+          console.log(response);
           this.article = response;
           if (this.article.articleText) {
             this.blogEditor.editorInstance.setData(this.article.articleText);
           }
           this.isEdit = true;
+        });
+      } else {
+        this.userService.getUser().subscribe(user => {
+          if (user) {
+            this.article = {
+              creationDate: new Date(),
+              modificationDate: new Date(),
+              status: 'draft',
+              hasCommentsEnabled: true,
+              hasDateAuthorEnabled: true,
+              userId: user.sub
+            };
+          }
         });
       }
     });
@@ -63,8 +69,8 @@ export class DashboardPostEditorComponent implements OnInit {
       this.isSaving = true;
       this.restService.createBlog(this.article).subscribe(response => {
 
-        switch (response.ChangeResponse) {
-          case EChangeResponse.Change:
+        switch (response.change) {
+          case ChangeResponse.Change:
             this.restService.getBlogId(this.article.title).subscribe(id => {
               this.article.articleId = id;
               this.isEdit = true;
@@ -73,8 +79,8 @@ export class DashboardPostEditorComponent implements OnInit {
               this.createHideTimer();
             });
             break;
-          case EChangeResponse.Error:
-          case EChangeResponse.NoChange:
+          case ChangeResponse.Error:
+          case ChangeResponse.NoChange:
           default:
             this.isSaving = false;
             this.isFailed = true;
@@ -100,13 +106,13 @@ export class DashboardPostEditorComponent implements OnInit {
   private updateArticle() {
     this.restService.updateBlog(this.article).subscribe(response => {
       this.createHideTimer();
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.isSaving = false;
           this.isSaved = true;
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
           this.isSaving = false;
           this.isFailed = true;
