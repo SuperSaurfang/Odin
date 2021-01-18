@@ -100,9 +100,8 @@ namespace Thor.Controllers {
         return BadRequest("Article id cannot be null");
       }
 
-      var result = await pageService.UpdateArticle(article);
-      var json = CreateJson(result);
-      return Ok(json);
+      var response = await pageService.UpdateArticle(article);
+      return Ok(response);
     }
 
     [Produces("application/json")]
@@ -110,9 +109,8 @@ namespace Thor.Controllers {
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> CreatePageArticle(Article article)
     {
-      var result = await pageService.CreateArticle(article);
-      var json = CreateJson(result);
-      return Ok(json);
+      var response = await pageService.CreateArticle(article);
+      return Ok(response);
     }
 
     [Produces("application/json")]
@@ -120,18 +118,13 @@ namespace Thor.Controllers {
     [Authorize(Policy = "ModeratorPolicy")]
     public async Task<ActionResult> DeletePageArticle()
     {
-      var result = await pageService.DeleteArticle();
-      var json = CreateJson(result);
-      return Ok(json);
+      var response = await pageService.DeleteArticle();
+      return Ok(response);
     }
     private ObjectResult InternalError(string message = "Internal Server Error")
     {
       return StatusCode(500, message);
     }
 
-    private static JObject CreateJson(ChangeResponse result)
-    {
-      return new JObject(new JProperty("ChangeResponse", result.ToString()));
-    }
   }
 }

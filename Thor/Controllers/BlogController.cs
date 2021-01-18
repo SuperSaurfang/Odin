@@ -146,8 +146,7 @@ namespace Thor.Controllers
         return BadRequest("the article id cannot be zero.");
       }
 
-      var result = await blogService.UpdateArticle(article);
-      JObject response = CreateJson(result);
+      var response = await blogService.UpdateArticle(article);
       return Ok(response);
     }
 
@@ -166,8 +165,7 @@ namespace Thor.Controllers
         return BadRequest("Author cannot be zero");
       }
 
-      var result = await blogService.CreateArticle(article);
-      JObject response = CreateJson(result);
+      var response = await blogService.CreateArticle(article);
       return Ok(response);
     }
 
@@ -181,8 +179,7 @@ namespace Thor.Controllers
     [Authorize("delete:blog")]
     public async Task<ActionResult> DeleteBlogArticle()
     {
-      var result = await blogService.DeleteArticle();
-      JObject response = CreateJson(result);
+      var response = await blogService.DeleteArticle();
       return Ok(response);
     }
 
@@ -191,10 +188,6 @@ namespace Thor.Controllers
       return StatusCode(500, message);
     }
 
-    private static JObject CreateJson(ChangeResponse result)
-    {
-      return new JObject(new JProperty("ChangeResponse", result.ToString()));
-    }
   }
   #endregion
 }

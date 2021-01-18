@@ -19,20 +19,20 @@ namespace Thor.Services.Maria {
     }
     public UnderlayingDatabase UnderlayingDatabase{get;}
 
-    public async Task<ChangeResponse> CreateArticle(Article article)
+    public async Task<StatusResponse> CreateArticle(Article article)
     {
       const string sql = @"INSERT INTO `Article`
       (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `Status`, `IsPage`)
       VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @Status, 1)";
-      var response = await executer.ExecuteSql(sql, article);
-      return await ProcessResponse(response);
+      var result = await executer.ExecuteSql(sql, article);
+      return Utils.CreateStatusResponse(result, "");
     }
 
-    public async Task<ChangeResponse> DeleteArticle()
+    public async Task<StatusResponse> DeleteArticle()
     {
       const string sql = @"DELETE FROM Article WHERE Status = 'trash' AND IsPage = 1";
-      var response = await executer.ExecuteSql(sql);
-      return await ProcessResponse(response);
+      var result = await executer.ExecuteSql(sql);
+      return Utils.CreateStatusResponse(result, "");
     }
 
     public async Task<IEnumerable<Article>> GetAllArticles()
@@ -68,27 +68,14 @@ namespace Thor.Services.Maria {
       return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
     }
 
-    public async Task<ChangeResponse> UpdateArticle(Article article)
+    public async Task<StatusResponse> UpdateArticle(Article article)
     {
       const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `CreationDate` = @CreationDate, `ModificationDate`= @ModificationDate,
       `HasCommentsEnabled`= @HasCommentsEnabled, `Status`= @Status
       WHERE `ArticleId` = @ArticleId AND `IsBlog`= 0 AND `IsPage`= 1";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
-      return await ProcessResponse(result);
-    }
-
-    private async Task<ChangeResponse> ProcessResponse(int response)
-    {
-      if (response >= 1)
-      {
-        return await Task.FromResult(ChangeResponse.Change);
-      }
-      else if (response == 0)
-      {
-        return await Task.FromResult(ChangeResponse.NoChange);
-      }
-      return await Task.FromResult(ChangeResponse.Error);
+      return Utils.CreateStatusResponse(result, "");
     }
   }
 }
