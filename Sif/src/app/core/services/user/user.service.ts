@@ -58,10 +58,14 @@ export class UserService {
 
   public hasUserPermission(permission: string | string[]): boolean {
     const decodedToken = this.helper.decodeToken();
+    // if the helper does not return a token abort check and return false
     if (!decodedToken) {
       return false;
     }
+
     const permissions: string[] = decodedToken['permissions'];
+
+    // check if the parameter is an array
     if (Array.isArray(permission)) {
       let isInclude = false;
       for (let index = 0; index < permissions.length; index++) {

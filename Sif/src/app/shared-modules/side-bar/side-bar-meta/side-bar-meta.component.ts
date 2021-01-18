@@ -19,13 +19,12 @@ export class SideBarMetaComponent implements OnInit {
   public user: User = undefined;
 
   ngOnInit() {
-    this.userService.isAuthenticated().subscribe(isAuthenticated => {
-      this.isAuthenticated = isAuthenticated;
-    });
     this.userService.getUser().subscribe(user => {
+      this.isAuthenticated = false;
       this.user = user;
       if (user) {
-       this.user.updated_at = new Date(user.updated_at).toLocaleString();
+        this.isAuthenticated = true;
+        this.user.updatedAt = new Date(user.updated_at).toLocaleString();
       }
     });
   }
