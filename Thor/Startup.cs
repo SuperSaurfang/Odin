@@ -35,13 +35,15 @@ namespace Thor
     public void ConfigureServices(IServiceCollection services)
     {
       // set config
-      services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseSettings:ConnectionSettings"));
+      services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseConfig:ConnectionSettings"));
       services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
 
       services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
       services.AddSingleton(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
-      var DatabaseType = Configuration.GetValue<string>("DatabaseSettings:DatabaseType").ToLower();
+      services.AddSingleton<IRestClientService, RestClientService>();
+
+      var DatabaseType = Configuration.GetValue<string>("DatabaseConfig:DatabaseType").ToLower();
       switch (DatabaseType)
       {
         case "mariadb":
@@ -134,7 +136,7 @@ namespace Thor
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
       {
@@ -149,7 +151,6 @@ namespace Thor
 
       app.UseDefaultFiles();
       app.UseStaticFiles();
-      Console.WriteLine(env.WebRootPath);
       // app.UseHttpsRedirection();
 
       app.UseSwagger();
