@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Nov 2020 um 17:10
+-- Erstellungszeit: 18. Jan 2021 um 13:47
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -18,18 +18,18 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `thor`
+-- Datenbank: `Thor`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `article`
+-- Tabellenstruktur für Tabelle `Article`
 --
 
-CREATE TABLE `article` (
+CREATE TABLE `Article` (
   `ArticleId` int(11) NOT NULL,
-  `UserId` int(11) NOT NULL,
+  `UserId` varchar(255) NOT NULL,
   `Title` varchar(255) NOT NULL,
   `ArticleText` longtext DEFAULT NULL,
   `CreationDate` date NOT NULL,
@@ -44,13 +44,26 @@ CREATE TABLE `article` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `comment`
+-- Tabellenstruktur für Tabelle `Category`
 --
 
-CREATE TABLE `comment` (
+CREATE TABLE `Category` (
+  `CategoryId` int(11) NOT NULL,
+  `ParentId` int(11) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `CategoryType` enum('category','tag') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `Comment`
+--
+
+CREATE TABLE `Comment` (
   `CommentId` int(11) NOT NULL,
   `ArticleId` int(11) NOT NULL,
-  `UserId` int(11) NOT NULL,
+  `UserId` varchar(255) NOT NULL,
   `AnswerOf` int(11) DEFAULT NULL,
   `CommentText` varchar(255) NOT NULL,
   `CreationDate` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -60,10 +73,10 @@ CREATE TABLE `comment` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `navmenu`
+-- Tabellenstruktur für Tabelle `Navmenu`
 --
 
-CREATE TABLE `navmenu` (
+CREATE TABLE `Navmenu` (
   `NavMenuId` int(11) NOT NULL,
   `PageId` int(11) NOT NULL,
   `ParentId` int(11) DEFAULT NULL,
@@ -74,16 +87,12 @@ CREATE TABLE `navmenu` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user`
+-- Tabellenstruktur für Tabelle `User`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `User` (
   `UserId` int(11) NOT NULL,
-  `UserName` varchar(255) NOT NULL,
-  `UserPassword` varchar(255) NOT NULL,
-  `UserRegisterDate` date NOT NULL,
-  `UserMail` varchar(255) NOT NULL,
-  `UserRank` enum('guest','user','moderator','admin') NOT NULL
+  `AuthUserId` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -91,64 +100,74 @@ CREATE TABLE `user` (
 --
 
 --
--- Indizes für die Tabelle `article`
+-- Indizes für die Tabelle `Article`
 --
-ALTER TABLE `article`
+ALTER TABLE `Article`
   ADD PRIMARY KEY (`ArticleId`),
-  ADD UNIQUE KEY `title` (`Title`),
-  ADD KEY `author_constraint` (`UserId`);
+  ADD UNIQUE KEY `title` (`Title`);
 
 --
--- Indizes für die Tabelle `comment`
+-- Indizes für die Tabelle `Category`
 --
-ALTER TABLE `comment`
+ALTER TABLE `Category`
+  ADD PRIMARY KEY (`CategoryId`);
+
+--
+-- Indizes für die Tabelle `Comment`
+--
+ALTER TABLE `Comment`
   ADD PRIMARY KEY (`CommentId`),
-  ADD KEY `user_const` (`UserId`),
   ADD KEY `article_const` (`ArticleId`),
   ADD KEY `answer_const` (`AnswerOf`);
 
 --
--- Indizes für die Tabelle `navmenu`
+-- Indizes für die Tabelle `Navmenu`
 --
-ALTER TABLE `navmenu`
+ALTER TABLE `Navmenu`
   ADD PRIMARY KEY (`NavMenuId`),
   ADD UNIQUE KEY `NavMenuOrder` (`NavMenuOrder`),
   ADD KEY `parent_const` (`ParentId`),
   ADD KEY `page_const` (`PageId`);
 
 --
--- Indizes für die Tabelle `user`
+-- Indizes für die Tabelle `User`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   ADD PRIMARY KEY (`UserId`),
-  ADD UNIQUE KEY `userMail` (`UserMail`);
+  ADD UNIQUE KEY `AuthUserId` (`AuthUserId`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
 --
--- AUTO_INCREMENT für Tabelle `article`
+-- AUTO_INCREMENT für Tabelle `Article`
 --
-ALTER TABLE `article`
+ALTER TABLE `Article`
   MODIFY `ArticleId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `comment`
+-- AUTO_INCREMENT für Tabelle `Category`
 --
-ALTER TABLE `comment`
+ALTER TABLE `Category`
+  MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `Comment`
+--
+ALTER TABLE `Comment`
   MODIFY `CommentId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `navmenu`
+-- AUTO_INCREMENT für Tabelle `Navmenu`
 --
-ALTER TABLE `navmenu`
+ALTER TABLE `Navmenu`
   MODIFY `NavMenuId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `user`
+-- AUTO_INCREMENT für Tabelle `User`
 --
-ALTER TABLE `user`
+ALTER TABLE `User`
   MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -156,25 +175,11 @@ ALTER TABLE `user`
 --
 
 --
--- Constraints der Tabelle `article`
+-- Constraints der Tabelle `Comment`
 --
-ALTER TABLE `article`
-  ADD CONSTRAINT `author_constraint` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`);
-
---
--- Constraints der Tabelle `comment`
---
-ALTER TABLE `comment`
-  ADD CONSTRAINT `answer_const` FOREIGN KEY (`AnswerOf`) REFERENCES `comment` (`CommentId`),
-  ADD CONSTRAINT `article_const` FOREIGN KEY (`ArticleId`) REFERENCES `article` (`ArticleId`),
-  ADD CONSTRAINT `user_const` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`);
-
---
--- Constraints der Tabelle `navmenu`
---
-ALTER TABLE `navmenu`
-  ADD CONSTRAINT `page_const` FOREIGN KEY (`PageId`) REFERENCES `article` (`ArticleId`),
-  ADD CONSTRAINT `parent_const` FOREIGN KEY (`ParentId`) REFERENCES `navmenu` (`NavMenuId`);
+ALTER TABLE `Comment`
+  ADD CONSTRAINT `answer_const` FOREIGN KEY (`AnswerOf`) REFERENCES `Comment` (`CommentId`),
+  ADD CONSTRAINT `article_const` FOREIGN KEY (`ArticleId`) REFERENCES `Article` (`ArticleId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
