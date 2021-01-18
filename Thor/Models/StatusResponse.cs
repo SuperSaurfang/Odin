@@ -1,7 +1,10 @@
 using Thor.Util;
 
-public class StatusResponse
+namespace Thor.Models
 {
-    public ChangeResponse Change {get; set;}
-    public string Message {get; set;}
+  public class StatusResponse
+  {
+    public ChangeResponse Change { get; set; }
+    public string Message { get; set; }
+  }
 }
