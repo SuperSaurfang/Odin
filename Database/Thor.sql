@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 18. Jan 2021 um 13:47
+-- Erstellungszeit: 18. Jan 2021 um 13:53
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -84,17 +84,6 @@ CREATE TABLE `Navmenu` (
   `DisplayText` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `User`
---
-
-CREATE TABLE `User` (
-  `UserId` int(11) NOT NULL,
-  `AuthUserId` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --
 -- Indizes der exportierten Tabellen
 --
@@ -130,13 +119,6 @@ ALTER TABLE `Navmenu`
   ADD KEY `page_const` (`PageId`);
 
 --
--- Indizes für die Tabelle `User`
---
-ALTER TABLE `User`
-  ADD PRIMARY KEY (`UserId`),
-  ADD UNIQUE KEY `AuthUserId` (`AuthUserId`);
-
---
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -163,12 +145,6 @@ ALTER TABLE `Comment`
 --
 ALTER TABLE `Navmenu`
   MODIFY `NavMenuId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `User`
---
-ALTER TABLE `User`
-  MODIFY `UserId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints der exportierten Tabellen
