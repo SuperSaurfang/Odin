@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Thor.Services.Api;
 using Thor.Util;
 using System;
+using System.Linq;
 
 namespace Thor.Services.Maria
 {
@@ -11,27 +12,39 @@ namespace Thor.Services.Maria
 
     private readonly ISqlExecuterService executer;
 
-    public BlogService(ISqlExecuterService sqlExecuterService) {
+    private readonly IRestClientService restClient;
+
+    public BlogService(ISqlExecuterService sqlExecuterService, IRestClientService restClient) {
       executer = sqlExecuterService;
+      this.restClient = restClient;
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
     public UnderlayingDatabase UnderlayingDatabase { get; }
 
-    public async Task<ChangeResponse> CreateArticle(Article article)
+    #region Interface implementation
+    public async Task<StatusResponse> CreateArticle(Article article)
     {
       const string sql = @"INSERT INTO `Article`
       (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`, `IsBlog`)
       VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @HasDateAuthorEnabled, @Status, 1)";
-      var response = await executer.ExecuteSql(sql, article);
-      return await ProcessResponse(response);
+      var result = await executer.ExecuteSql(sql, article);
+      if (result == 0)
+      {
+        return Utils.CreateStatusResponse(result, "No entry created");
+      }
+      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} created");
     }
 
-    public async Task<ChangeResponse> DeleteArticle()
+    public async Task<StatusResponse> DeleteArticle()
     {
       const string sql = @"DELETE FROM Article WHERE Status = 'trash' AND IsBlog = 1";
-      var response = await executer.ExecuteSql(sql);
-      return await ProcessResponse(response);
+      var result = await executer.ExecuteSql(sql);
+      if (result == 0)
+      {
+        return Utils.CreateStatusResponse(result, "No entry deleted");
+      }
+      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} deleted");
     }
 
     public async Task<int> GetArticleId(string title)
@@ -42,54 +55,73 @@ namespace Thor.Services.Maria
 
     public async Task<IEnumerable<Article>> GetAllArticles()
     {
-      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
-      FROM Article, User WHERE Article.UserId = User.UserId AND IsBlog = 1";
-      return await executer.ExecuteSql<Article>(sql);
+      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
+      FROM Article WHERE  IsBlog = 1";
+      var result = await executer.ExecuteSql<Article>(sql);
+      await MapUserIdToAuthor(result);
+      return result;
     }
 
     public async Task<IEnumerable<Article>> GetAllPublicArticles()
     {
-      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
-      FROM Article, User WHERE Article.UserId = User.UserId AND Status = 'public' AND IsBlog = 1";
-      return await executer.ExecuteSql<Article>(sql);
+      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
+      FROM Article WHERE Status = 'public' AND IsBlog = 1";
+      var result = await executer.ExecuteSql<Article>(sql);
+      await MapUserIdToAuthor(result);
+      return result;
     }
 
     public async Task<Article> GetArticleByTitle(string title)
     {
-      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
-      FROM Article, User WHERE Article.UserId = User.UserId AND IsBlog = 1 AND Title = @title";
-      return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
+      FROM Article WHERE IsBlog = 1 AND Title = @title";
+      var result = await executer.ExecuteSqlSingle<Article>(sql, new { title = title });
+      result.Author = await MapUserIdToAuthor(result);
+      return result;
     }
 
     public async Task<Article> GetPublicArticleByTitle(string title)
     {
-      const string sql = @"SELECT `ArticleId`, User.UserName as Author, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
-      FROM Article, User WHERE Article.UserId = User.UserId AND Status = 'public' AND IsBlog = 1 AND Title = @title";
-      return await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
+      FROM Article WHERE Status = 'public' AND IsBlog = 1 AND Title = @title";
+      var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+      result.Author = await MapUserIdToAuthor(result);
+      return result;
     }
 
-    public async Task<ChangeResponse> UpdateArticle(Article article)
+    public async Task<StatusResponse> UpdateArticle(Article article)
     {
 
-      const string sql = @"UPDATE `Article` SET `Title`= @Title,`ArticleText`= @ArticleText, `CreationDate` = @CreationDate, `ModificationDate`= @ModificationDate,
-      `HasCommentsEnabled`= @HasCommentsEnabled,`HasDateAuthorEnabled`= @HasDateAuthorEnabled, `Status`= @Status
-      WHERE `ArticleId` = @ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
+      const string sql = @"UPDATE `Article` SET `Title`=@Title, `ArticleText`=@ArticleText, `CreationDate`=@CreationDate, `ModificationDate`=@ModificationDate,
+      `HasCommentsEnabled`=@HasCommentsEnabled,`HasDateAuthorEnabled`=@HasDateAuthorEnabled, `Status`=@Status
+      WHERE `ArticleId`=@ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
-      return await ProcessResponse(result);
+      if (result == 0)
+      {
+        return Utils.CreateStatusResponse(result, "No entry updated");
+      }
+      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} updated");
     }
+    #endregion
 
-    private async Task<ChangeResponse> ProcessResponse(int response)
+    #region  Private Helpers
+    private async Task MapUserIdToAuthor(IEnumerable<Article> result)
     {
-      if (response >= 1)
+      var nickNames = await restClient.GetUserNicknames();
+      var query = nickNames.AsQueryable();
+
+      foreach (var item in result)
       {
-        return await Task.FromResult(ChangeResponse.Change);
+        item.Author = (from name in query where name.UserId.Equals(item.UserId) select name.Nickname).FirstOrDefault();
       }
-      else if (response == 0)
-      {
-        return await Task.FromResult(ChangeResponse.NoChange);
-      }
-      return await Task.FromResult(ChangeResponse.Error);
     }
+    private async Task<string> MapUserIdToAuthor(Article result)
+    {
+      var nicknames = await restClient.GetUserNicknames();
+      var query = nicknames.AsQueryable();
+      return (from name in query where name.UserId.Equals(result.UserId) select name.Nickname).FirstOrDefault();
+    }
+    #endregion
   }
 }
