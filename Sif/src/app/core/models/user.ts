@@ -1,10 +1,10 @@
-export class User{
+export class User {
   userId?: number;
   userName?: string;
   userPassword?: string;
   userRegisterDate?: Date;
-  userMail?: string
-  userRank?: string
+  userMail?: string;
+  userRank?: string;
   userToken?: string;
 
   email: string;
@@ -14,4 +14,5 @@ export class User{
   picture: string;
   sub: string;
   updated_at: string;
+  updatedAt: string;
 }
