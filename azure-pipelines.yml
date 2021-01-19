@@ -29,7 +29,7 @@ steps:
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)/**/'
     fileType: 'json'
-    targetFiles: 'auth_config.blank.json'
+    targetFiles: 'auth_config'
 
 - task: Npm@1
   inputs:
