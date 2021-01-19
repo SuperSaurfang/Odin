@@ -7,7 +7,7 @@ import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { timer } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
-import { Article, EChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse } from 'src/app/core';
 import { RestPageService } from '../../services';
 @Component({
   selector: 'app-dashboard-pages-editor',
@@ -18,15 +18,7 @@ export class DashboardPagesEditorComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private restService: RestPageService) {
-    this.article = {
-      creationDate: new Date(),
-      modificationDate: new Date(),
-      status: 'draft',
-      hasCommentsEnabled: false,
-      userId: this.userService.CurrentUserValue().userId
-    };
-  }
+    private restService: RestPageService) {}
 
   public article: Article = new Article();
   public editor = ClassicEditor;
@@ -52,6 +44,18 @@ export class DashboardPagesEditorComponent implements OnInit {
             this.pageEditor.editorInstance.setData(this.article.articleText);
           }
           this.isEdit = true;
+        });
+      } else {
+        this.userService.getUser().subscribe(user => {
+          if (user) {
+            this.article = {
+              creationDate: new Date(),
+              modificationDate: new Date(),
+              status: 'draft',
+              hasCommentsEnabled: false,
+              userId: user.sub
+            };
+          }
         });
       }
     });
@@ -85,8 +89,8 @@ export class DashboardPagesEditorComponent implements OnInit {
     this.isSaving = true;
     if (!this.isEdit && this.article.title) {
       this.restService.savePage(this.article).subscribe(response => {
-        switch (response.ChangeResponse) {
-          case EChangeResponse.Change:
+        switch (response.change) {
+          case ChangeResponse.Change:
             this.restService.getPageId(this.article.title).subscribe(id => {
               this.article.articleId = id;
               this.isEdit = true;
@@ -95,8 +99,8 @@ export class DashboardPagesEditorComponent implements OnInit {
               this.createHideTimer();
             });
             break;
-          case EChangeResponse.Error:
-          case EChangeResponse.NoChange:
+          case ChangeResponse.Error:
+          case ChangeResponse.NoChange:
           default:
             this.isSaving = false;
             this.isFailed = true;
@@ -112,13 +116,13 @@ export class DashboardPagesEditorComponent implements OnInit {
   private updateArticle() {
     this.restService.updatePage(this.article).subscribe(response => {
       this.createHideTimer();
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.isSaving = false;
           this.isSaved = true;
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
           this.isSaving = false;
           this.isFailed = true;
