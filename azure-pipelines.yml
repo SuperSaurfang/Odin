@@ -27,7 +27,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'ren auth_config.blank.json auth_config.json'
+    script: 'mv auth_config.blank.json auth_config.json'
     workingDirectory: 'Sif'
 
 - task: FileTransform@1
