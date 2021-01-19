@@ -25,6 +25,12 @@ steps:
     command: 'install'
     workingDir: 'Sif'
 
+- task: FileTransform@1
+  inputs:
+    folderPath: '$(System.DefaultWorkingDirectory)/**/'
+    fileType: 'json'
+    targetFiles: 'auth_config.blank.json'
+
 - task: Npm@1
   inputs:
     command: 'custom'
