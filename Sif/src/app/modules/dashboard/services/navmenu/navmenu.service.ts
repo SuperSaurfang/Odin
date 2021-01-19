@@ -52,7 +52,7 @@ export class NavmenuService {
       switch (response.change) {
         case ChangeResponse.Change:
           const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
-          this.navMenuList = this.navMenuList.slice(index, 1);
+          this.navMenuList.splice(index, 1);
           this.originalList = this.navMenuList.map(item => Object.assign(new NavMenu(), item));
           this.navMenuListSubject.next(this.navMenuList);
           break;
