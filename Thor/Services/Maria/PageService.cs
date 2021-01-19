@@ -66,7 +66,7 @@ namespace Thor.Services.Maria {
       const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
       FROM Article WHERE IsPage = 1 AND Title = @title";
       var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
-      await MapUserIdToAuthor(result);
+      result.Author = await MapUserIdToAuthor(result);
       return result;
     }
 
@@ -75,7 +75,7 @@ namespace Thor.Services.Maria {
       const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
       FROM Article WHERE Status = 'public' AND IsPage = 1 AND Title = @title";
       var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
-      await MapUserIdToAuthor(result);
+      result.Author = await MapUserIdToAuthor(result);
       return result;
     }
 
