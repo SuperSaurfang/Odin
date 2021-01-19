@@ -108,13 +108,13 @@ namespace Thor.Services
         var expiration = accessToken.ValidTo;
         if (now.AddMinutes(10) >= expiration)
         {
-          logger.LogInformation("Token expires soon. Refresh token now");
+          logger.LogInformation("Token expires soon. Refresh token now.");
           return ExpirationCheckState.ExpireSoon;
         }
-        logger.LogInformation("Token not expired yet");
+        logger.LogInformation("Token not expired yet.");
         return ExpirationCheckState.NotExpiring;
       }
-      logger.LogWarning("Unable to read token");
+      logger.LogWarning("Unable to read token. Get new token.");
       return ExpirationCheckState.UnableRead;
     }
 
