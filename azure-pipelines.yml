@@ -27,7 +27,7 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'rename auth_config.blank.json auth_config.json'
+    script: 'ren auth_config.blank.json auth_config.json'
     workingDirectory: 'Sif'
 
 - task: FileTransform@1
