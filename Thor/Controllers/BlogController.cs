@@ -82,7 +82,7 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpGet("{title}")]
-    [Authorize("create:blog")]
+    [Authorize("edit:blog")]
     public async Task<ActionResult<Article>> GetSingleArticle(string title)
     {
       if (title == null)
@@ -99,7 +99,7 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpGet("id/{title}")]
-    [Authorize("create:blog")]
+    [Authorize("edit:blog")]
     public async Task<ActionResult<int>> GetBlogId(string title)
     {
       if (title == null)
@@ -120,7 +120,7 @@ namespace Thor.Controllers
     /// <returns></returns>
     [Produces("application/json")]
     [HttpGet]
-    [Authorize("create:blog")]
+    [Authorize("edit:blog")]
     public async Task<ActionResult<IEnumerable<Article>>> GetFullBlog()
     {
       var result = await blogService.GetAllArticles();
