@@ -27,9 +27,9 @@ steps:
 
 - task: FileTransform@1
   inputs:
-    folderPath: '$(System.DefaultWorkingDirectory)/Sif/*'
+    folderPath: '$(System.DefaultWorkingDirectory)/Sif/'
     fileType: 'json'
-    targetFiles: 'auth_config.blank.json'
+    targetFiles: 'auth_config'
 
 - task: Npm@1
   inputs:
