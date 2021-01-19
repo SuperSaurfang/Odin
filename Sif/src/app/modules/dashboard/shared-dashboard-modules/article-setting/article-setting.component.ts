@@ -30,7 +30,7 @@ export class ArticleSettingComponent implements OnInit, OnChanges {
   public settingChange = new EventEmitter<any>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.type === 'date') {
+    if (this.type === 'date' && this.setting !== undefined) {
       const temp = new Date(this.setting);
       const month = temp.getMonth() + 1;
       const date = temp.getDate();

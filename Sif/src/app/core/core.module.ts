@@ -29,7 +29,9 @@ import { tokenGetter } from './const';
       httpInterceptor: {
         allowedList: [
           `${environment.restApi}/adminblog`,
-          `${environment.restApi}/adminblog/*`
+          `${environment.restApi}/adminblog/*`,
+          `${environment.restApi}/adminpage`,
+          `${environment.restApi}/adminpage/*`
         ]
       }
     })
