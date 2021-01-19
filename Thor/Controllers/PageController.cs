@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Linq;
 using Thor.Util;
 
-namespace Thor.Controllers {
-
+namespace Thor.Controllers
+{
+  #region public page controller
   [ApiController]
   [Route("api/[controller]")]
   public class PageController : ControllerBase
@@ -24,13 +25,13 @@ namespace Thor.Controllers {
     [HttpGet("{title}")]
     public async Task<ActionResult<Article>> GetPublicPage(string title)
     {
-      if(title == null || title == string.Empty || title.Length == 0)
+      if (title == null || title == string.Empty || title.Length == 0)
       {
         return BadRequest("Unable to load page without title");
       }
 
       var article = await pageService.GetPublicArticleByTitle(title);
-      if(article == null)
+      if (article == null)
       {
         return InternalError();
       }
@@ -38,18 +39,37 @@ namespace Thor.Controllers {
       return Ok(article);
     }
 
+    private ObjectResult InternalError(string message = "Internal Server Error")
+    {
+      return StatusCode(500, message);
+    }
+  }
+  #endregion
+
+
+  #region admin page controller
+  [ApiController]
+  [Route("api/[controller]")]
+  public class AdminPageController : ControllerBase
+  {
+    private readonly IPageService pageService;
+    public AdminPageController(IPageService pageService)
+    {
+      this.pageService = pageService;
+    }
+
     [Produces("application/json")]
-    [HttpGet("admin/{title}")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpGet("{title}")]
+    [Authorize("edit:page")]
     public async Task<ActionResult<Article>> GetSinglePage(string title)
     {
-      if(title == null || title == string.Empty || title.Length == 0)
+      if (title == null || title == string.Empty || title.Length == 0)
       {
         return BadRequest("Unable to load page without title");
       }
 
       var article = await pageService.GetArticleByTitle(title);
-      if(article == null)
+      if (article == null)
       {
         return InternalError();
       }
@@ -58,17 +78,17 @@ namespace Thor.Controllers {
     }
 
     [Produces("application/json")]
-    [HttpGet("admin/id/{title}")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpGet("id/{title}")]
+    [Authorize("edit:page")]
     public async Task<ActionResult<int>> GetPageId(string title)
     {
-      if(title == null || title == string.Empty || title.Length == 0)
+      if (title == null || title == string.Empty || title.Length == 0)
       {
         return BadRequest("Unable to load page without title");
       }
 
       var result = await pageService.GetArticleId(title);
-      if(result == 0)
+      if (result == 0)
       {
         return InternalError();
       }
@@ -77,12 +97,12 @@ namespace Thor.Controllers {
     }
 
     [Produces("application/json")]
-    [HttpGet("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpGet]
+    [Authorize("edit:page")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllPages()
     {
       var result = await pageService.GetAllArticles();
-      if(result == null)
+      if (result == null)
       {
         return InternalError();
       }
@@ -91,11 +111,11 @@ namespace Thor.Controllers {
     }
 
     [Produces("application/json")]
-    [HttpPut("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpPut]
+    [Authorize("edit:page")]
     public async Task<ActionResult> UpdatePageArticle(Article article)
     {
-      if(article.ArticleId == 0)
+      if (article.ArticleId == 0)
       {
         return BadRequest("Article id cannot be null");
       }
@@ -105,8 +125,8 @@ namespace Thor.Controllers {
     }
 
     [Produces("application/json")]
-    [HttpPost("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpPost]
+    [Authorize("create:page")]
     public async Task<ActionResult> CreatePageArticle(Article article)
     {
       var response = await pageService.CreateArticle(article);
@@ -114,8 +134,8 @@ namespace Thor.Controllers {
     }
 
     [Produces("application/json")]
-    [HttpDelete("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpDelete]
+    [Authorize("delete:page")]
     public async Task<ActionResult> DeletePageArticle()
     {
       var response = await pageService.DeleteArticle();
@@ -125,6 +145,6 @@ namespace Thor.Controllers {
     {
       return StatusCode(500, message);
     }
-
   }
+  #endregion
 }

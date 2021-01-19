@@ -122,7 +122,12 @@ namespace Thor
         o.AddPolicy("edit:blog", policy => policy.Requirements.Add(new HasScopeRequirement("edit:blog", domain)));
         o.AddPolicy("delete:blog", policy => policy.Requirements.Add(new HasScopeRequirement("delete:blog", domain)));
         o.AddPolicy("read:blog", policy => policy.Requirements.Add(new HasScopeRequirement("read:blog", domain)));
-        o.AddPolicy("Moderator", policy => policy.Requirements.Add(new HasScopeRequirement("Moderator", domain)));
+
+        o.AddPolicy("create:page", policy => policy.Requirements.Add(new HasScopeRequirement("create:page", domain)));
+        o.AddPolicy("delete:page", policy => policy.Requirements.Add(new HasScopeRequirement("delete:page", domain)));
+        o.AddPolicy("edit:page", policy => policy.Requirements.Add(new HasScopeRequirement("edit:page", domain)));
+        o.AddPolicy("read:page", policy => policy.Requirements.Add(new HasScopeRequirement("read:page", domain)));
+
         o.AddPolicy("User", policy => policy.Requirements.Add(new HasScopeRequirement("User", domain)));
       });
       services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
