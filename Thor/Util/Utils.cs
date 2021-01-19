@@ -5,25 +5,54 @@ namespace Thor.Util
 {
   class Utils
   {
-    public static StatusResponse CreateStatusResponse(int result, string message)
+    /// <summary>
+    /// Create a Response for a insert, update or delete operation
+    /// </summary>
+    /// <param name="affectedRows">The rows that changed</param>
+    /// <param name="type">The type of the response</param>
+    /// <returns>The status response</returns>
+    public static StatusResponse CreateStatusResponse(int affectedRows, StatusResponseType type)
     {
-      var statusResponse = new StatusResponse
+      var response = new StatusResponse
       {
-        Message = message
+        ResponseType = type
       };
-      if (result >= 1)
+
+      if (affectedRows == 0)
       {
-        statusResponse.Change = ChangeResponse.Change;
+        //if the SQL Statement is executes successful
+        response.Message = "Nothing changed, maybe something went wrong. No Sql Error Occurred";
+        response.Change = Change.NoChange;
+        return response;
       }
-      else if (result == 0)
+
+      else if(affectedRows == -1)
       {
-        statusResponse.Change = ChangeResponse.NoChange;
+        response.Message = "An Error occured. See logs for the error";
+        response.Change = Change.Error;
+        return response;
       }
+
       else
       {
-        statusResponse.Change = ChangeResponse.Error;
+        response.Change = Change.Change;
+        switch (type)
+        {
+          case StatusResponseType.Create:
+            response.Message = $"{affectedRows} entr{(affectedRows == 1 ? "y" : "ies")} created";
+            break;
+          case StatusResponseType.Delete:
+            response.Message = $"{affectedRows} entr{(affectedRows == 1 ? "y" : "ies")} deleted";
+            break;
+          case StatusResponseType.Update:
+            response.Message = $"{affectedRows} entr{(affectedRows == 1 ? "y" : "ies")} updated";
+            break;
+          default:
+            break;
+        }
+
+        return response;
       }
-      return statusResponse;
     }
   }
 }

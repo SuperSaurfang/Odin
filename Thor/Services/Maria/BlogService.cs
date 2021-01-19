@@ -20,31 +20,23 @@ namespace Thor.Services.Maria
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
+    #region Interface implementation
     public UnderlayingDatabase UnderlayingDatabase { get; }
 
-    #region Interface implementation
     public async Task<StatusResponse> CreateArticle(Article article)
     {
       const string sql = @"INSERT INTO `Article`
       (`UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`, `IsBlog`)
       VALUES (@UserId, @Title, @ArticleText, @CreationDate, @ModificationDate, @HasCommentsEnabled, @HasDateAuthorEnabled, @Status, 1)";
       var result = await executer.ExecuteSql(sql, article);
-      if (result == 0)
-      {
-        return Utils.CreateStatusResponse(result, "No entry created");
-      }
-      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} created");
+      return Utils.CreateStatusResponse(result, StatusResponseType.Create);
     }
 
     public async Task<StatusResponse> DeleteArticle()
     {
       const string sql = @"DELETE FROM Article WHERE Status = 'trash' AND IsBlog = 1";
       var result = await executer.ExecuteSql(sql);
-      if (result == 0)
-      {
-        return Utils.CreateStatusResponse(result, "No entry deleted");
-      }
-      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} deleted");
+      return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
     }
 
     public async Task<int> GetArticleId(string title)
@@ -91,17 +83,12 @@ namespace Thor.Services.Maria
 
     public async Task<StatusResponse> UpdateArticle(Article article)
     {
-
       const string sql = @"UPDATE `Article` SET `Title`=@Title, `ArticleText`=@ArticleText, `CreationDate`=@CreationDate, `ModificationDate`=@ModificationDate,
       `HasCommentsEnabled`=@HasCommentsEnabled,`HasDateAuthorEnabled`=@HasDateAuthorEnabled, `Status`=@Status
       WHERE `ArticleId`=@ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
-      if (result == 0)
-      {
-        return Utils.CreateStatusResponse(result, "No entry updated");
-      }
-      return Utils.CreateStatusResponse(result, $"{result} entr{(result == 1 ? "y" : "ies")} updated");
+      return Utils.CreateStatusResponse(result, StatusResponseType.Update);
     }
     #endregion
 
