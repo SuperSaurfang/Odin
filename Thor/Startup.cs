@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Thor.Services;
+using Thor.Authorization;
+using Thor.Models.Config;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +17,8 @@ using Microsoft.Extensions.Options;
 using Thor.Util;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Thor
 {
@@ -30,11 +34,17 @@ namespace Thor
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // setup database connections
-      var database = Configuration.GetValue<string>("ConnectionStrings:Database").ToLower();
-      services.Configure<ConnectionSetting>(Configuration.GetSection("ConnectionStrings:ConnectionSettings"));
-      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionSetting>>().Value);
-      switch (database)
+      // set config
+      services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseConfig:ConnectionSettings"));
+      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
+
+      services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
+      services.AddSingleton(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
+
+      services.AddSingleton<IRestClientService, RestClientService>();
+
+      var DatabaseType = Configuration.GetValue<string>("DatabaseConfig:DatabaseType").ToLower();
+      switch (DatabaseType)
       {
         case "mariadb":
         case "maria":
@@ -53,14 +63,14 @@ namespace Thor
         .AddJsonOptions(o =>
         {
           o.JsonSerializerOptions.IgnoreNullValues = true;
-        }).AddNewtonsoftJson(o =>
+        })
+        .AddNewtonsoftJson(o =>
         {
           o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
 
-      var value = Configuration.GetValue<string>("AppSettings:Secret");
-      byte[] key = Encoding.ASCII.GetBytes(value);
 
+      /** deprecated authentication
       services.AddAuthentication(o =>
       {
         o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,8 +87,26 @@ namespace Thor
           ValidateIssuer = false,
           ValidateAudience = false
         };
-      });
+      });*/
+      var auth0 = Configuration.GetSection("Auth0");
+      var authority = auth0.GetValue<string>("Authority");
+      var domain = $"https://{authority}/";
+      services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = domain;
+            options.Audience = auth0.GetValue<string>("Audience");
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+              NameClaimType = ClaimTypes.NameIdentifier
+            };
+        });
 
+      /** deprecated authorization
       services.AddAuthorization(o =>
       {
         o.AddPolicy("UserPolicy",
@@ -87,7 +115,28 @@ namespace Thor
           policy => policy.RequireRole(UserRank.Moderator, UserRank.Admin));
         o.AddPolicy("AdminPolicy",
           policy => policy.RequireRole(UserRank.Admin));
+      });*/
+      services.AddAuthorization(o =>
+      {
+        //scopes for blog controller
+        o.AddPolicy("create:blog", policy => policy.Requirements.Add(new HasScopeRequirement("create:blog", domain)));
+        o.AddPolicy("edit:blog", policy => policy.Requirements.Add(new HasScopeRequirement("edit:blog", domain)));
+        o.AddPolicy("delete:blog", policy => policy.Requirements.Add(new HasScopeRequirement("delete:blog", domain)));
+        o.AddPolicy("read:blog", policy => policy.Requirements.Add(new HasScopeRequirement("read:blog", domain)));
+
+        //scope for page controller
+        o.AddPolicy("create:page", policy => policy.Requirements.Add(new HasScopeRequirement("create:page", domain)));
+        o.AddPolicy("delete:page", policy => policy.Requirements.Add(new HasScopeRequirement("delete:page", domain)));
+        o.AddPolicy("edit:page", policy => policy.Requirements.Add(new HasScopeRequirement("edit:page", domain)));
+        o.AddPolicy("read:page", policy => policy.Requirements.Add(new HasScopeRequirement("read:page", domain)));
+
+        //scope for nav menu controller
+        o.AddPolicy("create:menu", policy => policy.Requirements.Add(new HasScopeRequirement("create:menu", domain)));
+        o.AddPolicy("delete:menu", policy => policy.Requirements.Add(new HasScopeRequirement("delete:menu", domain)));
+        o.AddPolicy("edit:menu", policy => policy.Requirements.Add(new HasScopeRequirement("edit:menu", domain)));
+        o.AddPolicy("read:menu", policy => policy.Requirements.Add(new HasScopeRequirement("read:menu", domain)));
       });
+      services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
       services.AddMvc();
 
@@ -98,7 +147,7 @@ namespace Thor
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUserService userService)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
       {
@@ -113,7 +162,6 @@ namespace Thor
 
       app.UseDefaultFiles();
       app.UseStaticFiles();
-      Console.WriteLine(env.WebRootPath);
       // app.UseHttpsRedirection();
 
       app.UseSwagger();

@@ -1,20 +1,20 @@
 <div class="editor-head-container">
-  <h1 class="margin-right-2">Blogeintrag editieren</h1>
+  <h1 class="mr-2">Blogeintrag editieren</h1>
   <div *ngIf="isSaving || isSaved || isFailed">
     <fa-icon *ngIf="isSaving" [icon]="iconSpinner" [pulse]="isSaving"></fa-icon>
     <div *ngIf="isSaved && !isSaving" class="status-container ok">
-      <fa-icon class="margin-right-1"  [icon]="iconCheck"></fa-icon>
+      <fa-icon class="mr-1"  [icon]="iconCheck"></fa-icon>
       <span>Erfolgreich gespeichert</span>
     </div>
     <div *ngIf="isFailed && !isSaving" class="status-container danger">
-      <fa-icon class="margin-right-1"  [icon]="iconTimes"></fa-icon>
+      <fa-icon class="mr-1"  [icon]="iconTimes"></fa-icon>
       <span>Speichern fehlgeschlagen</span>
     </div>
   </div>
 </div>
 
-<input type="text" class="title-input margin-bottom-1" [(ngModel)]="article.title" (change)="onUpdateArticleTitle()" placeholder="Titel des Blogeintrag">
-<div class="flex margin-bottom-1">
+<input type="text" class="title-input mb-1" [(ngModel)]="article.title" (change)="onUpdateArticleTitle()" placeholder="Titel des Blogeintrag">
+<div class="flex mb-1">
   <div class="flex-grow">
     <ckeditor
       #blogEditor
@@ -22,7 +22,7 @@
       (blur)="onUpdateArticleText($event)">
     </ckeditor>
   </div>
-  <div class="article-setting-container flex-shrink margin-left-1">
+  <div class="article-setting-container flex-shrink ml-1">
     <h2>Einstellungen</h2>
     <app-article-setting name='Status' type='select' [setting]="article.status" (settingChange)="onStatusUpdate($event)"></app-article-setting>
     <app-article-setting name='Kommentare' type='switch' label='Kommentare erlauben' [setting]="article.hasCommentsEnabled" (settingChange)="onCommentAllowUpdate($event)"></app-article-setting>

@@ -6,7 +6,6 @@ using Thor.Util;
 namespace Thor.Services.Api
 {
   public interface IBlogService : IArticleService {}
-
   public interface IPageService: IArticleService {}
   public interface IArticleService
   {
@@ -16,8 +15,8 @@ namespace Thor.Services.Api
     Task<int> GetArticleId(string title);
     Task<Article> GetArticleByTitle(string title);
     Task<IEnumerable<Article>> GetAllArticles();
-    Task<ChangeResponse> UpdateArticle(Article article);
-    Task<ChangeResponse> CreateArticle(Article article);
-    Task<ChangeResponse> DeleteArticle();
+    Task<StatusResponse> UpdateArticle(Article article);
+    Task<StatusResponse> CreateArticle(Article article);
+    Task<StatusResponse> DeleteArticle();
   }
 }

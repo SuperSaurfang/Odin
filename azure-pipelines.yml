@@ -25,11 +25,16 @@ steps:
     command: 'install'
     workingDir: 'Sif'
 
+- task: CmdLine@2
+  inputs:
+    script: 'mv auth_config.blank.json auth_config.json'
+    workingDirectory: 'Sif'
+
 - task: FileTransform@1
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)/**/'
     fileType: 'json'
-    targetFiles: 'auth_config.blank.json'
+    targetFiles: '**/auth_config.json' 
 
 - task: Npm@1
   inputs:

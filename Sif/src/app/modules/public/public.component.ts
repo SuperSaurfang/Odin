@@ -10,12 +10,12 @@ export class PublicComponent implements OnInit {
 
   constructor(private userService: UserService) { }
 
-  public isLoggedIn = false;
+  public isAuthenticated = false;
 
   ngOnInit() {
-    this.userService.IsUserLoggedIn().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    })
+    this.userService.isAuthenticated().subscribe(isAuthenticated => {
+      this.isAuthenticated = isAuthenticated;
+    });
   }
 
 }

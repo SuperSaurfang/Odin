@@ -11,13 +11,6 @@ export class InterceptorService implements HttpInterceptor {
   
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let request = req;
-    if(this.userService.IsUserLoggedInValue()) {
-      let user = this.userService.CurrentUserValue();
-      let token = user.userToken;
-      request = req.clone({
-        headers: req.headers.set('authorization', `Bearer ${token}`)
-      })
-    }
     return next.handle(request);
   }
 

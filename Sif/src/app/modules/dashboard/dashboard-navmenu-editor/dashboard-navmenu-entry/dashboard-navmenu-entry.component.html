@@ -7,14 +7,14 @@
   </div>
   <div class="form-container" *ngIf="isExpanded">
     <form [formGroup]="navMenuForm" (ngSubmit)="saveChanges()" (reset)="abortEdit()">
-      <div class="control-container control-group horizontal-group margin-bottom-2">
+      <div class="control-container control-group horizontal-group mb-2">
         <label for="display-text-{{navMenuEntry.navMenuId}}">
             Anzeige Text
         </label>
         <input type="text" id="display-text-{{navMenuEntry.navMenuId}}" formControlName="displayText" (input)="onDisplayTextChange($event)">
       </div>
 
-      <div class="control-container control-group horizontal-group margin-bottom-2">
+      <div class="control-container control-group horizontal-group mb-2">
         <label for="parent-select-{{navMenuEntry.navMenuId}}">
           Übergeordnetes Menuelemt
         </label>

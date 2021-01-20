@@ -1,14 +1,18 @@
 import { HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
-import { Article, ChangeResponseOld, EChangeResponse } from '../models';
+import { Article, ChangeResponse, StatusResponse, StatusResponseType } from '../models';
 
 export abstract class RestBase {
   protected basePath: string;
 
-  protected errorResponse: ChangeResponseOld = {
-    ChangeResponse: EChangeResponse.Error
-  };
+  protected errorResponse(type: StatusResponseType): StatusResponse {
+    return {
+      change: ChangeResponse.Error,
+      message: 'Error Response',
+      responseType: type
+    };
+  }
 
   /**
    * the base constructor for the htpp interface

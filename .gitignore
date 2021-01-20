@@ -37,3 +37,4 @@ Thor/wwwroot/index.html
 Thor/appsettings.Development.json
 Thor/appsettings.json
 dist
+Sif/auth_config.json

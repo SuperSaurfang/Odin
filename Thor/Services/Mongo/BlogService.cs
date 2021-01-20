@@ -20,12 +20,12 @@ namespace Thor.Services.Mongo
 
     private IMongoCollection<Article> Collection { get; }
 
-    public Task<ChangeResponse> CreateArticle(Article article)
+    public Task<StatusResponse> CreateArticle(Article article)
     {
       throw new System.NotImplementedException();
     }
 
-    public Task<ChangeResponse> DeleteArticle()
+    public Task<StatusResponse> DeleteArticle()
     {
       throw new System.NotImplementedException();
     }
@@ -57,7 +57,7 @@ namespace Thor.Services.Mongo
       return Task.FromResult<Article>(query.FirstOrDefault());
     }
 
-    public Task<ChangeResponse> UpdateArticle(Article update)
+    public Task<StatusResponse> UpdateArticle(Article update)
     {
       throw new System.NotImplementedException();
     }

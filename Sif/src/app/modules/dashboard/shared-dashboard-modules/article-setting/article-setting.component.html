@@ -7,7 +7,7 @@
   </div>
   <div class="setting-body" [ngClass]="{'open': isSettingOpen === true}">
     <div *ngIf="type === 'select'">
-      <select [ngModel]="setting" (ngModelChange)="settingChange.emit($event)" class="margin-right-1">
+      <select [ngModel]="setting" (ngModelChange)="settingChange.emit($event)" class="mr-1">
         <option value="public">Öffentlich</option>
         <option value="private">Privat</option>
         <option value="draft" selected>Entwurf</option>

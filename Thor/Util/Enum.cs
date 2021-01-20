@@ -7,10 +7,18 @@ namespace Thor.Util
     Redis
   }
 
-  public enum ChangeResponse {
+  public enum Change
+  {
     Change,
     NoChange,
     Error
+  }
+
+  public enum StatusResponseType
+  {
+    Create,
+    Update,
+    Delete
   }
 
 }

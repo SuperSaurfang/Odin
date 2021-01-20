@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/core/services';
-import { Rank } from 'src/app/core/enums/rank';
+import { AuthService } from '@auth0/auth0-angular';
+import { User } from 'src/app/core';
 
 @Component({
   selector: 'app-side-bar-meta',
@@ -9,23 +10,21 @@ import { Rank } from 'src/app/core/enums/rank';
 })
 export class SideBarMetaComponent implements OnInit {
 
-  constructor(private userService: UserService) { 
+  constructor(private userService: UserService) {
 
   }
 
-  public isLoggedIn = false;
-  public isAdmin = false;
+  public isAuthor = false;
+  public isAuthenticated = false;
+  public user: User = undefined;
 
   ngOnInit() {
-    this.userService.IsUserLoggedIn().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-      if(isLoggedIn) {
-        let rank = this.userService.CurrentUserValue().userRank;
-        if(Rank.Admin.toString() === rank) {
-          this.isAdmin = true;
-        }
-      } else {
-        this.isAdmin = false;
+    this.userService.getUser().subscribe(user => {
+      this.isAuthenticated = false;
+      this.user = user;
+      if (user) {
+        this.isAuthenticated = true;
+        this.user.updatedAt = new Date(user.updated_at).toLocaleString();
       }
     });
   }
@@ -34,4 +33,11 @@ export class SideBarMetaComponent implements OnInit {
     this.userService.logout();
   }
 
+  login() {
+    this.userService.loginWithRedirect();
+  }
+
+  isAdmin() {
+    return this.userService.hasUserPermission('author');
+  }
 }

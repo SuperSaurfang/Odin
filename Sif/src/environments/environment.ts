@@ -1,8 +1,15 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+import { apiUri, appUri, audience, clientId, domain } from 'auth_config.json';
 
 export const environment = {
+  auth0: {
+    domain: domain,
+    clientId: clientId,
+    audience: audience,
+    redirectUri: window.location.origin
+  },
   production: false,
   restApi: 'http://localhost:5000/api'
 };

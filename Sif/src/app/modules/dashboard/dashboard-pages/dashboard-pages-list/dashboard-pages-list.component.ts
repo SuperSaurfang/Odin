@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
-import { Article, EChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse } from 'src/app/core';
 import { RestPageService } from '../../services';
 import { Subscription } from 'rxjs';
 import { faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -65,13 +65,13 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
   public updateStatus(status: string, index: number) {
     this.articles[index].status = status;
     this.restService.updatePage(this.articles[index]).subscribe(response => {
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.articleFilter.applyFilter();
           console.log('everything okay');
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
           console.log('Something goes wrong');
           break;
@@ -113,13 +113,13 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
 
   public clearTrash() {
     this.restService.deletePages().subscribe(response => {
-      switch (response.ChangeResponse) {
-        case EChangeResponse.Change:
+      switch (response.change) {
+        case ChangeResponse.Change:
           this.articleFilterSubscription.unsubscribe();
           this.loadData();
           break;
-        case EChangeResponse.Error:
-        case EChangeResponse.NoChange:
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
         default:
           break;
       }

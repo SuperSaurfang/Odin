@@ -8,7 +8,7 @@ using System;
 
 namespace Thor.Controllers
 {
-
+  #region public nav menu controller
   [ApiController]
   [Route("api/[controller]")]
   public class NavMenuController : ControllerBase
@@ -27,10 +27,24 @@ namespace Thor.Controllers
       var result = await navMenuService.GetNavMenu();
       return Ok(result);
     }
+  }
+  #endregion
+
+  #region admin nav menu controller
+  [ApiController]
+  [Route("api/[controller]")]
+  public class AdminNavMenuController : ControllerBase
+  {
+    private readonly INavMenuService navMenuService;
+
+    public AdminNavMenuController(INavMenuService navMenuService)
+    {
+      this.navMenuService = navMenuService;
+    }
 
     [Produces("application/json")]
-    [HttpGet("admin/article-list")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpGet("article-list")]
+    [Authorize("edit:menu")]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticleList()
     {
       var result = await navMenuService.GetArticleList();
@@ -38,8 +52,8 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
-    [HttpGet("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpGet]
+    [Authorize("edit:menu")]
     public async Task<ActionResult<IEnumerable<NavMenu>>> GetFlatList()
     {
       var result = await navMenuService.GetFlatList();
@@ -47,8 +61,8 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
-    [HttpPost("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpPost]
+    [Authorize("create:menu")]
     public async Task<ActionResult<StatusResponse>> CreateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.PageId == 0)
@@ -60,8 +74,8 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
-    [HttpPut("admin")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpPut]
+    [Authorize("edit:menu")]
     public async Task<ActionResult<StatusResponse>> UpdateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.NavMenuId == 0)
@@ -73,13 +87,17 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
-    [HttpDelete("admin/{id}")]
-    [Authorize(Policy = "ModeratorPolicy")]
+    [HttpDelete("{id}")]
+    [Authorize("delete:menu")]
     public async Task<ActionResult<StatusResponse>> DeleteNavMenuEntry(int id)
     {
+      if(id == 0)
+      {
+        return BadRequest("Id cannot be null");
+      }
       var result = await navMenuService.DeleteNavMenu(id);
       return Ok(result);
     }
-
   }
+  #endregion
 }
