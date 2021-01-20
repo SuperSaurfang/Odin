@@ -26,11 +26,13 @@ steps:
     workingDir: 'Sif'
 
 - task: CmdLine@2
+  displayName: Prepare auth_config
   inputs:
     script: 'mv auth_config.blank.json auth_config.json'
     workingDirectory: 'Sif'
 
 - task: FileTransform@1
+  displayName: Set auth_config
   inputs:
     folderPath: '$(System.DefaultWorkingDirectory)/**/'
     fileType: 'json'
