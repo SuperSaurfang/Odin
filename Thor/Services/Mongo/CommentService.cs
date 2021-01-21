@@ -21,7 +21,17 @@ namespace Thor.Services.Mongo
 
     private IMongoCollection<Comment> Collection { get; }
 
-    public Task<IEnumerable<Comment>> GetComments(int articleId)
+    public Task<StatusResponse> DeleteComment()
+    {
+      throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Comment>> GetComments()
+    {
+      throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<Comment>> GetPublicComments(int articleId)
     {
       var result = (from c in Collection.AsQueryable() where c.ArticleId == articleId select c).ToList();
       if (result == null)
@@ -50,9 +60,14 @@ namespace Thor.Services.Mongo
       return Task.FromResult<IEnumerable<Comment>>(result);
     }
 
-    public Task<Comment> PostComment(Comment comment)
+    public Task<StatusResponse> UpdateComment(Comment comment)
     {
-      throw new System.NotImplementedException();
+      throw new NotImplementedException();
+    }
+
+    public Task<StatusResponse> PostComment(Comment comment)
+    {
+      throw new NotImplementedException();
     }
   }
 }
