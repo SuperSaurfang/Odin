@@ -107,5 +107,10 @@ namespace Thor.Services.Maria
       }
     }
 
+    public Task<IEnumerable<Article>> GetArticleList()
+    {
+      const string sql = "SELECT `ArticleId`, `Title` FROM `Article` WHERE `HasCommentsEnabled` = 1";
+      return executer.ExecuteSql<Article>(sql);
+    }
   }
 }

@@ -70,24 +70,6 @@ namespace Thor
         });
 
 
-      /** deprecated authentication
-      services.AddAuthentication(o =>
-      {
-        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
-      .AddJwtBearer(o =>
-      {
-        o.RequireHttpsMetadata = false;
-        o.SaveToken = true;
-        o.TokenValidationParameters = new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(key),
-          ValidateIssuer = false,
-          ValidateAudience = false
-        };
-      });*/
       var auth0 = Configuration.GetSection("Auth0");
       var authority = auth0.GetValue<string>("Authority");
       var domain = $"https://{authority}/";
@@ -106,16 +88,6 @@ namespace Thor
             };
         });
 
-      /** deprecated authorization
-      services.AddAuthorization(o =>
-      {
-        o.AddPolicy("UserPolicy",
-          policy => policy.RequireRole(UserRank.User, UserRank.Moderator, UserRank.Admin));
-        o.AddPolicy("ModeratorPolicy",
-          policy => policy.RequireRole(UserRank.Moderator, UserRank.Admin));
-        o.AddPolicy("AdminPolicy",
-          policy => policy.RequireRole(UserRank.Admin));
-      });*/
       services.AddAuthorization(o =>
       {
         //scopes for blog controller
@@ -124,17 +96,22 @@ namespace Thor
         o.AddPolicy("delete:blog", policy => policy.Requirements.Add(new HasScopeRequirement("delete:blog", domain)));
         o.AddPolicy("read:blog", policy => policy.Requirements.Add(new HasScopeRequirement("read:blog", domain)));
 
-        //scope for page controller
+        //scopes for page controller
         o.AddPolicy("create:page", policy => policy.Requirements.Add(new HasScopeRequirement("create:page", domain)));
         o.AddPolicy("delete:page", policy => policy.Requirements.Add(new HasScopeRequirement("delete:page", domain)));
         o.AddPolicy("edit:page", policy => policy.Requirements.Add(new HasScopeRequirement("edit:page", domain)));
         o.AddPolicy("read:page", policy => policy.Requirements.Add(new HasScopeRequirement("read:page", domain)));
 
-        //scope for nav menu controller
+        //scopes for nav menu controller
         o.AddPolicy("create:menu", policy => policy.Requirements.Add(new HasScopeRequirement("create:menu", domain)));
         o.AddPolicy("delete:menu", policy => policy.Requirements.Add(new HasScopeRequirement("delete:menu", domain)));
         o.AddPolicy("edit:menu", policy => policy.Requirements.Add(new HasScopeRequirement("edit:menu", domain)));
         o.AddPolicy("read:menu", policy => policy.Requirements.Add(new HasScopeRequirement("read:menu", domain)));
+
+        //scopes for comment
+        o.AddPolicy("create:comment", policy => policy.Requirements.Add(new HasScopeRequirement("create:comment", domain)));
+        o.AddPolicy("delete:comment", policy => policy.Requirements.Add(new HasScopeRequirement("delete:comment", domain)));
+        o.AddPolicy("edit:comment", policy => policy.Requirements.Add(new HasScopeRequirement("edit:comment", domain)));
       });
       services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
@@ -159,10 +136,6 @@ namespace Thor
           c.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyMethod();
         });
       }
-
-      app.UseDefaultFiles();
-      app.UseStaticFiles();
-      // app.UseHttpsRedirection();
 
       app.UseSwagger();
       app.UseSwaggerUI(c =>

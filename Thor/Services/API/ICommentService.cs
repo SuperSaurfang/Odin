@@ -13,5 +13,6 @@ namespace Thor.Services.Api
     Task<IEnumerable<Comment>> GetComments();
     Task<StatusResponse> UpdateComment(Comment comment);
     Task<StatusResponse> DeleteComment();
+    Task<IEnumerable<Article>> GetArticleList();
   }
 }

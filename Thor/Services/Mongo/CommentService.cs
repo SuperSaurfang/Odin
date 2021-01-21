@@ -69,5 +69,10 @@ namespace Thor.Services.Mongo
     {
       throw new NotImplementedException();
     }
+
+    public Task<IEnumerable<Article>> GetArticleList()
+    {
+      throw new NotImplementedException();
+    }
   }
 }
