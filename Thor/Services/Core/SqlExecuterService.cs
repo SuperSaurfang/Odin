@@ -3,19 +3,21 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Dapper;
-using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Thor.Services.Api;
 using Thor.Models.Config;
+using Microsoft.Extensions.Logging;
 
 namespace Thor.Services
 {
   public class SqlExecuterService : ISqlExecuterService
   {
     private readonly string connectionString;
+    private readonly ILogger<SqlExecuterService> logger;
 
-    public SqlExecuterService(ConnectionConfig connectionSetting)
+    public SqlExecuterService(ILogger<SqlExecuterService> logger, ConnectionConfig connectionSetting)
     {
+      this.logger = logger;
       connectionString = connectionSetting.GetMariaConnectionString();
     }
 
@@ -42,7 +44,7 @@ namespace Thor.Services
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"Execption: {ex}");
+        logger.LogError(ex, "Unable to execute sql statement.");
         return new List<T>();
       }
     }
@@ -70,7 +72,7 @@ namespace Thor.Services
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"Exception: {ex}");
+        logger.LogError(ex, "Unable to execute sql statement.");
         return -1;
       }
     }
@@ -98,11 +100,9 @@ namespace Thor.Services
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"Execption: {ex}");
-        return default(T);
+        logger.LogError(ex, "Unable to execute sql statement.");
+        return Activator.CreateInstance<T>();
       }
     }
-
-
   }
 }
