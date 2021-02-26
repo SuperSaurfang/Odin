@@ -9,7 +9,12 @@
 
 .btn-link {
     text-decoration: none;
+    padding: 0px;
     display: inline-block;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
 }
 
 .btn-large {
