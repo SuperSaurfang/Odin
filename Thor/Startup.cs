@@ -36,10 +36,10 @@ namespace Thor
     {
       // set config
       services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseConfig:ConnectionSettings"));
-      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
+      services.AddTransient(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
 
       services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
-      services.AddSingleton(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
+      services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
       services.AddSingleton<IRestClientService, RestClientService>();
 
@@ -113,7 +113,7 @@ namespace Thor
         o.AddPolicy("delete:comment", policy => policy.Requirements.Add(new HasScopeRequirement("delete:comment", domain)));
         o.AddPolicy("edit:comment", policy => policy.Requirements.Add(new HasScopeRequirement("edit:comment", domain)));
       });
-      services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+      services.AddTransient<IAuthorizationHandler, HasScopeHandler>();
 
       services.AddMvc();
 
@@ -156,7 +156,7 @@ namespace Thor
 
     private void ConfigureMariaDB(IServiceCollection services)
     {
-      services.AddSingleton<ISqlExecuterService, SqlExecuterService>();
+      services.AddTransient<ISqlExecuterService, SqlExecuterService>();
 
       services.AddTransient<IBlogService, BlogService>();
       services.AddTransient<IPageService, PageService>();
@@ -168,7 +168,7 @@ namespace Thor
     private void ConfigureMongoDB(IServiceCollection services)
     {
 
-      services.AddSingleton<IMongoConnectionService, MongoConnectionService>();
+      services.AddTransient<IMongoConnectionService, MongoConnectionService>();
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
       services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();
