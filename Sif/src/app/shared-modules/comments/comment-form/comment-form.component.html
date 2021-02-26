@@ -1,0 +1,23 @@
+<form class="comment-form content-container" [formGroup]="commentForm">
+  <div class="info mb-2 p-1 radius">
+      <div *ngIf="isAuthenticated">
+          <span class="mr-1">Du bist angemeldet als:</span>
+          <span class="mr-1">{{user.nickname}}</span>
+          <a class="btn btn-link" (click)="logout()">Abmelden</a>
+      </div>
+      <div *ngIf="!isAuthenticated">
+          Du schreibst deinen Beitrag als Gast. Bedenke, das dein Beitrag erst geprüft wird bevor du ihn lesen kannst.
+          <a class="btn btn-link" (click)="login()">Anmelden</a>
+      </div>
+  </div>
+  <div class="mb-2">
+      <textarea  id="comment" formControlName="comment"></textarea>
+      <div *ngIf="comment.invalid && comment.touched">
+          Kein Kommentar ohne Text, schreibe etwas!
+      </div>
+  </div>
+  <div class="btn-group">
+      <input class="btn btn-primary btn-large" type="reset" (click)="abortComment()">
+      <input class="btn btn-primary btn-large" type="submit" (click)="saveComment()">
+  </div>
+</form>

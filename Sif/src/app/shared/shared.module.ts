@@ -10,6 +10,7 @@ import { ApplicationBarModule} from '../shared-modules/application-bar/applicati
 import { CheckboxModule } from '../shared-modules/checkbox/checkbox.module';
 import { ToggleSwitchModule } from '../shared-modules/toggle-switch/toggle-switch.module';
 import { MenuModule } from '../shared-modules/menu/menu.module';
+import { CommentModule } from '../shared-modules/comments/comments.module';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { MenuModule } from '../shared-modules/menu/menu.module';
     CheckboxModule,
     ToggleSwitchModule,
     MenuModule,
-    DragDropModule
+    DragDropModule,
+    CommentModule
   ]
 })
 export class SharedModule { }

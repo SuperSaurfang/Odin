@@ -8,4 +8,5 @@ export class Comment {
     creationDate?: Date;
     answerOf?: number;
     answers?: Comment[];
+    userId?: string;
 }
