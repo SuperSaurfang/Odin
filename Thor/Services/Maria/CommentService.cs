@@ -81,9 +81,13 @@ namespace Thor.Services.Maria
     public async Task<StatusResponse> PostComment(Comment comment)
     {
       comment.UserId.ToLower();
-      if(comment.UserId.Equals("guest") && !comment.Status.Equals("new"))
+      if(comment.UserId.Equals("guest"))
       {
         comment.Status = "new";
+      }
+      else
+      {
+        comment.Status = "released";
       }
       const string sql = @"INSERT INTO `Comment`(`ArticleId`, `UserId`, `AnswerOf`, `CommentText`, `CreationDate`, `Status`)
       VALUES (@ArticleId, @UserId, @AnswerOf, @CommentText, @CreationDate, @Status)";
