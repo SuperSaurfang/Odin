@@ -41,7 +41,12 @@ export class RestService extends RestBase {
   }
 
   public getComment(articleId: number): Observable<Comment[]> {
-    return this.httpClient.get<Comment[]>(this.basePath + `/comment/${articleId}`);
+    return this.httpClient.get<Comment[]>(this.basePath + `/comment/${articleId}`).pipe(
+      map(comments => {
+        comments.forEach(item => this.parseCommentDate(item));
+        return comments;
+      })
+    );
   }
 
   public postComment(comment: Comment): Observable<StatusResponse> {
@@ -57,4 +62,10 @@ export class RestService extends RestBase {
     );
   }
 
+  private parseCommentDate(comment: Comment) {
+    comment.creationDate = new Date(comment.creationDate);
+    if (comment.answers) {
+      comment.answers.forEach(item => this.parseCommentDate(item));
+    }
+  }
 }
