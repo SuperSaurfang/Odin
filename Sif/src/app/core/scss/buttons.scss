@@ -47,6 +47,7 @@
 .btn-primary:disabled {
     background-color: $primary-disabled;
     color: $white;
+    cursor: default;
 }
 
 .btn-primary-outline {
@@ -135,6 +136,12 @@
     color: $primary-light;
 }
 
+.btn-dark:disabled {
+  background-color: $black-disabled;
+  color: $white;
+  cursor: default;
+}
+
 .btn-dark-outline {
     border: 1px solid $dark-2;
     background-color: transparent;
@@ -177,10 +184,4 @@
     *:not(:last-child) {
         margin-right: margin(1);
     }
-}
-
-.btn-disabled {
-  background-color: #bfbfbf !important;
-  color: #ffffff !important;
-  cursor: default;
 }
