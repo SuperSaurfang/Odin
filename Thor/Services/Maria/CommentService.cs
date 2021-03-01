@@ -104,10 +104,13 @@ namespace Thor.Services.Maria
       {
         if(item.UserId.Equals("guest"))
         {
-          item.UserName = "Guest";
+          if(item.User == null) {
+            item.User = new User();
+          }
+          item.User.Nickname = "Guest";
           continue;
         }
-        item.UserName = (from name in query where name.UserId.Equals(item.UserId) select name.Nickname).FirstOrDefault();
+        item.User = (from name in query where name.UserId.Equals(item.UserId) select name).FirstOrDefault();
       }
     }
 

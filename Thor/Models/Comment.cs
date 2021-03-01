@@ -11,7 +11,7 @@ namespace Thor.Models
     public string CommentText { get; set; }
     public DateTime CreationDate { get; set; }
     public string Status { get; set; }
-    public string UserName { get; set; }
+    public User User {get; set;}
     public string UserId { get; set; }
     public List<Comment> Answers { get; set; }
   }
