@@ -162,3 +162,15 @@ th, h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
 }
 
+.user-profile-picture {
+  min-width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.user-profile-picture-small {
+  min-width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
