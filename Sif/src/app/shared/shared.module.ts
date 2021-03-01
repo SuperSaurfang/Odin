@@ -11,6 +11,7 @@ import { CheckboxModule } from '../shared-modules/checkbox/checkbox.module';
 import { ToggleSwitchModule } from '../shared-modules/toggle-switch/toggle-switch.module';
 import { MenuModule } from '../shared-modules/menu/menu.module';
 import { CommentModule } from '../shared-modules/comments/comments.module';
+import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { CommentModule } from '../shared-modules/comments/comments.module';
     ToggleSwitchModule,
     MenuModule,
     DragDropModule,
-    CommentModule
+    CommentModule,
+    HintboxModule
   ]
 })
 export class SharedModule { }

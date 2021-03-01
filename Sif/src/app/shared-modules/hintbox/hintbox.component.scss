@@ -1,0 +1,17 @@
+@import "../../core/scss/variables.scss";
+
+:host {
+  display: block;
+  width: max-content;
+
+  .hintbox-container {
+    display: flex;
+    align-items: first baseline;
+    padding: padding(1) padding(2);
+    border-radius: $radius;
+  }
+
+  .hintbox-container > :not(:last-child) {
+    margin-right: margin(1.5);
+  }
+}

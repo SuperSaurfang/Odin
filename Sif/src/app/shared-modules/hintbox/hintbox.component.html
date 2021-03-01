@@ -1,0 +1,10 @@
+<div class="hintbox-container"
+	[ngClass]="{'info': hintType === 'info', 'ok': hintType === 'ok', 'warn': hintType === 'warn', 'danger': hintType === 'danger'}">
+	<fa-icon *ngIf="hintType === 'ok'" [icon]="okIcon"></fa-icon>
+	<fa-icon *ngIf="hintType === 'warn'" [icon]="warnIcon"></fa-icon>
+	<fa-icon *ngIf="hintType === 'danger'" [icon]="errorIcon"></fa-icon>
+	<fa-icon *ngIf="hintType === 'info'" [icon]="infoIcon"></fa-icon>
+	<div>
+		<ng-content></ng-content>
+	</div>
+</div>
