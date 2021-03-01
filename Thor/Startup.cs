@@ -162,7 +162,6 @@ namespace Thor
       services.AddTransient<IPageService, PageService>();
       services.AddTransient<INavMenuService, NavMenuService>();
       services.AddTransient<ICommentService, CommentService>();
-      services.AddTransient<IUserService, UserService>();
     }
 
     private void ConfigureMongoDB(IServiceCollection services)
@@ -172,7 +171,6 @@ namespace Thor
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
       services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();
-      services.AddTransient<IUserService, Thor.Services.Mongo.UserService>();
     }
   }
 }
