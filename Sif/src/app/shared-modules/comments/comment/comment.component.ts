@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { faCalendar, faExclamation, faShare, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faExclamation, faShare, faUser, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { Comment } from 'src/app/core/models';
 import { CommentService } from '../services';
 
@@ -20,6 +20,7 @@ export class CommentComponent implements OnInit {
   public calendar = faCalendar;
   public share = faShare;
   public exclamation = faExclamation;
+  public circle = faCircle;
 
   constructor(private commentService: CommentService) { }
 

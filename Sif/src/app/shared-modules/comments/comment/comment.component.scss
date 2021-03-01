@@ -3,6 +3,24 @@
 :host {
   display: block;
 
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .avatar-background {
+    color: $grey-2;
+  }
+
+  .avatar-foreground {
+    color: $white;
+  }
+
+  .comment-author {
+    display: flex;
+    align-items: center;
+  }
+
   .comment-answer-container {
     padding: 0 0 0 margin(4);
   }
