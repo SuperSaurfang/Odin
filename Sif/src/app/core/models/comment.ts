@@ -1,6 +1,7 @@
+
+import { User } from './user';
 export class Comment {
     commentId?: number;
-    userName?: string;
     userMail?: string;
     commentText?: string;
     userRank?: string;
@@ -9,4 +10,5 @@ export class Comment {
     answerOf?: number;
     answers?: Comment[];
     userId?: string;
+    user?: User;
 }
