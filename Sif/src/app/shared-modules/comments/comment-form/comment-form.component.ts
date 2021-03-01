@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Comment, User } from 'src/app/core';
 import { UserService } from 'src/app/core/services';
 import { CommentService } from '../services';
+import { faInfo } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-comment-form',
@@ -18,8 +19,8 @@ export class CommentFormComponent implements OnInit {
   public commentId: number = null;
 
   public isAuthenticated = false;
-
   public user: User = null;
+  public infoIcon = faInfo;
 
   public commentForm = this.formBuilder.group({
     comment: ['', Validators.required]
@@ -68,7 +69,6 @@ export class CommentFormComponent implements OnInit {
       userId: this.isAuthenticated && this.user ? this.user.sub : 'guest'
     };
     this.commentService.saveComment(comment);
-
   }
 
 }

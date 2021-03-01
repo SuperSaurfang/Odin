@@ -6,11 +6,11 @@
         <fa-icon class="avatar-foreground" [icon]="user" stackItemSize="1x"></fa-icon>
       </fa-stack>
       <img *ngIf="comment?.user.picture" [src]="comment?.user.picture" class="user-profile-picture-small">
-      <span class="comment-actionline-space">{{comment?.user.nickname}} schreibt:</span>
+      <span>{{comment?.user.nickname}} schreibt:</span>
     </div>
     <div>
       <fa-icon class="comment-actionline-smallspace" [icon]="calendar"></fa-icon>
-      <span class="comment-actionline-space">
+      <span>
         {{comment?.creationDate.toLocaleDateString()}} um {{comment?.creationDate.toLocaleTimeString()}}
       </span>
     </div>
