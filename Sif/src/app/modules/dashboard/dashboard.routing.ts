@@ -9,7 +9,8 @@ const routes: Routes = [
       { path: 'overview', component: DashboardOverviewComponent },
       { path: 'posts', loadChildren: () => import('./dashboard-posts/dashboard-posts.module').then(m => m.DashboardPostsModule) },
       { path: 'pages', loadChildren: () => import('./dashboard-pages/dashboard-pages.module').then(m => m.DashboardPagesModule) },
-      { path: 'navmenu', loadChildren: () => import('./dashboard-navmenu-editor/dashboard-navmenu-editor.module').then(m => m.DashboardNavmenuEditorModule)}
+      { path: 'navmenu', loadChildren: () => import('./dashboard-navmenu-editor/dashboard-navmenu-editor.module').then(m => m.DashboardNavmenuEditorModule)},
+      { path: 'comments', loadChildren: () => import('./dashboard-comments/dashboard-comments.module').then(m => m.DashboardCommentsModule) }
     ]
   },
 ];
