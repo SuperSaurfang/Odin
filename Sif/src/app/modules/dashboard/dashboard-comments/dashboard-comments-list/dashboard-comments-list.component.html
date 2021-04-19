@@ -1,3 +1,41 @@
-<p>
-  dashboard-comments-list works!
-</p>
+<h1>Übersicht aller Kommentare</h1>
+<p>Hier kannst du alle Kommentare bearbeiten, löschen, freigeben oder als Spam markieren</p>
+<div class="action-bar"></div>
+<table>
+  <thead>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Autor</th>
+      <th>Kommentar</th>
+      <th>Status</th>
+      <th>Antwort auf</th>
+      <th>Geschrieben am</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let comment of comments; let i = index">
+      <td>
+        <app-checkbox [isChecked]="selectedComments[i]" (StateChanged)="setSelectedComment(i)"></app-checkbox>
+      </td>
+      <td>{{comment.user.nickname}}</td>
+      <td>{{comment.commentText}}</td>
+      <td>{{comment.status}}</td>
+      <td>{{comment.answerOf}}</td>
+      <td>{{comment.creationDate}}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+      </th>
+      <th>Autor</th>
+      <th>Kommentar</th>
+      <th>Status</th>
+      <th>Antwort auf</th>
+      <th>Geschrieben am</th>
+    </tr>
+  </tfoot>
+</table>

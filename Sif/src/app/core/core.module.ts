@@ -33,7 +33,9 @@ import { tokenGetter } from './const';
           `${environment.restApi}/adminpage`,
           `${environment.restApi}/adminpage/*`,
           `${environment.restApi}/adminnavmenu`,
-          `${environment.restApi}/adminnavmenu/*`
+          `${environment.restApi}/adminnavmenu/*`,
+          `${environment.restApi}/admincomment`,
+          `${environment.restApi}/admincomment/*`
         ]
       }
     })

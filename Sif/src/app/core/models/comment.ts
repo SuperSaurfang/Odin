@@ -11,4 +11,5 @@ export class Comment {
     answers?: Comment[];
     userId?: string;
     user?: User;
+    status?: string;
 }
