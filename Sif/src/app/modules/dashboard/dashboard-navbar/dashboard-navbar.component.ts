@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { faTachometerAlt, faEdit, faHome, faSitemap, faCopy, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faEdit, faHome, faSitemap, faCopy, faComments, faTags, faList } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -17,6 +17,8 @@ export class DashboardNavbarComponent implements OnInit {
   public menu = faSitemap;
   public page = faCopy;
   public comments = faComments;
+  public tags = faTags;
+  public list = faList;
 
   ngOnInit() {
   }
