@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Article, ChangeResponse } from 'src/app/core';
 
 import { faTrash, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { ArticleFilterService, DateFilter, RestPostsService } from '../../services';
+import { ArticleFilterService, RestPostsService } from '../../services';
 import { Subscription } from 'rxjs';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
+import { DateFilter } from 'src/app/core/baseClass';
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -36,7 +37,7 @@ export class DashboardPostListComponent implements OnInit {
       this.articleFilterSubscription = this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
       });
-      this.articleFilter.setArticles(articles);
+      this.articleFilter.setFilterObject(articles);
       this.selectedArticles = [];
       articles.forEach(() => {
         this.selectedArticles.push(false);
