@@ -15,6 +15,8 @@ import { ListActionBarModule } from '../shared-dashboard-modules/list-action-bar
 import { ArticleFilterService } from '../services';
 import { RestPostsService } from '../services/rest-posts/rest-posts.service';
 import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
+import { DashboardPostTagEditorComponent } from './dashboard-post-tag-editor/dashboard-post-tag-editor.component';
+import { DashboardPostCategoryEditorComponent } from './dashboard-post-category-editor/dashboard-post-category-editor.component';
 
 
 
@@ -35,6 +37,8 @@ import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-chang
     DashboardPostsComponent,
     DashboardPostListComponent,
     DashboardPostEditorComponent,
+    DashboardPostTagEditorComponent,
+    DashboardPostCategoryEditorComponent
   ],
   providers: [
     ArticleFilterService,

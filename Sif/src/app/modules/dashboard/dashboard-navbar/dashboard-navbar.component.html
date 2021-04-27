@@ -11,13 +11,23 @@
       Blog
     </a>
     <ul *ngIf="rlaBlog.isActive" class="nav-child-list">
-      <li class="nav-entry">
-        <fa-icon [icon]="tags"></fa-icon>
-        Tags
+      <li>
+        <a class="nav-entry" [routerLink]="['posts/edit']" routerLinkActive="primary-dark">
+          <fa-icon [icon]="plus"></fa-icon>
+          Erstellen
+        </a>
       </li>
-      <li class="nav-entry">
-        <fa-icon [icon]="list"></fa-icon>
-        Kategorien
+      <li>
+        <a class="nav-entry" [routerLink]="['posts/tags']" routerLinkActive="primary-dark">
+          <fa-icon [icon]="tags"></fa-icon>
+          Tags
+        </a>
+      </li>
+      <li>
+        <a class="nav-entry" [routerLink]="['posts/categories']" routerLinkActive="primary-dark">
+          <fa-icon [icon]="list"></fa-icon>
+          Kategorien
+        </a>
       </li>
     </ul>
   </li>
