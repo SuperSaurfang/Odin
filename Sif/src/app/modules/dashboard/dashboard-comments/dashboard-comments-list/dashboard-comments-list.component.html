@@ -1,12 +1,82 @@
 <h1>Übersicht aller Kommentare</h1>
 <p>Hier kannst du alle Kommentare bearbeiten, löschen, freigeben oder als Spam markieren</p>
-<div class="action-bar"></div>
+<div class="action-bar my-2">
+  <div class="action">
+    <div>Action wählen:</div>
+    <div class="control-group horizontal-group">
+      <select [(ngModel)]="selectedAction">
+        <option value="" selected disabled hidden>-- Action auswählen --</option>
+        <option value="spam">Als Spam markieren</option>
+        <option value="new">Als Neu markieren</option>
+        <option value="released">Veröffentlichen</option>
+        <option value="trash">In den Papierkorbverschieben</option>
+      </select>
+      <button class="btn btn-dark" (click)="executeAction()">Ausführen</button>
+    </div>
+  </div>
+
+  <div class="action">
+    <div>Zeitraum Filtern:</div>
+    <div class="flex">
+      <label class="label control-group horizontal-group" for="filter-start-date">
+        <div>
+          <div>Start:</div>
+        </div>
+        <input id="filter-start-date" type="date" [(ngModel)]="startDate" (change)="updateDateFilter()" [max]="endDate" />
+      </label>
+      <label class="label control-group ml-1 horizontal-group" for="filter-end-date">
+        <div>
+          <span>Ende:</span>
+        </div>
+        <input id="filter-end-date" type="date" [(ngModel)]="endDate" (change)="updateDateFilter()" [min]="startDate"/>
+      </label>
+    </div>
+  </div>
+
+  <div class="action">
+    <div>Status Filter:</div>
+    <select [(ngModel)]="selectedStatus" (change)="updateStatusFilter()">
+      <option value="trash">Papierkorb</option>
+      <option value="all" selected>Alle</option>
+      <option value="spam">Spam</option>
+      <option value="new">Neu</option>
+      <option value="released">Veröffentlicht</option>
+    </select>
+  </div>
+
+  <div class="action">
+    <div>Durchsuchen:</div>
+    <input type="text" [(ngModel)]="searchTerm" (input)="updateSearchTerm()"/>
+  </div>
+
+  <div class="reset-filter pos-relative tooltip-trigger">
+    <button class="btn btn-icon" (click)="resetFilter()">
+      <fa-layers size="2x">
+        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
+        <fa-icon [icon]="iconSlash" transform="up-2 left-2" class="danger-text"></fa-icon>
+      </fa-layers>
+    </button>
+    <div class="tooltip">
+      Filter zurücksetzen
+    </div>
+  </div>
+
+  <div class="clear-trash pos-relative tooltip-trigger">
+    <button class="btn btn-icon danger-text" (click)="clearTrash()">
+      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
+    </button>
+    <div class="tooltip">
+      Papierkorb leeren
+    </div>
+  </div>
+</div>
 <table>
   <thead>
     <tr>
       <th>
         <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
       </th>
+      <th>Kommentar ID</th>
       <th>Autor</th>
       <th>Kommentar</th>
       <th>Status</th>
@@ -19,11 +89,58 @@
       <td>
         <app-checkbox [isChecked]="selectedComments[i]" (StateChanged)="setSelectedComment(i)"></app-checkbox>
       </td>
-      <td>{{comment.user.nickname}}</td>
+      <td>{{comment.commentId}}</td>
+      <td>
+        <div class="flex user-info-container">
+          <fa-stack *ngIf="!comment?.user.picture">
+            <fa-icon class="avatar-background" [icon]="iconCircle" stackItemSize="2x" ></fa-icon>
+            <fa-icon class="avatar-foreground" [icon]="iconUser" stackItemSize="1x"></fa-icon>
+          </fa-stack>
+          <img *ngIf="comment.user.picture" [src]="comment.user.picture" alt="profile image" class="user-profile-picture-small image">
+          <span class="ml-1">{{comment.user.nickname}}</span>
+        </div>
+      </td>
       <td>{{comment.commentText}}</td>
-      <td>{{comment.status}}</td>
-      <td>{{comment.answerOf}}</td>
-      <td>{{comment.creationDate}}</td>
+      <td>
+        <div (click)="openMenu(i)" class="pos-relative tooltip-trigger cursor-pointer">
+          <fa-icon *ngIf="comment.status !== 'trash'"
+            [icon]="iconCircle"
+            [ngClass]="{
+              'danger-text': comment.status === 'spam',
+              'warn-text': comment.status === 'new',
+              'ok-text': comment.status === 'released'
+            }"></fa-icon>
+          <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <div class="tooltip" [ngClass]="{'hide': statusmenuopen === i}">
+            {{getTooltipText(comment.status)}}
+          </div>
+        </div>
+        <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (isOpenChange)="OnClose()">
+          <div class="control-group vertical-group">
+            <button class="btn btn-light text-left" (click)="updateStatus('spam', i)">
+              <fa-icon class="danger-text" [icon]="iconCircle"></fa-icon>
+              Als Spam markieren
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('new', i)">
+              <fa-icon class="warn-text" [icon]="iconCircle"></fa-icon>
+              Als neu markieren
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('released', i)">
+              <fa-icon class="ok-text" [icon]="iconCircle"></fa-icon>
+              Veröffentlichen
+            </button>
+            <button class="btn btn-light text-left" (click)="updateStatus('trash', i)">
+              <fa-icon class="danger-text" [icon]="iconTrash"></fa-icon>
+              In den Papierkorb verschieben
+            </button>
+          </div>
+        </app-menu>
+      </td>
+      <td>
+        <div>Artikel: {{comment.articleTitle}}</div>
+        <div *ngIf="comment.answerOf !== undefined">Kommentar: {{comment.answerOf}}</div>
+      </td>
+      <td>{{comment.creationDate.toLocaleDateString()}}</td>
     </tr>
   </tbody>
   <tfoot>
@@ -31,6 +148,7 @@
       <th>
         <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
       </th>
+      <th>Kommentar ID</th>
       <th>Autor</th>
       <th>Kommentar</th>
       <th>Status</th>

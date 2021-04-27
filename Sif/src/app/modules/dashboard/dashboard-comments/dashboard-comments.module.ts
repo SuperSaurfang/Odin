@@ -6,12 +6,17 @@ import { RestCommentService } from '../services';
 import { DashboardCommentsListComponent } from './dashboard-comments-list/dashboard-comments-list.component';
 import { DashboardCommentEditorComponent } from './dashboard-comment-editor/dashboard-comment-editor.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from '@angular/forms';
+import { CommentFilterService } from '../services/comment-filter/comment-filter.service';
 
 @NgModule({
   imports: [
     CommonModule,
     DashboardRoutes,
-    SharedModule
+    SharedModule,
+    FontAwesomeModule,
+    FormsModule
   ],
   declarations: [
     DashboardCommentsComponent,
@@ -19,7 +24,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DashboardCommentEditorComponent
   ],
   providers: [
-    RestCommentService
+    RestCommentService,
+    CommentFilterService
   ]
 })
 export class DashboardCommentsModule { }

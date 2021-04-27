@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
-import { Comment } from 'src/app/core';
+import { ChangeResponse, Comment } from 'src/app/core';
+import { faCircle, faFilter, faSlash, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
+import { CommentFilterService } from '../../services/comment-filter/comment-filter.service';
+import { DateFilter } from 'src/app/core/baseClass';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-comments-list',
@@ -9,22 +13,46 @@ import { Comment } from 'src/app/core';
 })
 export class DashboardCommentsListComponent implements OnInit {
 
+  public iconUser = faUser;
+  public iconCircle = faCircle;
+  public iconTrash = faTrash;
+  public iconFilter = faFilter;
+  public iconSlash = faSlash;
+
   public comments: Comment[] = [];
 
   public isIndeterminate = false;
   public isAllSelected = false;
   public selectedComments: boolean[] = [];
 
-  constructor(private commentService: RestCommentService) { }
+  public statusmenuopen = -1;
+  public selectedAction = '';
+
+  public startDate: Date;
+  public endDate: Date;
+  public selectedStatus = 'all';
+  public searchTerm = '';
+
+  private filterSubscription: Subscription;
+
+  constructor(private commentService: RestCommentService,
+    private filterService: CommentFilterService) { }
 
   ngOnInit() {
-    this.commentService.getCommentList().subscribe(response => {
-      this.comments = response;
+    this.loadData();
+  }
 
-      this.selectedComments = [];
-      this.comments.forEach(comment => {
-        this.selectedComments.push(false);
+  private loadData() {
+    this.commentService.getCommentList().subscribe(response => {
+      this.filterSubscription = this.filterService.filtered().subscribe(comments => {
+        this.comments = comments;
+
+        this.selectedComments = [];
+        this.comments.forEach(comment => {
+          this.selectedComments.push(false);
+        });
       });
+      this.filterService.setFilterObject(response);
     });
   }
 
@@ -53,6 +81,102 @@ export class DashboardCommentsListComponent implements OnInit {
         this.selectedComments[index] = false;
       }
     }
+  }
+
+  public getTooltipText(status: string): string {
+    switch (status) {
+      case 'new':
+        return 'Status: Neu';
+      case 'released':
+        return 'Status: Veröffentlicht';
+      case 'spam':
+        return 'Status: Spam';
+      default:
+        return 'Papierkorb';
+    }
+  }
+
+  public openMenu(index: number): void {
+    this.statusmenuopen = index;
+  }
+
+  public OnClose(): void {
+    this.statusmenuopen = -1;
+  }
+
+  public updateStatus(status: string, index: number): void {
+    this.comments[index].status = status;
+    this.commentService.putComment(this.comments[index]).subscribe(response => {
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.filterService.applyFilter();
+          break;
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
+        default:
+          break;
+      }
+    });
+
+    this.OnClose();
+  }
+
+  public executeAction() {
+    // do nothing if nothing is selected or no action selected
+    if (this.selectedAction === '' || this.selectedComments.filter(a => a === true).length === 0) {
+      return;
+    }
+
+    for (let index = 0; index < this.selectedComments.length; index++) {
+      if (this.selectedComments[index]) {
+        this.updateStatus(this.selectedAction, index);
+      }
+    }
+  }
+
+  public resetFilter() {
+    this.startDate = undefined;
+    this.endDate = undefined;
+    this.selectedStatus = 'all';
+    this.searchTerm = '';
+    this.filterService.resetFilter();
+  }
+
+  public clearTrash() {
+    this.commentService.deleteComments().subscribe(response => {
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.filterSubscription.unsubscribe();
+          this.loadData();
+          break;
+        case ChangeResponse.Error:
+        case ChangeResponse.NoChange:
+        default:
+          break;
+      }
+    });
+  }
+
+  public updateDateFilter() {
+    const dateFilter: DateFilter = {};
+    if (this.endDate) {
+      dateFilter.endDate = new Date(this.endDate);
+      dateFilter.endDate.setHours(23, 59, 59);
+    }
+
+    if (this.startDate) {
+      dateFilter.startDate = new Date(this.startDate);
+      dateFilter.startDate.setHours(0, 0, 0);
+    }
+    this.filterService.updateDateFilter(dateFilter);
+  }
+
+  public updateStatusFilter() {
+    this.filterService.updateStatusFilter(this.selectedStatus)
+  }
+
+  public updateSearchTerm() {
+    this.filterService.searchFilter(this.searchTerm);
   }
 
 }

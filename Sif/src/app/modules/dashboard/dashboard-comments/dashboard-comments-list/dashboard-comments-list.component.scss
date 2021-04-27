@@ -3,4 +3,21 @@
 :host {
   flex: 1 1 auto;
   padding: padding(1);
+
+  .user-info-container {
+    align-items: center;
+  }
+
+  .image {
+    margin: margin(0.5);
+  }
+
+  .action-bar {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .action-bar > div:not(:last-child) {
+    margin-right: margin(2);
+  }
 }
