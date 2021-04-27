@@ -24,7 +24,7 @@ const BASE_FILTER: Filter = {
 
 /**
  * Genric base class for filter service classes to filter a list of comments or articles
- * or something else that could be filtered with a between two dates, status and search term
+ * or something else that could be filtered between two dates, status and a search term
  * The TFilterObject is the target object type for the filter service
  */
 export abstract class FilterBase<TFilterObject> {
