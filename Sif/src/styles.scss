@@ -152,7 +152,7 @@ a {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .display-block {
@@ -177,5 +177,13 @@ a {
   min-width: 32px;
   height: 32px;
   border-radius: 50%;
+}
+
+.avatar-background {
+  color: $grey-2;
+}
+
+.avatar-foreground {
+  color: $white;
 }
 
