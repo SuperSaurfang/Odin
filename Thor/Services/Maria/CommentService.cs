@@ -30,7 +30,7 @@ namespace Thor.Services.Maria
 
     public async Task<IEnumerable<Comment>> GetComments()
     {
-      const string sql = @"SELECT `CommentId`, `Article`.`Title`, `Comment`.`UserId`, `AnswerOf`, `CommentText`, `Comment`.`CreationDate`, `Comment`.`Status`
+      const string sql = @"SELECT `CommentId`, `Comment`.`ArticleId`, `Article`.`Title` AS `ArticleTitle`, `Comment`.`UserId`, `AnswerOf`, `CommentText`, `Comment`.`CreationDate`, `Comment`.`Status`
       FROM `Comment`, `Article` WHERE `Article`.`ArticleId` = `Comment`.`ArticleId`";
       var result = await executer.ExecuteSql<Comment>(sql);
       await MapUserIdToAuthor(result);

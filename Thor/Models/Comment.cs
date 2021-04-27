@@ -8,6 +8,7 @@ namespace Thor.Models
     public int CommentId { get; set; }
     public int ArticleId { get; set; }
     public int? AnswerOf { get; set; }
+    public string ArticleTitle { get; set; }
     public string CommentText { get; set; }
     public DateTime CreationDate { get; set; }
     public string Status { get; set; }
