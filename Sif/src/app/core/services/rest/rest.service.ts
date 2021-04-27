@@ -10,7 +10,7 @@ import { RestBase } from '../../baseClass';
 export class RestService extends RestBase {
 
   constructor(protected httpClient: HttpClient) {
-    super();
+    super('public');
   }
 
   public getBlog(): Observable<Article[]> {

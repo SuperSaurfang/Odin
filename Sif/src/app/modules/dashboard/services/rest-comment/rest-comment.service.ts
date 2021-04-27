@@ -9,7 +9,7 @@ import { RestBase } from 'src/app/core/baseClass';
 export class RestCommentService extends RestBase {
 
   constructor(protected httpClient: HttpClient) {
-    super('admincomment');
+    super('dashboard/comment');
   }
 
   public getCommentList(): Observable<Comment[]> {

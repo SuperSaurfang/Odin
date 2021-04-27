@@ -28,14 +28,7 @@ import { tokenGetter } from './const';
       redirectUri: environment.auth0.redirectUri,
       httpInterceptor: {
         allowedList: [
-          `${environment.restApi}/adminblog`,
-          `${environment.restApi}/adminblog/*`,
-          `${environment.restApi}/adminpage`,
-          `${environment.restApi}/adminpage/*`,
-          `${environment.restApi}/adminnavmenu`,
-          `${environment.restApi}/adminnavmenu/*`,
-          `${environment.restApi}/admincomment`,
-          `${environment.restApi}/admincomment/*`
+          `${environment.restApi}/dashboard/*`
         ]
       }
     })
