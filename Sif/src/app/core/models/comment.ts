@@ -4,7 +4,7 @@ export class Comment {
     commentId?: number;
     userMail?: string;
     commentText?: string;
-    userRank?: string;
+    articleTitle?: string;
     articleId?: number;
     creationDate?: Date;
     answerOf?: number;
