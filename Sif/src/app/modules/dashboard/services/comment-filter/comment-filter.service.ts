@@ -29,7 +29,9 @@ export class CommentFilterService extends FilterBase<Comment> {
     // simple search
     if (this.currentFilter.searchTerm.length > 0) {
       filtered = filtered.filter(comment =>
-        comment.user.nickname.includes(this.currentFilter.searchTerm) || comment.commentText.includes(this.currentFilter.searchTerm)
+        comment.user.nickname.includes(this.currentFilter.searchTerm)
+        || comment.commentText.includes(this.currentFilter.searchTerm)
+        || comment.articleTitle.includes(this.currentFilter.searchTerm)
         );
     }
     this.filteredObject.next(filtered);
