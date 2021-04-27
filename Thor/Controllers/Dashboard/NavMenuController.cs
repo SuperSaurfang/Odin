@@ -4,40 +4,16 @@ using Thor.Services.Api;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System;
 
-namespace Thor.Controllers
+namespace Thor.Controllers.Dashboard
 {
-  #region public nav menu controller
   [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/dashboard/[controller]")]
   public class NavMenuController : ControllerBase
   {
-
     private readonly INavMenuService navMenuService;
 
     public NavMenuController(INavMenuService navMenuService)
-    {
-      this.navMenuService = navMenuService;
-    }
-    [Produces("application/json")]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<NavMenu>>> GetNavMenu()
-    {
-      var result = await navMenuService.GetNavMenu();
-      return Ok(result);
-    }
-  }
-  #endregion
-
-  #region admin nav menu controller
-  [ApiController]
-  [Route("api/[controller]")]
-  public class AdminNavMenuController : ControllerBase
-  {
-    private readonly INavMenuService navMenuService;
-
-    public AdminNavMenuController(INavMenuService navMenuService)
     {
       this.navMenuService = navMenuService;
     }
@@ -99,5 +75,4 @@ namespace Thor.Controllers
       return Ok(result);
     }
   }
-  #endregion
 }
