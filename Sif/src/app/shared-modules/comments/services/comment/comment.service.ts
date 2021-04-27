@@ -8,15 +8,12 @@ export class CommentService {
 
   private commentIdSubject: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   private commentsSubject: BehaviorSubject<Comment[]> = new BehaviorSubject<Comment[]>([]);
-  private commentSubject: Subject<Comment> = new Subject<Comment>();
 
-  private sourceComments: Comment[] = [];
   constructor(private restService: RestService) {}
 
 
   public loadComments(articleId: number): Observable<Comment[]> {
     this.restService.getComment(articleId).subscribe(comments => {
-      this.sourceComments = comments;
       this.commentsSubject.next(comments);
     });
     return this.commentsSubject;
@@ -26,12 +23,9 @@ export class CommentService {
     this.restService.postComment(comment).subscribe(response => {
         switch (response.responseType) {
           case StatusResponseType.Create:
-            if (comment.userId !== 'guest') {
-              this.addComment(comment);
-              this.commentsSubject.next(this.sourceComments);
-              this.commentSubject.next(comment);
-              this.commentIdSubject.next(null);
-            }
+            this.restService.getComment(comment.articleId).subscribe(response => {
+              this.commentsSubject.next(response);
+            });
             break;
           default:
             break;
@@ -45,32 +39,6 @@ export class CommentService {
 
   public isAnswerTo() {
     return this.commentIdSubject;
-  }
-
-  private addComment(comment: Comment) {
-    if (comment.answerOf === null) {
-      this.sourceComments.push(comment);
-    } else {
-      const foundComment = this.findComment(this.sourceComments, comment.answerOf);
-      if (!foundComment.answers) {
-        foundComment.answers = [];
-      }
-      foundComment.answers.push(comment);
-    }
-  }
-
-  private findComment(comments: Comment[], answerOf: number): Comment {
-    let foundComment: Comment;
-    for (const comment of comments) {
-      if (comment.commentId !== answerOf && comment.answers !== undefined) {
-        foundComment = this.findComment(comment.answers, answerOf);
-      }
-
-      if (comment.commentId === answerOf) {
-        return comment;
-      }
-    }
-    return foundComment;
   }
 
 }
