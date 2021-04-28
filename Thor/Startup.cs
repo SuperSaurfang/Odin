@@ -162,6 +162,7 @@ namespace Thor
       services.AddTransient<IPageService, PageService>();
       services.AddTransient<INavMenuService, NavMenuService>();
       services.AddTransient<ICommentService, CommentService>();
+      services.AddTransient<ICategoryService, CategoryService>();
     }
 
     private void ConfigureMongoDB(IServiceCollection services)
