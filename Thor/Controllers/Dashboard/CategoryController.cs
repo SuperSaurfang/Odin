@@ -20,6 +20,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
     {
       var result = await categoryService.GetCategories();
@@ -28,6 +29,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPost]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> CreateCategory(Category category)
     {
       if (category == null)
@@ -41,6 +43,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPut]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> UpdateCategory(Category category)
     {
       if (category == null || category.CategoryId == 0)
@@ -54,6 +57,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpDelete("{id}")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> DeleteCategory(int id)
     {
       if(id == 0)

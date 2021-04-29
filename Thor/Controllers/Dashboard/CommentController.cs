@@ -20,7 +20,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet]
-    [Authorize("edit:comment")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
     {
       var comments = await commentService.GetComments();
@@ -29,7 +29,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPut]
-    [Authorize("edit:comment")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> UpdateComment(Comment comment)
     {
       if(comment.CommentId == 0)
@@ -43,7 +43,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpDelete]
-    [Authorize("delete:comment")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> DeleteComments()
     {
       var result = await commentService.DeleteComment();
@@ -52,7 +52,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPost]
-    [Authorize("create:comment")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> CreateComment(Comment comment)
     {
       if(comment.ArticleId == 0)
@@ -65,7 +65,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("article-list")]
-    [Authorize("create:comment")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticleList()
     {
       var result = await commentService.GetArticleList();

@@ -20,7 +20,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("{title}")]
-    [Authorize("edit:blog")]
+    [Authorize("author")]
     public async Task<ActionResult<Article>> GetSingleArticle(string title)
     {
       if (title == null)
@@ -37,7 +37,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("id/{title}")]
-    [Authorize("edit:blog")]
+    [Authorize("author")]
     public async Task<ActionResult<int>> GetBlogId(string title)
     {
       if (title == null)
@@ -58,7 +58,7 @@ namespace Thor.Controllers.Dashboard
     /// <returns></returns>
     [Produces("application/json")]
     [HttpGet]
-    [Authorize("edit:blog")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetFullBlog()
     {
       var result = await blogService.GetAllArticles();
@@ -76,7 +76,7 @@ namespace Thor.Controllers.Dashboard
     /// <returns></returns>
     [Produces("application/json")]
     [HttpPut]
-    [Authorize("edit:blog")]
+    [Authorize("author")]
     public async Task<ActionResult> UpdateBlogArticle(Article article)
     {
       if (article.ArticleId == 0)
@@ -95,7 +95,7 @@ namespace Thor.Controllers.Dashboard
     /// <returns></returns>
     [Produces("application/json")]
     [HttpPost]
-    [Authorize("create:blog")]
+    [Authorize("author")]
     public async Task<ActionResult> CreateBlogArticle(Article article)
     {
       if (article.Author == string.Empty)
@@ -114,7 +114,7 @@ namespace Thor.Controllers.Dashboard
     /// <returns></returns>
     [Produces("application/json")]
     [HttpDelete]
-    [Authorize("delete:blog")]
+    [Authorize("author")]
     public async Task<ActionResult> DeleteBlogArticle()
     {
       var response = await blogService.DeleteArticle();

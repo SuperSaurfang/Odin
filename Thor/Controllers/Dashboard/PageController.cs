@@ -19,7 +19,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("{title}")]
-    [Authorize("edit:page")]
+    [Authorize("author")]
     public async Task<ActionResult<Article>> GetSinglePage(string title)
     {
       if (title == null || title == string.Empty || title.Length == 0)
@@ -38,7 +38,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("id/{title}")]
-    [Authorize("edit:page")]
+    [Authorize("author")]
     public async Task<ActionResult<int>> GetPageId(string title)
     {
       if (title == null || title == string.Empty || title.Length == 0)
@@ -57,7 +57,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet]
-    [Authorize("edit:page")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllPages()
     {
       var result = await pageService.GetAllArticles();
@@ -71,7 +71,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPut]
-    [Authorize("edit:page")]
+    [Authorize("author")]
     public async Task<ActionResult> UpdatePageArticle(Article article)
     {
       if (article.ArticleId == 0)
@@ -85,7 +85,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPost]
-    [Authorize("create:page")]
+    [Authorize("author")]
     public async Task<ActionResult> CreatePageArticle(Article article)
     {
       var response = await pageService.CreateArticle(article);
@@ -94,7 +94,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpDelete]
-    [Authorize("delete:page")]
+    [Authorize("author")]
     public async Task<ActionResult> DeletePageArticle()
     {
       var response = await pageService.DeleteArticle();

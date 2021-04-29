@@ -20,7 +20,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet("article-list")]
-    [Authorize("edit:menu")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticleList()
     {
       var result = await navMenuService.GetArticleList();
@@ -29,7 +29,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpGet]
-    [Authorize("edit:menu")]
+    [Authorize("author")]
     public async Task<ActionResult<IEnumerable<NavMenu>>> GetFlatList()
     {
       var result = await navMenuService.GetFlatList();
@@ -38,7 +38,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPost]
-    [Authorize("create:menu")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> CreateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.PageId == 0)
@@ -51,7 +51,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPut]
-    [Authorize("edit:menu")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> UpdateNavMenuEntry(NavMenu navMenu)
     {
       if (navMenu.NavMenuId == 0)
@@ -64,7 +64,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpDelete("{id}")]
-    [Authorize("delete:menu")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> DeleteNavMenuEntry(int id)
     {
       if(id == 0)
