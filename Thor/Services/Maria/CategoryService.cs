@@ -35,7 +35,9 @@ namespace Thor.Services.Maria
 
     public async Task<IEnumerable<Category>> GetCategories()
     {
-      const string sql = "SELECT `CategoryId`, `ParentId`, `Name`, `Description` FROM `Category`";
+      const string sql = @"SELECT `Category`.`CategoryId`, `ParentId`, `Name`, `Description`, COUNT(`ArticleCategory`.`CategoryId`) As ArticleCount 
+                          FROM `Category` LEFT JOIN `ArticleCategory` ON `Category`.`CategoryId` = `ArticleCategory`.`CategoryId` 
+                          GROUP By `Category`.`CategoryId` ";
       return await sqlExecuter.ExecuteSql<Category>(sql);
     }
 
