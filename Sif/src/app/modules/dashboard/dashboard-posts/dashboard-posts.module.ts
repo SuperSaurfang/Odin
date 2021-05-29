@@ -17,6 +17,8 @@ import { RestPostsService } from '../services/rest-posts/rest-posts.service';
 import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
 import { DashboardPostTagEditorComponent } from './dashboard-post-tag-editor/dashboard-post-tag-editor.component';
 import { DashboardPostCategoryEditorComponent } from './dashboard-post-category-editor/dashboard-post-category-editor.component';
+import { RestCategoryService } from '../services/rest-category/rest-category.service';
+import { CategoryService } from '../services/category/category.service';
 
 
 
@@ -42,7 +44,9 @@ import { DashboardPostCategoryEditorComponent } from './dashboard-post-category-
   ],
   providers: [
     ArticleFilterService,
-    RestPostsService
+    RestPostsService,
+    RestCategoryService,
+    CategoryService
   ]
 })
 export class DashboardPostsModule {
