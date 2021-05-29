@@ -53,3 +53,17 @@ textarea {
         padding: 0 padding(1);
     }
 }
+
+.small {
+  height: 20px;
+  font-size: 14px;
+
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  input[type="password"],
+  input[type="date"],
+  select {
+    height: 20px;
+  }
+}
