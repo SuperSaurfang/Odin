@@ -55,20 +55,20 @@
       <tbody>
           <tr *ngFor="let category of categoryList; index as i">
             <td>
-              <div>{{category.name}}</div>
-              <div>
+              <div *ngIf="currentEditing !== i">{{category.name}}</div>
+              <div *ngIf="currentEditing === i">
                 <input type="text" [(ngModel)]="category.name">
             </div>
             </td>
             <td>
-              <div>{{category.description}}</div>
-              <div>
+              <div *ngIf="currentEditing !== i">{{category.description}}</div>
+              <div *ngIf="currentEditing === i">
                   <input type="text" [(ngModel)]="category.description">
               </div>
             </td>
             <td>
-              <div>{{getParentNameById(category.parentId)}}</div>
-              <div>
+              <div *ngIf="currentEditing !== i">{{getParentNameById(category.parentId)}}</div>
+              <div *ngIf="currentEditing === i">
                 <select [(ngModel)]="category.parentId">
                   <option value=""></option>
                   <option *ngFor="let optionItem of categoryList" [value]="optionItem.categoryId">{{optionItem.name}}</option>
@@ -76,15 +76,21 @@
               </div>
             </td>
             <td>
-              <div>{{category.articleCount}}</div>
+              <div>{{category.articleCount || 0}}</div>
             </td>
             <td>
               <div class="flex">
-                <button class="btn btn-icon">
+                <button *ngIf="currentEditing !== i" class="btn btn-icon" (click)="setCurrentEditing(i)">
                   <fa-icon [icon]="editIcon"></fa-icon>
                 </button>
-                <button class="btn btn-icon danger-text">
+                <button *ngIf="currentEditing !== i" class="btn btn-icon danger-text" (click)="deleteCategory(i)">
                   <fa-icon [icon]="trashIcon"></fa-icon>
+                </button>
+                <button *ngIf="currentEditing === i" class="btn btn-icon" (click)="updateCategory(i)">
+                  <fa-icon [icon]="saveIcon"></fa-icon>
+                </button>
+                <button *ngIf="currentEditing === i" class="btn btn-icon danger-text" (click)="clearCurrentEditing()">
+                  <fa-icon [icon]="abortIcon"></fa-icon>
                 </button>
               </div>
             </td>
