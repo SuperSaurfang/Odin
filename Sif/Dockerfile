@@ -6,6 +6,6 @@ COPY . .
 RUN npm run build-minor
 
 
-FROM nginx:latest
+FROM nginx:alpine-perl
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /src/dist/ /var/www/html

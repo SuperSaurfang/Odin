@@ -1,2 +1,30 @@
-Thor:
-Sif:
+version: "3.7"
+services:
+  thor:
+    build: 
+     context: ./Thor
+     dockerfile: Dockerfile
+  sif:
+    build:
+      context: ./Sif
+      dockerfile: Dockerfile
+    environment: 
+      BACKEND: "172.20.0.2"
+    networks: 
+      - odin-frontend
+
+networks: 
+  odin-frontend:
+    driver: bridge
+    ipam: 
+      driver: default
+      config:
+        - 
+          subnet: 172.30.0.0/29
+          gateway: 172.30.0.1
+  odin-backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.40.0.0/29
