@@ -6,6 +6,6 @@ namespace Thor.Services.Api
 {
   public interface IRestClientService
   {
-     Task<IEnumerable<UserNickname>> GetUserNicknames();
+     Task<IEnumerable<User>> GetUserNicknames();
   }
 }

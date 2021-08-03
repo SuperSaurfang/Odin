@@ -1,0 +1,32 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  display: block;
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .comment-author {
+    display: flex;
+    align-items: center;
+  }
+
+  .comment-answer-container {
+    padding: 0 0 0 margin(4);
+  }
+
+  .comment-actionline-smallspace {
+    margin-right: margin(0.5);
+  }
+
+  .comment-actionline-space {
+    margin-right: margin(1);
+  }
+
+  .comment-content-container {
+    padding-bottom: padding(2);
+    border-bottom: 1px solid $black;
+  }
+}

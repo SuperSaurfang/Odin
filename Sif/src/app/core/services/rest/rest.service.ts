@@ -2,7 +2,7 @@ import { Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Article, Comment, User, ChangeResponse, NavMenu } from '../../models';
+import { Article, Comment, User, ChangeResponse, NavMenu, StatusResponse, StatusResponseType } from '../../models';
 import { RestBase } from '../../baseClass';
 
 
@@ -10,7 +10,7 @@ import { RestBase } from '../../baseClass';
 export class RestService extends RestBase {
 
   constructor(protected httpClient: HttpClient) {
-    super();
+    super('public');
   }
 
   public getBlog(): Observable<Article[]> {
@@ -41,11 +41,18 @@ export class RestService extends RestBase {
   }
 
   public getComment(articleId: number): Observable<Comment[]> {
-    return this.httpClient.get<Comment[]>(this.basePath + `/comment/${articleId}`);
+    return this.httpClient.get<Comment[]>(this.basePath + `/comment/${articleId}`).pipe(
+      map(comments => {
+        comments.forEach(item => this.parseCommentDate(item));
+        return comments;
+      })
+    );
   }
 
-  public postComment(comment: Comment): Observable<Comment> {
-    return this.httpClient.post<Comment>(this.basePath + '/comment', comment);
+  public postComment(comment: Comment): Observable<StatusResponse> {
+    return this.httpClient.post<StatusResponse>(this.basePath + '/comment', comment).pipe(
+      catchError(this.handleError<StatusResponse>('Failed to save comment', this.errorResponse(StatusResponseType.Create)))
+    );
   }
 
   public postLogin(user: User): Observable<User> {
@@ -55,4 +62,10 @@ export class RestService extends RestBase {
     );
   }
 
+  private parseCommentDate(comment: Comment) {
+    comment.creationDate = new Date(comment.creationDate);
+    if (comment.answers) {
+      comment.answers.forEach(item => this.parseCommentDate(item));
+    }
+  }
 }

@@ -7,9 +7,9 @@
       <fa-icon [icon]="user"></fa-icon>
       {{article?.author}} /
       <fa-icon [icon]="calendar"></fa-icon>
-      verfasst am {{parseDate(article.creationDate)}}
+      verfasst am {{article.creationDate.toLocaleDateString()}}
     </div>
-    <div class="blog-content" [innerHTML]="article?.articleText | newline"></div>
+    <div class="blog-content" [innerHTML]="article?.articleText"></div>
     <div class="blog-footer">
       <span *ngIf="article?.hasCommentsEnabled">
         <a>

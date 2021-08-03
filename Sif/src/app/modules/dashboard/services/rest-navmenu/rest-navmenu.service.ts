@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 export class RestNavmenuService extends RestBase {
 
 constructor(protected httpClient: HttpClient) {
-  super('adminnavmenu');
+  super('dashboard/navmenu');
  }
 
  public GetArticleList(): Observable<Article[]> {

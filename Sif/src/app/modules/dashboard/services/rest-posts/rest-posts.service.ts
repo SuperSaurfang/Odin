@@ -10,7 +10,7 @@ import { map, catchError } from 'rxjs/operators';
 export class RestPostsService extends RestBase {
 
   constructor(private httpClient: HttpClient) {
-    super('adminblog');
+    super('dashboard/blog');
   }
 
   public getFullBlog(): Observable<Article[]> {

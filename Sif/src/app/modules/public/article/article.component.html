@@ -8,7 +8,7 @@
     <fa-icon [icon]="calendar"></fa-icon>
     verfasst am {{article?.creationDate.toLocaleDateString()}}
   </div>
-  <div class="article-content" [innerHTML]="article?.articleText | newline"></div>
+  <div class="article-content" [innerHTML]="article?.articleText"></div>
   <div class="article-footer">
     <span *ngIf="article?.hasCommentsEnabled">
       <a *ngIf="false">
@@ -21,7 +21,8 @@
 <div class="content-container">
   <h2>
     <fa-icon [icon]="comments"></fa-icon>
-    Kommentare
+    Kommentare zu "{{article?.title}}"
   </h2>
 </div>
+
 <app-comments [articleId]="article?.articleId"></app-comments>

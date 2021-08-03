@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Thor.Models;
 using Thor.Services.Api;
@@ -9,25 +10,43 @@ namespace Thor.Services.Maria
 {
   public class CommentService : ICommentService
   {
-
     private readonly ISqlExecuterService executer;
-    public CommentService(ISqlExecuterService sqlExecuterService)
+    private readonly IRestClientService restClient;
+    public CommentService(ISqlExecuterService sqlExecuterService, IRestClientService restClient)
     {
       executer = sqlExecuterService;
+      this.restClient = restClient;
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
-    public UnderlayingDatabase UnderlayingDatabase { get; } 
+    public UnderlayingDatabase UnderlayingDatabase { get; }
 
-    public async Task<IEnumerable<Comment>> GetComments(int articleId)
+    public async Task<StatusResponse> DeleteComment()
     {
-      const string sql = @"SELECT CommentId, ArticleId, AnswerOf, CommentText, CreationDate, User.UserName 
-      FROM Comment, User WHERE Comment.UserId = User.UserId AND ArticleId = @articleId";
+      const string sql = "DELETE FROM `Comment` WHERE `Status` = 'trash'";
+      var result = await executer.ExecuteSql(sql);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
+    }
+
+    public async Task<IEnumerable<Comment>> GetComments()
+    {
+      const string sql = @"SELECT `CommentId`, `Comment`.`ArticleId`, `Article`.`Title` AS `ArticleTitle`, `Comment`.`UserId`, `AnswerOf`, `CommentText`, `Comment`.`CreationDate`, `Comment`.`Status`
+      FROM `Comment`, `Article` WHERE `Article`.`ArticleId` = `Comment`.`ArticleId`";
+      var result = await executer.ExecuteSql<Comment>(sql);
+      await MapUserIdToAuthor(result);
+      return result;
+    }
+
+    public async Task<IEnumerable<Comment>> GetPublicComments(int articleId)
+    {
+      const string sql = @"SELECT `CommentId`, `ArticleId`, `UserId`, `AnswerOf`, `CommentText`, `CreationDate`
+      FROM Comment WHERE ArticleId = @articleId AND `Status` = 'released'";
       List<Comment> result = (List<Comment>)await executer.ExecuteSql<Comment>(sql, new { articleId = articleId });
-      if(result == null) {
-        return null;
+      if(result.Count == 0) {
+        return result;
       }
 
+      await MapUserIdToAuthor(result);
       // reverse sort by date to begin with the newest and end with the oldest
       result.Sort((a, b) => DateTime.Compare(b.CreationDate, a.CreationDate));
       // map answers to parent comment or answer
@@ -52,11 +71,53 @@ namespace Thor.Services.Maria
       return result;
     }
 
-    public Task<Comment> PostComment(Comment comment)
+    public async Task<StatusResponse> UpdateComment(Comment comment)
     {
-      const string userSql = "INSERT INTO user(userName, userMail, userRank) VALUES (@userName, @userMail, @userRank)";
-      const string commentSql = "INSERT INTO Comment(ArticleId, UserId, AnswerOf, CommentText) VALUES (@articleId, @userId, @answerOf, @commentText)";
-      throw new NotImplementedException();
+      const string sql = "UPDATE `Comment` SET `CommentText`= @CommentText, `Status`= @Status WHERE `CommentId` = @CommentId";
+      var result = await executer.ExecuteSql(sql, comment);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Update);
+    }
+
+    public async Task<StatusResponse> PostComment(Comment comment)
+    {
+      comment.UserId.ToLower();
+      if(comment.UserId.Equals("guest"))
+      {
+        comment.Status = "new";
+      }
+      else
+      {
+        comment.Status = "released";
+      }
+      const string sql = @"INSERT INTO `Comment`(`ArticleId`, `UserId`, `AnswerOf`, `CommentText`, `CreationDate`, `Status`)
+      VALUES (@ArticleId, @UserId, @AnswerOf, @CommentText, @CreationDate, @Status)";
+      var result = await executer.ExecuteSql(sql, comment);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Create);
+    }
+
+    private async Task MapUserIdToAuthor(IEnumerable<Comment> result)
+    {
+      var nickNames = await restClient.GetUserNicknames();
+      var query = nickNames.AsQueryable();
+
+      foreach (var item in result)
+      {
+        if(item.UserId.Equals("guest"))
+        {
+          if(item.User == null) {
+            item.User = new User();
+          }
+          item.User.Nickname = "Guest";
+          continue;
+        }
+        item.User = (from name in query where name.UserId.Equals(item.UserId) select name).FirstOrDefault();
+      }
+    }
+
+    public Task<IEnumerable<Article>> GetArticleList()
+    {
+      const string sql = "SELECT `ArticleId`, `Title` FROM `Article` WHERE `HasCommentsEnabled` = 1";
+      return executer.ExecuteSql<Article>(sql);
     }
   }
 }

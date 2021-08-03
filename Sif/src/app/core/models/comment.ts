@@ -1,11 +1,15 @@
+
+import { User } from './user';
 export class Comment {
     commentId?: number;
-    userName?: string;
     userMail?: string;
     commentText?: string;
-    userRank?: string;
+    articleTitle?: string;
     articleId?: number;
     creationDate?: Date;
     answerOf?: number;
     answers?: Comment[];
+    userId?: string;
+    user?: User;
+    status?: string;
 }

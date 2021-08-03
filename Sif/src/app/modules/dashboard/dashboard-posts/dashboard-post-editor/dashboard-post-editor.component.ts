@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { faSpinner, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { BlurEvent, ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { timer } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
@@ -129,7 +129,7 @@ export class DashboardPostEditorComponent implements OnInit {
     this.saveArticle();
   }
 
-  public onUpdateArticleText({editor}: ChangeEvent) {
+  public onUpdateArticleText({editor}: BlurEvent) {
     this.article.articleText = editor.getData();
     this.saveArticle();
   }
