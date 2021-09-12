@@ -25,9 +25,11 @@
     </Content>
   </ItemGroup>
 
+<!-- disabled temporary
   <ItemGroup>
     <ProjectReference Include="..\Thor.DatabaseProvider\Thor.DatabaseProvider.csproj" />
     <ProjectReference Include="..\Thor.Models\Thor.Models.csproj" />
   </ItemGroup>
+-->
 
 </Project>
