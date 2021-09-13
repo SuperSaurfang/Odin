@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:docker": "ng serve  --host 0.0.0.0 --port 80 --configuration=docker --disable-host-check true",
     "build-patch": "npm version patch && ng build --prod",
     "build-minor": "npm version minor && ng build --prod",
     "build-major": "npm version major && ng build --prod",

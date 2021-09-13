@@ -115,6 +115,7 @@ namespace Thor
         {
           c.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
           c.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyMethod();
+          c.WithOrigins("http://127.0.0.1").AllowAnyMethod().AllowAnyMethod();
         });
       }
 
