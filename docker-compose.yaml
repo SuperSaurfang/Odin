@@ -1,0 +1,45 @@
+version: "3.7"
+services:
+  mariadb:
+    image: mariadb:latest
+    volumes: 
+      - /var/lib/docker/volumes/database/_data
+    environment:
+      MYSQL_ROOT_PASSWORD: "toor"
+    networks: 
+      backend:
+        ipv4_address: 172.40.0.6
+
+  thor:
+    build: 
+     context: ./Thor
+     dockerfile: Dockerfile
+    networks: 
+      frontend:
+        ipv4_address: 172.30.0.6
+      backend:
+        ipv4_address: 172.40.0.4
+  sif:
+    build:
+      context: ./Sif
+      dockerfile: Dockerfile
+    environment: 
+      BACKEND: http://172.30.0.6
+    ports: 
+      - "127.0.0.1:80:80"
+    networks: 
+      - frontend
+
+networks: 
+  frontend:
+    driver: bridge
+    ipam: 
+      driver: default
+      config:
+        - subnet: 172.30.0.0/29
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.40.0.0/29
