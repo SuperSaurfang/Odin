@@ -6,7 +6,7 @@ namespace Thor.Util
   class Utils
   {
     /// <summary>
-    /// Create a Response for a insert, update or delete operation
+    /// Create a Response for an insert, update or delete operation
     /// </summary>
     /// <param name="affectedRows">The rows that changed</param>
     /// <param name="type">The type of the response</param>

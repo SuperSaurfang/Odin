@@ -1,8 +1,0 @@
-<div *ngFor="let comment of comments" class="comment-container">
-    <app-comment [comment]="comment" 
-        [articleId]="articleId"
-        [responseTo]="responseTo" 
-        (showCommentForm)="onShowCommentForm($event)"
-        (abortCommentForm)="onAbort()"></app-comment>
-</div>
-<app-comments-form *ngIf="!isResponseTo" [articleId]="articleId" (abort)="onAbort()" (saved)="onSaved($event)"></app-comments-form>

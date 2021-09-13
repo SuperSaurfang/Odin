@@ -1,10 +1,11 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
-import { ArticleFilterService, DateFilter } from '../../services/article-filter/article-filter.service';
+import { ArticleFilterService } from '../../services/article-filter/article-filter.service';
 import { Article, ChangeResponse } from 'src/app/core';
 import { RestPageService } from '../../services';
 import { Subscription } from 'rxjs';
 import { faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { DateFilter } from 'src/app/core/baseClass';
 
 @Component({
   selector: 'app-dashboard-pages-list',
@@ -41,7 +42,7 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
       this.articleFilterSubscription = this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
       });
-      this.articleFilter.setArticles(articles);
+      this.articleFilter.setFilterObject(articles);
       this.selectedArticles = [];
       articles.forEach(() => {
         this.selectedArticles.push(false);

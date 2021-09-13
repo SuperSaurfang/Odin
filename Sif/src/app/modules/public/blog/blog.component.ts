@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faUser, faCalendar, faComments, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faCalendar, faComments, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Article } from 'src/app/core/models';
 import { RestService } from 'src/app/core/services/rest/rest.service';
 
@@ -9,8 +9,6 @@ import { RestService } from 'src/app/core/services/rest/rest.service';
   styleUrls: ['./blog.component.scss']
 })
 export class BlogComponent implements OnInit {
-
-  
   constructor(private restService: RestService) { }
 
   public calendar = faCalendar;
@@ -22,11 +20,7 @@ export class BlogComponent implements OnInit {
   ngOnInit() {
     this.restService.getBlog().subscribe(articles => {
       this.articles = articles;
-    })
-  }
-
-  public parseDate(date: string) {
-    return new Date(date).toLocaleDateString()
+    });
   }
 
 }

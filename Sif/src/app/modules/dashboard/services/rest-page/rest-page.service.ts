@@ -9,7 +9,7 @@ import { catchError, map } from 'rxjs/operators';
 export class RestPageService extends RestBase {
 
   constructor(protected httpClient: HttpClient) {
-    super('adminpage');
+    super('dashboard/page');
   }
 
   public getPageByTitle(title: string): Observable<Article> {

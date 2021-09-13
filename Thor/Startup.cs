@@ -36,10 +36,10 @@ namespace Thor
     {
       // set config
       services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseConfig:ConnectionSettings"));
-      services.AddSingleton(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
+      services.AddTransient(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
 
       services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
-      services.AddSingleton(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
+      services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
       services.AddSingleton<IRestClientService, RestClientService>();
 
@@ -70,24 +70,6 @@ namespace Thor
         });
 
 
-      /** deprecated authentication
-      services.AddAuthentication(o =>
-      {
-        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
-      .AddJwtBearer(o =>
-      {
-        o.RequireHttpsMetadata = false;
-        o.SaveToken = true;
-        o.TokenValidationParameters = new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(key),
-          ValidateIssuer = false,
-          ValidateAudience = false
-        };
-      });*/
       var auth0 = Configuration.GetSection("Auth0");
       var authority = auth0.GetValue<string>("Authority");
       var domain = $"https://{authority}/";
@@ -106,37 +88,13 @@ namespace Thor
             };
         });
 
-      /** deprecated authorization
       services.AddAuthorization(o =>
       {
-        o.AddPolicy("UserPolicy",
-          policy => policy.RequireRole(UserRank.User, UserRank.Moderator, UserRank.Admin));
-        o.AddPolicy("ModeratorPolicy",
-          policy => policy.RequireRole(UserRank.Moderator, UserRank.Admin));
-        o.AddPolicy("AdminPolicy",
-          policy => policy.RequireRole(UserRank.Admin));
-      });*/
-      services.AddAuthorization(o =>
-      {
-        //scopes for blog controller
-        o.AddPolicy("create:blog", policy => policy.Requirements.Add(new HasScopeRequirement("create:blog", domain)));
-        o.AddPolicy("edit:blog", policy => policy.Requirements.Add(new HasScopeRequirement("edit:blog", domain)));
-        o.AddPolicy("delete:blog", policy => policy.Requirements.Add(new HasScopeRequirement("delete:blog", domain)));
-        o.AddPolicy("read:blog", policy => policy.Requirements.Add(new HasScopeRequirement("read:blog", domain)));
-
-        //scope for page controller
-        o.AddPolicy("create:page", policy => policy.Requirements.Add(new HasScopeRequirement("create:page", domain)));
-        o.AddPolicy("delete:page", policy => policy.Requirements.Add(new HasScopeRequirement("delete:page", domain)));
-        o.AddPolicy("edit:page", policy => policy.Requirements.Add(new HasScopeRequirement("edit:page", domain)));
-        o.AddPolicy("read:page", policy => policy.Requirements.Add(new HasScopeRequirement("read:page", domain)));
-
-        //scope for nav menu controller
-        o.AddPolicy("create:menu", policy => policy.Requirements.Add(new HasScopeRequirement("create:menu", domain)));
-        o.AddPolicy("delete:menu", policy => policy.Requirements.Add(new HasScopeRequirement("delete:menu", domain)));
-        o.AddPolicy("edit:menu", policy => policy.Requirements.Add(new HasScopeRequirement("edit:menu", domain)));
-        o.AddPolicy("read:menu", policy => policy.Requirements.Add(new HasScopeRequirement("read:menu", domain)));
+        o.AddPolicy("admin", policy => policy.Requirements.Add(new HasPermissionRequirement("admin", domain)));
+        o.AddPolicy("author", policy => policy.Requirements.Add(new HasPermissionRequirement("author", domain)));
+        o.AddPolicy("user", policy => policy.Requirements.Add(new HasPermissionRequirement("user", domain)));
       });
-      services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+      services.AddTransient<IAuthorizationHandler, HasPermissionHandler>();
 
       services.AddMvc();
 
@@ -157,12 +115,9 @@ namespace Thor
         {
           c.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
           c.WithOrigins("http://localhost").AllowAnyMethod().AllowAnyMethod();
+          c.WithOrigins("http://127.0.0.1").AllowAnyMethod().AllowAnyMethod();
         });
       }
-
-      app.UseDefaultFiles();
-      app.UseStaticFiles();
-      // app.UseHttpsRedirection();
 
       app.UseSwagger();
       app.UseSwaggerUI(c =>
@@ -183,23 +138,22 @@ namespace Thor
 
     private void ConfigureMariaDB(IServiceCollection services)
     {
-      services.AddSingleton<ISqlExecuterService, SqlExecuterService>();
+      services.AddTransient<ISqlExecuterService, SqlExecuterService>();
 
       services.AddTransient<IBlogService, BlogService>();
       services.AddTransient<IPageService, PageService>();
       services.AddTransient<INavMenuService, NavMenuService>();
       services.AddTransient<ICommentService, CommentService>();
-      services.AddTransient<IUserService, UserService>();
+      services.AddTransient<ICategoryService, CategoryService>();
     }
 
     private void ConfigureMongoDB(IServiceCollection services)
     {
 
-      services.AddSingleton<IMongoConnectionService, MongoConnectionService>();
+      services.AddTransient<IMongoConnectionService, MongoConnectionService>();
 
       services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
       services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();
-      services.AddTransient<IUserService, Thor.Services.Mongo.UserService>();
     }
   }
 }

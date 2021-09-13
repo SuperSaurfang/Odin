@@ -59,6 +59,14 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "docker": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
             }
           }
         },
@@ -70,6 +78,9 @@
           "configurations": {
             "production": {
               "browserTarget": "Sif:build:production"
+            },
+            "docker": {
+              "browserTarget": "Sif:build:docker"
             }
           }
         },

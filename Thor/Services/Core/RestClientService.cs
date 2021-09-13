@@ -46,20 +46,20 @@ namespace Thor.Services
     /// Get User Nicknames from Auth0
     /// </summary>
     /// <returns></returns>
-    public async Task<IEnumerable<UserNickname>> GetUserNicknames()
+    public async Task<IEnumerable<User>> GetUserNicknames()
     {
       if (RefreshCheck())
       {
-        var restClient = new RestClient($"{ApiUrl}users?fields=user_id%2Cnickname");
+        var restClient = new RestClient($"{ApiUrl}users?fields=user_id%2Cnickname%2Cpicture");
 
         var restRequest = new RestRequest(Method.GET);
         restRequest.AddHeader("authorization", $"{token.TokenType} {token.AccessToken}");
 
-        IRestResponse<IEnumerable<UserNickname>> response = await restClient.ExecuteAsync<IEnumerable<UserNickname>>(restRequest);
+        IRestResponse<IEnumerable<User>> response = await restClient.ExecuteAsync<IEnumerable<User>>(restRequest);
 
         return response.Data;
       }
-      return new List<UserNickname>();
+      return new List<User>();
     }
 
     /// <summary>

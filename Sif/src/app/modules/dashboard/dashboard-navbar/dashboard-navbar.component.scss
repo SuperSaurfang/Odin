@@ -14,6 +14,12 @@
     padding: 0;
   }
 
+  .nav-child-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0 padding(2);
+  }
+
   .nav-entry {
     display: block;
     padding: padding(1) padding(2);
@@ -23,7 +29,7 @@
 
   .nav-entry:hover {
     background-color: $dark-2;
-    color: $primary-light;
+    color: $primary-light !important;
   }
 
 }

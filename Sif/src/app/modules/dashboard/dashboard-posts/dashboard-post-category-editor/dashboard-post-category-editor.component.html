@@ -1,0 +1,110 @@
+<h1>Kategorien verwalten</h1>
+<p>
+  Hier hast du eine übersicht über deine Kategorien, kannst Neue erstellen und Bestehende ändern oder löschen.
+  Beachte, das du übergeordnete Kategorien nicht so einfach löschen kannst.
+</p>
+
+<div class="flex">
+  <div class="flex-grow category-editor-container">
+    <h2>Kategorie erstellen</h2>
+    <div class="content-container">
+      <form class="flex flex-column" [formGroup]="createCategoryForm" (ngSubmit)="createCategory()">
+        <label for="name" class="label control-group horizontal-group">
+          <div>
+            <span>Name:</span>
+          </div>
+          <input id="name" type="text" formControlName="name">
+        </label>
+        <p class="input-helper-text">Dies ist der Name der neuen Kategorie.</p>
+
+        <label for="description" class="label control-group horizontal-group">
+          <div>
+            <span>Beschreibung:</span>
+          </div>
+          <input id="description" type="text" formControlName="description">
+        </label>
+        <p class="input-helper-text">Beschreibe in wenigen Worten deine Kategorie.</p>
+
+        <label class="label control-group horizontal-group">
+          <div>
+            <span>Übergeordnete Kategorie:</span>
+          </div>
+          <select formControlName="parentId">
+            <option selected value="">--</option>
+            <option *ngFor="let category of categoryList" [value]="category.categoryId">{{category.name}}</option>
+          </select>
+        </label>
+        <p class="input-helper-text">Wähle hier eine Übergeordnete Kategorie aus.</p>
+
+        <button type="submit" class="btn btn-dark ml-auto" [disabled]="createCategoryForm.invalid">Speichern</button>
+      </form>
+    </div>
+  </div>
+  <div class="flex-grow category-table-containter">
+    <h2>Aktuelle Kategorien</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Beschreibung</th>
+          <th>Übergeordnete Kategorie</th>
+          <th>Anzahl Beiträge</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let category of categoryList; index as i">
+            <td>
+              <div *ngIf="currentEditing !== i">{{category.name}}</div>
+              <div *ngIf="currentEditing === i">
+                <input type="text" [(ngModel)]="category.name">
+            </div>
+            </td>
+            <td>
+              <div *ngIf="currentEditing !== i">{{category.description}}</div>
+              <div *ngIf="currentEditing === i">
+                  <input type="text" [(ngModel)]="category.description">
+              </div>
+            </td>
+            <td>
+              <div *ngIf="currentEditing !== i">{{getParentNameById(category.parentId)}}</div>
+              <div *ngIf="currentEditing === i">
+                <select [(ngModel)]="category.parentId">
+                  <option value=""></option>
+                  <option *ngFor="let optionItem of categoryList" [value]="optionItem.categoryId">{{optionItem.name}}</option>
+                </select>
+              </div>
+            </td>
+            <td>
+              <div>{{category.articleCount || 0}}</div>
+            </td>
+            <td>
+              <div class="flex">
+                <button *ngIf="currentEditing !== i" class="btn btn-icon" (click)="setCurrentEditing(i)">
+                  <fa-icon [icon]="editIcon"></fa-icon>
+                </button>
+                <button *ngIf="currentEditing !== i" class="btn btn-icon danger-text" (click)="deleteCategory(i)">
+                  <fa-icon [icon]="trashIcon"></fa-icon>
+                </button>
+                <button *ngIf="currentEditing === i" class="btn btn-icon" (click)="updateCategory(i)">
+                  <fa-icon [icon]="saveIcon"></fa-icon>
+                </button>
+                <button *ngIf="currentEditing === i" class="btn btn-icon danger-text" (click)="clearCurrentEditing()">
+                  <fa-icon [icon]="abortIcon"></fa-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>Beschreibung</th>
+          <th>Übergeordnete Kategorie</th>
+          <th>Anzahl Beiträge</th>
+          <th>Aktionen</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

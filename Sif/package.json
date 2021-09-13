@@ -1,9 +1,10 @@
 {
   "name": "Sif",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:docker": "ng serve  --host 0.0.0.0 --port 80 --configuration=docker --disable-host-check true",
     "build-patch": "npm version patch && ng build --prod",
     "build-minor": "npm version minor && ng build --prod",
     "build-major": "npm version major && ng build --prod",
