@@ -40,7 +40,6 @@ export class DashboardPostEditorComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['title']) {
         this.restService.getArticleByTitle(params['title']).subscribe(response => {
-          console.log(response);
           this.article = response;
           if (this.article.articleText) {
             this.blogEditor.editorInstance.setData(this.article.articleText);

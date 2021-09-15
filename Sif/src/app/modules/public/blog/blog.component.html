@@ -1,4 +1,4 @@
-<div>
+<div class="flex-grow">
   <div *ngFor="let article of articles" class="content-container">
     <h1 class="blog-header">
       <a [routerLink]="['/blog/', article?.title]">{{article?.title}}</a>
