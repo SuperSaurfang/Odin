@@ -9,6 +9,7 @@ import { timer } from 'rxjs';
 import { UserService } from 'src/app/core/services';
 import { Article, ChangeResponse } from 'src/app/core';
 import { RestPostsService } from '../../services';
+import { ArticleEditorService } from 'src/app/core/baseClass';
 
 @Component({
   selector: 'app-dashboard-post-editor',
@@ -33,12 +34,14 @@ export class DashboardPostEditorComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private restService: RestPostsService,
-    private userService: UserService) {
+    private userService: UserService,
+    private articleService: ArticleEditorService) {
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       if (params['title']) {
+        this.articleService.setArticleByTitle(params['title']);
         this.restService.getArticleByTitle(params['title']).subscribe(response => {
           this.article = response;
           if (this.article.articleText) {

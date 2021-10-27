@@ -24,8 +24,8 @@
   </div>
   <div class="article-setting-container flex-shrink ml-1">
     <h2>Einstellungen</h2>
-    <app-article-setting name='Status' type='select' [setting]="article.status" (settingChange)="onUpdateStatus($event)"></app-article-setting>
-    <app-article-setting name='Kommentare' type='switch' label='Kommentare erlauben' [setting]="article.hasCommentsEnabled" (settingChange)="onUpdateAllowComment($event)"></app-article-setting>
-    <app-article-setting name='Erstelldatum' type='date' [setting]="article.creationDate" (settingChange)="onUpdateCreationDate($event)"></app-article-setting>
+    <app-article-setting name='Status' type='status'></app-article-setting>
+    <app-article-setting name='Kommentare' type='allowComments' label='Kommentare erlauben'></app-article-setting>
+    <app-article-setting name='Erstelldatum' type='createDate'></app-article-setting>
   </div>
 </div>

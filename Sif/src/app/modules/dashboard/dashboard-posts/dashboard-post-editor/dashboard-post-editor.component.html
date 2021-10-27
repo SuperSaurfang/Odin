@@ -24,9 +24,10 @@
   </div>
   <div class="article-setting-container flex-shrink ml-1">
     <h2>Einstellungen</h2>
-    <app-article-setting name='Status' type='select' [setting]="article.status" (settingChange)="onStatusUpdate($event)"></app-article-setting>
-    <app-article-setting name='Kommentare' type='switch' label='Kommentare erlauben' [setting]="article.hasCommentsEnabled" (settingChange)="onCommentAllowUpdate($event)"></app-article-setting>
-    <app-article-setting name='Autor und Datum' type='switch' label='Autor und Datum anzeigen' [setting]="article.hasDateAuthorEnabled" (settingChange)="onDisplayAuthorDateUpdate($event)"></app-article-setting>
-    <app-article-setting name='Erstelldatum' type='date' [setting]="article.creationDate" (settingChange)="parseUpdatedDate($event)"></app-article-setting>
+    <app-article-setting name='Status' type='status'></app-article-setting>
+    <app-article-setting name='Kommentare' type='allowComments' label='Kommentare erlauben'></app-article-setting>
+    <app-article-setting name='Autor und Datum' type='showDateAuthor' label='Autor und Datum anzeigen'></app-article-setting>
+    <app-article-setting name='Erstelldatum' type='createDate'></app-article-setting>
+    <app-article-setting name='Kategorien' type='category'></app-article-setting>
   </div>
 </div>
