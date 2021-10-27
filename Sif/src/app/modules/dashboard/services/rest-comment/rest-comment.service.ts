@@ -14,7 +14,7 @@ export class RestCommentService extends RestBase {
 
   public getCommentList(): Observable<Comment[]> {
     return this.httpClient.get<Comment[]>(`${this.basePath}`).pipe(
-      map(comments => this.retoreDate(comments)),
+      map(comments => this.restoreDate(comments)),
       catchError(this.handleError<Comment[]>('Unable load Comments', []))
     );
   }
@@ -37,7 +37,7 @@ export class RestCommentService extends RestBase {
     );
   }
 
-  private retoreDate(comments: Comment[]): Comment[] {
+  private restoreDate(comments: Comment[]): Comment[] {
     comments.forEach(comment => {
       comment.creationDate = new Date(comment.creationDate);
     });
