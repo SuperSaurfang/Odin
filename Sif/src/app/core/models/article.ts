@@ -9,4 +9,5 @@ export class Article {
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
   status?: string;
+  categories?: string[];
 }
