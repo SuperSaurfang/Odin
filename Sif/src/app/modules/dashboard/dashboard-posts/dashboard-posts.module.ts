@@ -19,6 +19,8 @@ import { DashboardPostTagEditorComponent } from './dashboard-post-tag-editor/das
 import { DashboardPostCategoryEditorComponent } from './dashboard-post-category-editor/dashboard-post-category-editor.component';
 import { RestCategoryService } from '../services/rest-category/rest-category.service';
 import { CategoryService } from '../services/category/category.service';
+import { PostEditorService } from '../services/post-editor/post-editor.service';
+import { ArticleEditorService } from 'src/app/core/baseClass';
 
 
 
@@ -46,7 +48,9 @@ import { CategoryService } from '../services/category/category.service';
     ArticleFilterService,
     RestPostsService,
     RestCategoryService,
-    CategoryService
+    CategoryService,
+
+    { provide: ArticleEditorService, useClass: PostEditorService }
   ]
 })
 export class DashboardPostsModule {

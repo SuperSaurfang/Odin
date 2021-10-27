@@ -14,6 +14,8 @@ import { DashboardPagesEditorComponent } from './dashboard-pages-editor/dashboar
 import { RestPageService, ArticleFilterService } from '../services';
 import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ArticleEditorService } from 'src/app/core/baseClass';
+import { PageEditorService } from '../services/page-editor/page-editor.service';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
   ],
   providers: [
     ArticleFilterService,
-    RestPageService
+    RestPageService,
+
+    { provide: ArticleEditorService, useClass: PageEditorService}
   ]
 })
 export class DashboardPagesModule { }
