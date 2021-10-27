@@ -41,19 +41,17 @@ export abstract class ArticleEditorService {
     }
 
     public updateCreationDate(date: Date): void {
-        this.article.creationDate.setFullYear(date.getFullYear());
-        this.article.creationDate.setMonth(date.getMonth());
-        this.article.creationDate.setDate(date.getDate());
+        this.article.creationDate = date;
         this.saveOrUpdate();
     }
 
-    public updateCommentsEnabled(): void {
-        this.article.hasCommentsEnabled = !this.article.hasCommentsEnabled;
+    public updateCommentsEnabled(value: boolean): void {
+        this.article.hasCommentsEnabled = value;
         this.saveOrUpdate();
     }
 
-    public updateDateAuthorEnabled(): void {
-        this.article.hasDateAuthorEnabled = this.article.hasDateAuthorEnabled;
+    public updateDateAuthorEnabled(value: boolean): void {
+        this.article.hasDateAuthorEnabled = value;
         this.saveOrUpdate();
     }
 

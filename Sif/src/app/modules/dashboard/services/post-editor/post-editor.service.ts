@@ -16,6 +16,7 @@ export class PostEditorService extends ArticleEditorService {
   public setArticleByTitle(title: string): void {
     this.restService.getArticleByTitle(title).subscribe(article => {
       this.article = article;
+      this.articleSubject.next(this.article);
       this.setMode('edit');
     });
   }
