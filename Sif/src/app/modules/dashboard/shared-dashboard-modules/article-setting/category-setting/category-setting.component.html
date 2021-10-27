@@ -1,0 +1,14 @@
+<input type="text" list="categories-list" [(ngModel)]="categoryName" (change)="onChange($event)">
+
+<datalist id="categories-list">
+  <option *ngFor="let category of categories" [value]="category.name" >
+</datalist>
+
+<div class="badge-container">
+  <span class="badge" *ngFor="let category of contectedCategories">
+    {{category}}
+    <div class="remove" (click)="remove(category)">
+      <fa-icon [icon]="removeIcon"></fa-icon>
+    </div>
+  </span>
+</div>
