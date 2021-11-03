@@ -1,21 +1,38 @@
-import { of, Observable, Subject } from "rxjs";
-import { Article, Category } from "..";
+import { Observable, Subject } from 'rxjs';
+import { Article, Message, MessageType, User } from '../models';
 
-type Type = 'blog' | 'page'
-type Mode = 'edit' | 'create'
+/**  The editor has two modes, one for edit and one create articles.
+ create means that the editor is creating a new article.
+ edit means that the editor is editing an existing article.
+ if the editor saves the new article, the editor switches to edit mode.
+*/
+export type Mode = 'edit' | 'create';
 
 export abstract class ArticleEditorService {
 
     protected article: Article;
-    protected mode: Mode = 'create'
-    
+    protected mode: Mode = 'create';
+
     protected articleSubject: Subject<Article> = new Subject<Article>();
+    protected messageSubject: Subject<Message> = new Subject<Message>();
 
-    readonly type: Type;
+    constructor() {
 
-    constructor(type: Type) {
-        this.type = type;
     }
+
+    public abstract addCategory(category: string): boolean;
+
+    public abstract removeCategory(category: string): boolean;
+
+    public abstract getCategories(): Observable<string[]>;
+
+    public abstract setArticleByTitle(title: string): void;
+
+    public abstract createArticle(user: User): void;
+
+    public abstract save(): void;
+
+    public abstract update(): void;
 
     public setMode(mode: Mode): void {
         this.mode = mode;
@@ -25,7 +42,7 @@ export abstract class ArticleEditorService {
         return this.mode;
     }
 
-    public updateText(text: string) : void {
+    public updateText(text: string): void {
         this.article.articleText = text;
         this.saveOrUpdate();
     }
@@ -55,31 +72,32 @@ export abstract class ArticleEditorService {
         this.saveOrUpdate();
     }
 
-    public abstract addCategory(category: string): boolean;
-
-    public abstract removeCategory(category: string): boolean;
-
     public getArticle(): Observable<Article> {
         return this.articleSubject;
     }
 
-    public abstract getCategories(): Observable<string[]>;
+    public getMessage(): Observable<Message> {
+      return this.messageSubject;
+    }
 
-    public abstract setArticleByTitle(title: string): void;
-
-    public abstract createArticle(userId: string): void;
-
-    public abstract save(): void;
-
-    public abstract update(): void;
+    protected createMessage(type: MessageType, messageContent: string): void {
+      const message = new Message();
+      message.messageType = type;
+      message.messageContent = messageContent;
+      this.messageSubject.next(message);
+    }
 
     private saveOrUpdate() {
-        this.articleSubject.next(this.article);
-        if (this.mode === 'create') {
-            this.save();
-        }
-        else {
-            this.update();
-        }
+      if (!this.article.title) {
+        // No title was set.
+        return;
+      }
+
+      this.articleSubject.next(this.article);
+      if (this.mode === 'create') {
+          this.save();
+      } else {
+          this.update();
+      }
     }
 }
