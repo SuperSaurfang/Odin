@@ -6,9 +6,9 @@
 
 <div class="badge-container">
   <span class="badge" *ngFor="let category of contectedCategories">
-    {{category}}
-    <div class="remove" (click)="remove(category)">
+    <span class="badge-content">{{category}}</span>
+    <button class="badge-remove" (click)="remove(category)">
       <fa-icon [icon]="removeIcon"></fa-icon>
-    </div>
+    </button>
   </span>
 </div>

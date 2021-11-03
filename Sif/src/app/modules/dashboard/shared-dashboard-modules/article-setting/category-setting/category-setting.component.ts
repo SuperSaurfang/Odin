@@ -21,35 +21,34 @@ export class CategorySettingComponent implements OnInit, OnDestroy {
   // easier to manage the subscriptions as list
   private subscriptions: Subscription[] = [];
 
-  constructor(private categoryService: CategoryService, 
+  constructor(private categoryService: CategoryService,
     private articleEditor: ArticleEditorService) {
     }
-  
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscribtion => {
       subscribtion.unsubscribe();
-    })
+    });
   }
 
   ngOnInit() {
-    console.log(this.articleEditor.type);
     this.subscriptions.push(this.categoryService.getCategoryList().subscribe(categories => {
       this.categories = categories;
     }));
 
     this.subscriptions.push(this.articleEditor.getCategories().subscribe(categories => {
       this.contectedCategories = categories;
-    }))
+    }));
   }
 
 
   public onChange(event: any): void {
-    if(this.articleEditor.addCategory(this.categoryName)) {
+    if (this.articleEditor.addCategory(this.categoryName)) {
       this.categoryName = '';
     }
   }
 
   public remove(category: string): void {
-    this.articleEditor.removeCategory(category)
+    this.articleEditor.removeCategory(category);
   }
 }
