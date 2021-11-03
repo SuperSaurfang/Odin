@@ -21,6 +21,7 @@ import { RestCategoryService } from '../services/rest-category/rest-category.ser
 import { CategoryService } from '../services/category/category.service';
 import { PostEditorService } from '../services/post-editor/post-editor.service';
 import { ArticleEditorService } from 'src/app/core/baseClass';
+import { HintboxModule } from 'src/app/shared-modules/hintbox/hintbox.module';
 
 
 
@@ -35,7 +36,8 @@ import { ArticleEditorService } from 'src/app/core/baseClass';
     FontAwesomeModule,
     ArticleSettingModule,
     ListActionBarModule,
-    StatusChangeMenuModule
+    StatusChangeMenuModule,
+    HintboxModule
   ],
   declarations: [
     DashboardPostsComponent,

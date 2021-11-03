@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Article } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 
-type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' | 'category'
+type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' | 'category';
 
 @Component({
   selector: 'app-article-setting',
@@ -22,7 +22,7 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(private articleEditor: ArticleEditorService) { }
-  
+
   @Input()
   public type: SettingType;
 
@@ -33,7 +33,7 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
   public label: string;
 
   ngOnDestroy(): void {
-    if(this.subscription) {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
@@ -41,9 +41,7 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.articleEditor.getArticle().subscribe(article => {
       this.article = article;
-      if(this.type === 'createDate' && this.displayedDate === undefined) {
-        console.log(article.creationDate);
-        console.log(this.parseDate(article.creationDate));
+      if (this.type === 'createDate' && this.displayedDate === undefined) {
         this.displayedDate = this.parseDate(article.creationDate);
       }
     });
@@ -65,7 +63,7 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
   public updateToggle() {
     switch (this.type) {
       case 'allowComments':
-        this.articleEditor.updateCommentsEnabled(this.article.hasCommentsEnabled)
+        this.articleEditor.updateCommentsEnabled(this.article.hasCommentsEnabled);
         break;
       case 'showDateAuthor':
         this.articleEditor.updateDateAuthorEnabled(this.article.hasDateAuthorEnabled);
@@ -75,12 +73,10 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
 
   public updateCreationDate() {
     let date: Date;
-    if(!this.displayedDate) {
+    if (!this.displayedDate) {
       date = new Date(this.article.creationDate);
       this.displayedDate = this.parseDate(date);
-    } 
-    else 
-    {
+    } else {
       date = new Date(Date.parse(this.displayedDate));
       console.log(date);
     }
