@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Threading.Tasks;
+using System.Linq;
 using System.Collections.Generic;
 using Dapper;
 using MySql.Data.MySqlClient;
@@ -31,15 +32,7 @@ namespace Thor.Services
           {
             connection.Open();
           }
-
-          if (param == null)
-          {
-            return await connection.QueryAsync<T>(sql);
-          }
-          else
-          {
-            return await connection.QueryAsync<T>(sql, param);
-          }
+          return await connection.QueryAsync<T>(sql, param);
         }
       }
       catch (Exception ex)
@@ -59,15 +52,7 @@ namespace Thor.Services
           {
             connection.Open();
           }
-
-          if (param == null)
-          {
-            return await connection.ExecuteAsync(sql);
-          }
-          else
-          {
-            return await connection.ExecuteAsync(sql, param);
-          }
+          return await connection.ExecuteAsync(sql, param);
         }
       }
       catch (Exception ex)
@@ -87,15 +72,7 @@ namespace Thor.Services
           {
             connection.Open();
           }
-
-          if (param == null)
-          {
-            return await connection.QueryAsync<T, C, T>(sql, mapFunc, splitOn: splitON);
-          }
-          else
-          {
-            return await connection.QueryAsync<T, C, T>(sql, mapFunc, param, splitOn: splitON);
-          }
+          return await connection.QueryAsync<T, C, T>(sql, mapFunc, param, splitOn: splitON);
         }
       }
       catch (Exception ex)
@@ -105,7 +82,7 @@ namespace Thor.Services
       }
     }
 
-    public async Task<IEnumerable<T>> ExecuteSql<T, A, B>(string sql, Func<T, A, B, T> mapFunc, string splitON, object param = null)
+    public async Task<IEnumerable<T>> ExecuteSql<T, A, B>(string sql, Func<T, A, B, T> mapFunc, string splitON, object param = null, CommandType? commandType = null)
     {
       try
       {
@@ -116,14 +93,7 @@ namespace Thor.Services
             connection.Open();
           }
 
-          if (param == null)
-          {
-            return await connection.QueryAsync<T, A, B, T>(sql, mapFunc, splitOn: splitON);
-          }
-          else
-          {
-            return await connection.QueryAsync<T, A, B, T>(sql, mapFunc, param, splitOn: splitON);
-          }
+          return await connection.QueryAsync<T, A, B, T>(sql, mapFunc, param, splitOn: splitON, commandType: commandType);
         }
       }
       catch (Exception ex)
@@ -144,20 +114,34 @@ namespace Thor.Services
             connection.Open();
           }
 
-          if (param == null)
-          {
-            return await connection.QueryFirstAsync<T>(sql);
-          }
-          else
-          {
-            return await connection.QueryFirstAsync<T>(sql, param);
-          }
+          return await connection.QueryFirstAsync<T>(sql, param);
         }
       }
       catch (Exception ex)
       {
         logger.LogError(ex, "Unable to execute sql statement.");
         return Activator.CreateInstance<T>();
+      }
+    }
+
+    public async Task<TModel> ExecuteSqlSingle<TModel, AModel, BModel>(string sql, Func<TModel, AModel, BModel, TModel> mapFunc, string splitON, object param = null)
+    {
+      try
+      {
+        using (var connection = new MySqlConnection(connectionString))
+        {
+          if (connection.State == ConnectionState.Closed)
+          {
+            connection.Open();
+          }
+          var result = await connection.QueryAsync<TModel, AModel, BModel, TModel>(sql, mapFunc, param, splitOn: splitON);
+          return result.FirstOrDefault();
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "Unable to execute sql statement.");
+        return Activator.CreateInstance<TModel>();
       }
     }
   }
