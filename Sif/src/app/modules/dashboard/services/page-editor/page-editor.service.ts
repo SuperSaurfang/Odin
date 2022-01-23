@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { User } from 'src/app/core';
+import { Category, User } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 
 @Injectable()
@@ -25,14 +25,14 @@ export class PageEditorService extends ArticleEditorService {
   }
 
 
-  public addCategory(category: string): boolean {
+  public addCategory(category: Category): boolean {
     return false;
   }
-  public removeCategory(category: string): boolean {
+  public removeCategory(category: Category): boolean {
     return false;
   }
-  public getCategories(): Observable<string[]> {
-    const empty: string[] = [];
+  public getCategories(): Observable<Category[]> {
+    const empty: Category[] = [];
     return of(empty);
   }
 }

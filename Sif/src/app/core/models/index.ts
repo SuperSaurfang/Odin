@@ -6,3 +6,4 @@ export * from './navmenu';
 export * from './statusresponse';
 export * from './category';
 export * from './message';
+export * from './articleCategory';

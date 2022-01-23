@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ChangeResponse, MessageType, StatusResponseType, User } from 'src/app/core';
+import { ArticleCategory, Category, ChangeResponse, MessageType, StatusResponseType, User } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 import { RestPostsService } from '../rest-posts/rest-posts.service';
 
 @Injectable()
 export class PostEditorService extends ArticleEditorService {
 
-  private categoriesSubject: Subject<string[]> = new Subject<string[]>();
+  private categoriesSubject: Subject<Category[]> = new Subject<Category[]>();
 
   constructor(private restService: RestPostsService) {
     super();
@@ -17,6 +17,7 @@ export class PostEditorService extends ArticleEditorService {
     this.restService.getArticleByTitle(title).subscribe(article => {
       this.article = article;
       this.articleSubject.next(this.article);
+      this.categoriesSubject.next(this.article.categories);
       this.setMode('edit');
     });
   }
@@ -75,34 +76,61 @@ export class PostEditorService extends ArticleEditorService {
     });
   }
 
-  public addCategory(category: string): boolean {
+  public addCategory(category: Category): boolean {
     if (!this.article.categories) {
       this.article.categories = [];
     }
-    const result = this.article.categories.find(item => item === category);
+    const result = this.article.categories.find(item => item.categoryId === category.categoryId);
 
     if (!result) {
-      this.article.categories.push(category);
-      this.categoriesSubject.next(this.article.categories);
+      const articleCategory = new ArticleCategory(this.article, category);
+      this.restService.addCategoryToArticle(articleCategory).subscribe(response => {
+        switch (response.change) {
+          case ChangeResponse.Change:
+            this.article.categories.push(category);
+            this.categoriesSubject.next(this.article.categories);
+            this.createMessage(MessageType.Ok, 'Kategory mit Artikel verknüpft.');
+            break;
+          case ChangeResponse.Error:
+            this.createMessage(MessageType.Error, 'Beim verknüpfen einer Kategorie mit dem Artikel trat ein Fehler auf.');
+            break;
+          case ChangeResponse.NoChange:
+            this.createMessage(MessageType.Info, 'Kategorie konnte nicht mit Artikel verknüpft werden.');
+            break;
+        }
+      });
       return true;
     }
 
     return false;
   }
 
-  public removeCategory(category: string): boolean {
-    const index = this.article.categories.findIndex(item => item === category);
+  public removeCategory(category: Category): boolean {
+    const index = this.article.categories.findIndex(item => item.categoryId === category.categoryId);
 
     if (index >= 0) {
-      this.article.categories.splice(index, 1);
-      this.categoriesSubject.next(this.article.categories);
+      const articleCategory = new ArticleCategory(this.article, category);
+      this.restService.removeCategoryFromArticle(articleCategory).subscribe(response => {
+        switch (response.change) {
+          case ChangeResponse.Change:
+            this.article.categories.splice(index, 1);
+            this.categoriesSubject.next(this.article.categories);
+            this.createMessage(MessageType.Ok, 'Kategory von Artikel entfernt');
+            break;
+          case ChangeResponse.Error:
+            this.createMessage(MessageType.Error, 'Beim entfernen der Kategorie von dem Artikel trat ein Fehler auf.');
+            break;
+          case ChangeResponse.NoChange:
+            this.createMessage(MessageType.Info, 'Kategorie konnte nicht von Artikel entfernt werden.');
+            break;
+        }
+      });
       return true;
     }
-
     return false;
   }
 
-  public getCategories(): Observable<string[]> {
+  public getCategories(): Observable<Category[]> {
     return this.categoriesSubject;
   }
 }

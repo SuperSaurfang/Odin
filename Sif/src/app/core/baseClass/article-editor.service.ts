@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { Article, Message, MessageType, User } from '../models';
+import { Article, Category, Message, MessageType, User } from '../models';
 
 /**  The editor has two modes, one for edit and one create articles.
  create means that the editor is creating a new article.
@@ -20,11 +20,11 @@ export abstract class ArticleEditorService {
 
     }
 
-    public abstract addCategory(category: string): boolean;
+    public abstract addCategory(category: Category): boolean;
 
-    public abstract removeCategory(category: string): boolean;
+    public abstract removeCategory(category: Category): boolean;
 
-    public abstract getCategories(): Observable<string[]>;
+    public abstract getCategories(): Observable<Category[]>;
 
     public abstract setArticleByTitle(title: string): void;
 

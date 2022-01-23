@@ -1,3 +1,5 @@
+import { Category } from './category';
+
 export class Article {
   articleId?: number;
   title?: string;
@@ -9,5 +11,5 @@ export class Article {
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
   status?: string;
-  categories?: string[];
+  categories?: Category[];
 }
