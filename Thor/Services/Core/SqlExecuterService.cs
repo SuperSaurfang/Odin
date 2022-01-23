@@ -123,26 +123,5 @@ namespace Thor.Services
         return Activator.CreateInstance<T>();
       }
     }
-
-    public async Task<TModel> ExecuteSqlSingle<TModel, AModel, BModel>(string sql, Func<TModel, AModel, BModel, TModel> mapFunc, string splitON, object param = null)
-    {
-      try
-      {
-        using (var connection = new MySqlConnection(connectionString))
-        {
-          if (connection.State == ConnectionState.Closed)
-          {
-            connection.Open();
-          }
-          var result = await connection.QueryAsync<TModel, AModel, BModel, TModel>(sql, mapFunc, param, splitOn: splitON);
-          return result.FirstOrDefault();
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.LogError(ex, "Unable to execute sql statement.");
-        return Activator.CreateInstance<TModel>();
-      }
-    }
   }
 }
