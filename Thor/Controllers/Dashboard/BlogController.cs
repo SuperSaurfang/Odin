@@ -21,7 +21,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpGet("{title}")]
     [Authorize("author")]
-    public async Task<ActionResult<Article>> GetSingleArticle(string title)
+    public async Task<ActionResult<Article>> GetArticleByTitle(string title)
     {
       if (title == null)
       {
@@ -59,7 +59,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpGet]
     [Authorize("author")]
-    public async Task<ActionResult<IEnumerable<Article>>> GetFullBlog()
+    public async Task<ActionResult<IEnumerable<Article>>> GetAllArticles()
     {
       var result = await blogService.GetAllArticles();
       if (result == null)
@@ -77,7 +77,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdateBlogArticle(Article article)
+    public async Task<ActionResult<StatusResponse>> UpdateArticle(Article article)
     {
       if (article.ArticleId == 0)
       {
@@ -96,7 +96,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult> CreateBlogArticle(Article article)
+    public async Task<ActionResult<StatusResponse>> CreateArticle(Article article)
     {
       if (article.Author == string.Empty)
       {
@@ -115,10 +115,39 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpDelete]
     [Authorize("author")]
-    public async Task<ActionResult> DeleteBlogArticle()
+    public async Task<ActionResult<StatusResponse>> DeleteBlogArticle()
     {
       var response = await blogService.DeleteArticle();
       return Ok(response);
+    }
+
+    [Produces("application/json")]
+    [HttpPost]
+    [Route("Category")]
+    [Authorize("author")]
+    public async Task<ActionResult<StatusResponse>> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    {
+      if(articleCategory is null)
+      {
+        return BadRequest("Cannot be null.");
+      }
+      var result = await blogService.AddCategoryToBlogPost(articleCategory);
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpDelete]
+    [Route("Category")]
+    [Authorize("author")]
+    public async Task<ActionResult<StatusResponse>> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
+    {
+      if(articleCategory is null)
+      {
+        return BadRequest("Cannot be null.");
+      }
+      var result = await blogService.RemoveCategoryFromBlogPost(articleCategory);
+
+      return Ok(result);
     }
 
     private ObjectResult InternalError(string message = "Internal Server Error")
