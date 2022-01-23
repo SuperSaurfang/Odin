@@ -105,6 +105,7 @@ namespace Thor.Services.Maria
       var dynamicParams = new DynamicParameters();
       dynamicParams.Add("catName", category);
       var result = await executer.ExecuteSql<Article, Category, Tag>(sql, ArticleJoinFunc, SPLIT_ON, dynamicParams, CommandType.StoredProcedure);
+      result = result.GroupBy(p => p.ArticleId).Select(Selection());
       await MapUserIdToAuthor(result);
       return result;
     }

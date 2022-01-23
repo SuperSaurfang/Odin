@@ -58,6 +58,21 @@ namespace Thor.Controllers
       return Ok(result);
     }
 
+    [Produces("application/json")]
+    [HttpGet("category/{category}")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetCategoryBlog(string category)
+    {
+      if(category == null)
+      {
+        return BadRequest("Category cannot be null");
+      }
+      var result = await blogService.GetCategoryBlog(category);
+      if(result == null)
+      {
+        return InternalError();
+      }
+      return Ok(result);
+    }
     private ObjectResult InternalError(string message = "Internal Server Error")
     {
       return StatusCode(500, message);
