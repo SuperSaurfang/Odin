@@ -14,16 +14,16 @@ export class CategorySettingComponent implements OnInit, OnDestroy {
 
   public removeIcon = faTimes;
   public categories: Category[] = [];
-  public categoryName: string;
+  public selectedCategory: string;
 
-  public contectedCategories: string[] = [];
+  public contectedCategories: Category[] = [];
 
   // easier to manage the subscriptions as list
   private subscriptions: Subscription[] = [];
 
   constructor(private categoryService: CategoryService,
     private articleEditor: ArticleEditorService) {
-    }
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscribtion => {
@@ -43,12 +43,32 @@ export class CategorySettingComponent implements OnInit, OnDestroy {
 
 
   public onChange(event: any): void {
-    if (this.articleEditor.addCategory(this.categoryName)) {
-      this.categoryName = '';
+    const category = this.categories.find(item => item.name === this.selectedCategory);
+    if (category === undefined) {
+      this.createNewCategory();
+    } else {
+      this.addCategory(category);
     }
   }
 
-  public remove(category: string): void {
+  public remove(category: Category): void {
     this.articleEditor.removeCategory(category);
+  }
+
+  private createNewCategory(): void {
+    let category = new Category();
+    category.name = this.selectedCategory;
+    this.categoryService.createCategory(category).subscribe(result => {
+      if (result) {
+        category = this.categories.find(item => item.name === this.selectedCategory);
+        this.addCategory(category);
+      }
+    });
+  }
+
+  private addCategory(category: Category) {
+    if (this.articleEditor.addCategory(category)) {
+      this.selectedCategory = undefined;
+    }
   }
 }

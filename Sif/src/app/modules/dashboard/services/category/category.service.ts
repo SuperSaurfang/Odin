@@ -50,21 +50,25 @@ export class CategoryService {
     });
   }
 
-  public createCategory(category: Category) {
+  public createCategory(category: Category): Observable<boolean> {
+    const resultSubject = new Subject<boolean>();
     this.restService.createCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.restService.getCategoryList().subscribe(response => {
-            this.categories = response;
-            this.categoryList.next(response);
+          this.restService.getCategoryList().subscribe(categories => {
+            this.categories = categories;
+            this.categoryList.next(categories);
+            resultSubject.next(true);
           });
           break;
         case ChangeResponse.Error:
         case ChangeResponse.NoChange:
         default:
+          resultSubject.next(false);
           break;
       }
     });
+    return resultSubject;
   }
 
   private update(categories: Category[], category: Category): Category[] {
