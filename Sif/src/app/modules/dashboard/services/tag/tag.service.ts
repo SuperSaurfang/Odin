@@ -32,6 +32,7 @@ export class TagService {
       }
     });
   }
+
   public deleteTag(id: number) {
     this.restService.deleteTag(id).subscribe(response => {
       switch (response.change) {
@@ -46,6 +47,7 @@ export class TagService {
       }
     });
   }
+
   public createTag(tag: Tag) {
     this.restService.createTag(tag).subscribe(response => {
       switch (response.change) {
@@ -63,13 +65,12 @@ export class TagService {
     });
   }
 
-
   private update(tagList: Tag[], tag: Tag): Tag[] {
     tagList.map(item => {
-      if (item.tagId = tag.tagId) {
-        item.Name = tag.Name;
-        item.Description = tag.Description;
-        item.ArticleCount = tag.ArticleCount;
+      if (item.tagId === tag.tagId) {
+        item.name = tag.name;
+        item.description = tag.description;
+        item.articleCount = tag.articleCount;
       }
     });
     return tagList;
@@ -78,7 +79,7 @@ export class TagService {
   private removeById(tagList: Tag[], id: number): Tag[] {
     const index = tagList.findIndex(item => item.tagId === id);
     if (index >= 0) {
-      tagList.slice(index, 1);
+      tagList.splice(index, 1);
     }
     return tagList;
   }

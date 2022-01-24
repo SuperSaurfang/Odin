@@ -1,3 +1,90 @@
+<h1>
+  Tag Editor
+</h1>
 <p>
-  dashboard-post-tag-editor works!
+  Hier hast du eine kleine Übersicht über deine Tags. Du kannst hier neue erstellen, bestehende bearbeiten oder löschen. Beachte aber das Tags,
+  die mit Artikeln verknüpft sind nicht so einfach löschbar sind.
 </p>
+
+<div class="flex">
+  <div class="flex-grow tag-editor-container">
+    <h2>Tag erstellen</h2>
+    <div class="content-container">
+      <form class="flex flex-column" [formGroup]="createTagForm" (ngSubmit)="createTag()">
+        <label for="name" class="label control-group horizontal-group">
+          <div>
+            <span>Name:</span>
+          </div>
+          <input id="name" type="text" formControlName="name">
+        </label>
+        <p class="input-helper-text">Dies ist der Name deines Tags</p>
+
+        <label for="description" class="label control-group horizontal-group">
+          <div>
+            <span>Beschreibung:</span>
+          </div>
+          <input id="description" type="text" formControlName="description">
+        </label>
+        <p class="input-helper-text">Beschreibe in wenigen Worten dein Tag.</p>
+
+        <button type="submit" class="btn btn-dark ml-auto" [disabled]="createTagForm.invalid">Speichern</button>
+      </form>
+    </div>
+  </div>
+  <div class="flex-grow tag-table-container">
+    <h2>Deine aktuellen Tags</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Beschreibung</th>
+          <th>Anzahl Beiträge</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tag of tagList; index as i">
+          <td>
+            <div *ngIf="currentEditing !== i">{{tag.name}}</div>
+            <div *ngIf="currentEditing === i">
+              <input type="text" [(ngModel)]="tag.name">
+            </div>
+          </td>
+          <td>
+            <div *ngIf="currentEditing !== i">{{tag.description}}</div>
+            <div *ngIf="currentEditing === i">
+              <input type="text" [(ngModel)]="tag.description">
+            </div>
+          </td>
+          <td>
+            <div>{{tag.articleCount || 0}}</div>
+          </td>
+          <td>
+            <div class="flex">
+              <button *ngIf="currentEditing !== i" class="btn btn-icon" (click)="setCurrentEditing(i)">
+                <fa-icon [icon]="editIcon"></fa-icon>
+              </button>
+              <button *ngIf="currentEditing !== i" class="btn btn-icon danger-text" (click)="deleteTag(i)">
+                <fa-icon [icon]="trashIcon"></fa-icon>
+              </button>
+              <button *ngIf="currentEditing === i" class="btn btn-icon" (click)="updateTag(i)">
+                <fa-icon [icon]="saveIcon"></fa-icon>
+              </button>
+              <button *ngIf="currentEditing === i" class="btn btn-icon danger-text" (click)="clearCurrentEditing()">
+                <fa-icon [icon]="abortIcon"></fa-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>Beschreibung</th>
+          <th>Anzahl Beiträge</th>
+          <th>Aktionen</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+@import "../../../../core/scss/variables.scss";
+
+:host {
+  flex: 1 1 auto;
+  padding: padding(1);
+
+  .tag-editor-container,
+  .tag-table-container {
+    padding: padding(2);
+  }
+}

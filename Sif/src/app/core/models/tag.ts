@@ -1,6 +1,6 @@
 export class Tag {
   tagId: number;
-  Name: string;
-  Description: string;
-  ArticleCount?: number;
+  name: string;
+  description: string;
+  articleCount?: number;
 }
