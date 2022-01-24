@@ -89,7 +89,7 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.categories.push(category);
             this.categoriesSubject.next(this.article.categories);
-            this.createMessage(MessageType.Ok, 'Kategory mit Artikel verknüpft.');
+            this.createMessage(MessageType.Ok, 'Kategorie mit Artikel verknüpft.');
             break;
           case ChangeResponse.Error:
             this.createMessage(MessageType.Error, 'Beim verknüpfen einer Kategorie mit dem Artikel trat ein Fehler auf.');
@@ -115,7 +115,7 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.categories.splice(index, 1);
             this.categoriesSubject.next(this.article.categories);
-            this.createMessage(MessageType.Ok, 'Kategory von Artikel entfernt');
+            this.createMessage(MessageType.Ok, 'Kategorie von Artikel entfernt');
             break;
           case ChangeResponse.Error:
             this.createMessage(MessageType.Error, 'Beim entfernen der Kategorie von dem Artikel trat ein Fehler auf.');
