@@ -12,7 +12,7 @@ import { DashboardPostRoutes } from './dashboard-post.routing';
 import { DashboardPostListComponent } from './dashboard-post-list/dashboard-post-list.component';
 import { DashboardPostEditorComponent } from './dashboard-post-editor/dashboard-post-editor.component';
 import { ListActionBarModule } from '../shared-dashboard-modules/list-action-bar/list-action-bar.module';
-import { ArticleFilterService } from '../services';
+import { ArticleFilterService, RestTagService } from '../services';
 import { RestPostsService } from '../services/rest-posts/rest-posts.service';
 import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-change-menu/status-change-menu.module';
 import { DashboardPostTagEditorComponent } from './dashboard-post-tag-editor/dashboard-post-tag-editor.component';
@@ -50,8 +50,8 @@ import { HintboxModule } from 'src/app/shared-modules/hintbox/hintbox.module';
     ArticleFilterService,
     RestPostsService,
     RestCategoryService,
+    RestTagService,
     CategoryService,
-
     { provide: ArticleEditorService, useClass: PostEditorService }
   ]
 })

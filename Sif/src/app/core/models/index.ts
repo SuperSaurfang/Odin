@@ -7,3 +7,4 @@ export * from './statusresponse';
 export * from './category';
 export * from './message';
 export * from './articleCategory';
+export * from './tag';
