@@ -7,3 +7,4 @@ export * from './rest-comment/rest-comment.service';
 export * from './post-editor/post-editor.service';
 export * from './page-editor/page-editor.service';
 export * from './rest-tag/rest-tag.service';
+export * from './tag/tag.service';
