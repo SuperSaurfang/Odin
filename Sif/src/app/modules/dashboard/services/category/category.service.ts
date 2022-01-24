@@ -20,7 +20,6 @@ export class CategoryService {
   }
 
   public updateCategory(category: Category) {
-    console.log(category);
     this.restService.updateCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
