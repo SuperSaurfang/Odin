@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { faEdit, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { Category } from 'src/app/core';
 import { CategoryService } from '../../services/category/category.service';
 
@@ -10,7 +11,7 @@ const DEFAULT_EDITING_INDEX = -1;
   templateUrl: './dashboard-post-category-editor.component.html',
   styleUrls: ['./dashboard-post-category-editor.component.scss']
 })
-export class DashboardPostCategoryEditorComponent implements OnInit {
+export class DashboardPostCategoryEditorComponent implements OnInit, OnDestroy {
 
   public editIcon = faEdit;
   public trashIcon = faTrash;
@@ -29,12 +30,17 @@ export class DashboardPostCategoryEditorComponent implements OnInit {
 
   // holds the restore item, that will be reassign if editing was abort by user
   private restoreValue: string;
+  private subscription: Subscription;
 
   constructor(private categoryService: CategoryService,
     private formBuilder: FormBuilder) { }
 
+    ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   ngOnInit() {
-    this.categoryService.getCategoryList().subscribe(categoryList => {
+    this.subscription = this.categoryService.getCategoryList().subscribe(categoryList => {
       this.categoryList = categoryList;
     });
   }
