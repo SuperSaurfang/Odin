@@ -9,7 +9,7 @@ import { RestBase } from 'src/app/core/baseClass';
 export class RestTagService extends RestBase {
 
   constructor(private httpClient: HttpClient) {
-    super('dashboard/category');
+    super('dashboard/tag');
   }
 
   public getTagList(): Observable<Tag[]> {
