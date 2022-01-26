@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { RestBase } from 'src/app/core/baseClass';
 import { HttpClient, HttpHeaders,  } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Article, ArticleCategory, StatusResponse, StatusResponseType } from 'src/app/core';
+import { Article,
+  ArticleCategory,
+  ArticleTag,
+  StatusResponse,
+  StatusResponseType } from 'src/app/core';
 import { map, catchError } from 'rxjs/operators';
 
 
@@ -58,15 +62,31 @@ export class RestPostsService extends RestBase {
   }
 
   public removeCategoryFromArticle(articleCategory: ArticleCategory): Observable<StatusResponse> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: articleCategory
-    };
+    const options = this.createOptions(articleCategory);
     return this.httpClient.delete<StatusResponse>(`${this.basePath}/category`, options).pipe(
       catchError(this.handleError<StatusResponse>('Failed to remove category', this.errorResponse(StatusResponseType.Delete)))
     );
   }
 
+  public addTagToArticle(articleTag: ArticleTag): Observable<StatusResponse> {
+    return this.httpClient.post<StatusResponse>(`${this.basePath}/tag`, articleTag).pipe(
+      catchError(this.handleError<StatusResponse>('Failed to add tag', this.errorResponse(StatusResponseType.Create)))
+    );
+  }
+
+  public removeTagFromArticle(articleTag: ArticleTag): Observable<StatusResponse> {
+    const options = this.createOptions(articleTag);
+    return this.httpClient.delete<StatusResponse>(`${this.basePath}/tag`, options).pipe(
+      catchError(this.handleError<StatusResponse>('Failed to remove tag', this.errorResponse(StatusResponseType.Delete)))
+    );
+  }
+
+  private createOptions<TBody>(body: TBody) {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: body
+    };
+  }
 }

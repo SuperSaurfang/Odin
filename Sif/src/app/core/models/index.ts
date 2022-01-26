@@ -8,3 +8,4 @@ export * from './category';
 export * from './message';
 export * from './articleCategory';
 export * from './tag';
+export * from './articleTag';
