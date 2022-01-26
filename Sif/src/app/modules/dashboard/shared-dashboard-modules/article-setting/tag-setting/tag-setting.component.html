@@ -1,0 +1,14 @@
+<input type="text" list="tag-list" [(ngModel)]="selectedTag" (change)="onChange($event)">
+
+<datalist id="tag-list">
+  <option *ngFor="let item of tagList" [ngValue]="item">{{item.name}}</option>
+</datalist>
+
+<div class="badge-container">
+  <span class="badge" *ngFor="let item of connectedTagList">
+    <span class="badge-content">{{item.name}}</span>
+    <button class="badge-remove" (click)="remove(item)">
+      <fa-icon [icon]="removeIcon"></fa-icon>
+    </button>
+  </span>
+</div>

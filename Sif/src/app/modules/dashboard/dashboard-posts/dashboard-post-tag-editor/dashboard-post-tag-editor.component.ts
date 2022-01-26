@@ -38,7 +38,6 @@ export class DashboardPostTagEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.tagService.getTagList().subscribe(tagList => {
-      console.log(tagList);
       this.tagList = tagList;
     });
   }

@@ -1,4 +1,5 @@
 import { Category } from './category';
+import { Tag } from './tag';
 
 export class Article {
   articleId?: number;
@@ -12,4 +13,5 @@ export class Article {
   hasDateAuthorEnabled?: boolean;
   status?: string;
   categories?: Category[];
+  tags?: Tag[];
 }

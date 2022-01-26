@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ArticleCategory, Category, ChangeResponse, MessageType, StatusResponseType, User } from 'src/app/core';
+import { ArticleCategory, ArticleTag, Category, ChangeResponse, MessageType, StatusResponseType, Tag, User } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 import { RestPostsService } from '../rest-posts/rest-posts.service';
 
@@ -8,6 +8,7 @@ import { RestPostsService } from '../rest-posts/rest-posts.service';
 export class PostEditorService extends ArticleEditorService {
 
   private categoriesSubject: Subject<Category[]> = new Subject<Category[]>();
+  private tagListSubject: Subject<Tag[]> = new Subject<Tag[]>();
 
   constructor(private restService: RestPostsService) {
     super();
@@ -18,6 +19,7 @@ export class PostEditorService extends ArticleEditorService {
       this.article = article;
       this.articleSubject.next(this.article);
       this.categoriesSubject.next(this.article.categories);
+      this.tagListSubject.next(this.article.tags);
       this.setMode('edit');
     });
   }
@@ -30,7 +32,8 @@ export class PostEditorService extends ArticleEditorService {
       hasCommentsEnabled: true,
       hasDateAuthorEnabled: true,
       userId: user.sub,
-      categories: []
+      categories: [],
+      tags: []
     };
     this.setMode('create');
   }
@@ -132,5 +135,63 @@ export class PostEditorService extends ArticleEditorService {
 
   public getCategories(): Observable<Category[]> {
     return this.categoriesSubject;
+  }
+
+  public addTag(tag: Tag): boolean {
+    if (!this.article.tags) {
+      this.article.tags = [];
+    }
+    const result = this.article.tags.find(item => item.tagId === tag.tagId);
+
+    if (!result) {
+      const articleTag = new ArticleTag(this.article, tag);
+      this.restService.addTagToArticle(articleTag).subscribe(response => {
+        switch (response.change) {
+          case ChangeResponse.Change:
+            this.article.tags.push(tag);
+            this.tagListSubject.next(this.article.tags);
+            this.createMessage(MessageType.Ok, 'Tag mit Artikel verknüpft.');
+            break;
+          case ChangeResponse.NoChange:
+            this.createMessage(MessageType.Error, 'Beim verknüpfen eines Tags mit dem Artikel trat ein Fehler auf.');
+            break;
+          case ChangeResponse.Error:
+            this.createMessage(MessageType.Info, 'Tag konnte nicht mit Artikel verknüpft werden.');
+            break;
+        }
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  public removeTag(tag: Tag): boolean {
+    const index = this.article.tags.findIndex(item => item.tagId === tag.tagId);
+
+    if (index >= 0) {
+      const articleTag = new ArticleTag(this.article, tag);
+      this.restService.removeTagFromArticle(articleTag).subscribe(response => {
+        switch (response.change) {
+          case ChangeResponse.Change:
+            this.article.tags.splice(index, 1);
+            this.tagListSubject.next(this.article.tags);
+            this.createMessage(MessageType.Ok, 'Tag von Artikel entfernt');
+            break;
+          case ChangeResponse.Error:
+            this.createMessage(MessageType.Error, 'Beim entfernen des Tags von dem Artikel trat ein Fehler auf.');
+            break;
+          case ChangeResponse.NoChange:
+            this.createMessage(MessageType.Info, 'Tag konnte nicht von Artikel entfernt werden.');
+            break;
+        }
+      });
+      return true;
+    }
+    return false;
+  }
+
+  public getTagList(): Observable<Tag[]> {
+    return this.tagListSubject;
   }
 }

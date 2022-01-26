@@ -12,16 +12,18 @@
         <option value="private">Privat</option>
         <option value="draft" selected>Entwurf</option>
       </select>
-      <fa-icon [ngClass]="{'danger-text': article.status === 'draft', 
+      <fa-icon [ngClass]="{'danger-text': article.status === 'draft',
                 'warn-text': article.status  === 'private',
                 'ok-text': article.status  === 'public'}" [icon]="iconCircle"></fa-icon>
     </div>
-    
+
     <app-toggle-switch *ngIf="type === 'allowComments'" [(isToggleOn)]="article.hasCommentsEnabled" (isToggleOnChange)="updateToggle()" [label]="label"></app-toggle-switch>
     <app-toggle-switch *ngIf="type === 'showDateAuthor'" [(isToggleOn)]="article.hasDateAuthorEnabled" (isToggleOnChange)="updateToggle()" [label]="label"></app-toggle-switch>
 
     <input *ngIf="type === 'createDate'" type="date" [(ngModel)]="displayedDate" (ngModelChange)="updateCreationDate()">
 
     <app-category-setting *ngIf="type === 'category'"></app-category-setting>
+
+    <app-tag-setting *ngIf="type === 'tag'"></app-tag-setting>
   </div>
 </div>

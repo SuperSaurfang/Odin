@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Article } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 
-type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' | 'category';
+type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' | 'category' | 'tag';
 
 @Component({
   selector: 'app-article-setting',

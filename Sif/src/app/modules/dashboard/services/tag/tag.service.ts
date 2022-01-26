@@ -48,21 +48,25 @@ export class TagService {
     });
   }
 
-  public createTag(tag: Tag) {
+  public createTag(tag: Tag): Observable<boolean> {
+    const subject = new Subject<boolean>();
     this.restService.createTag(tag).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
           this.restService.getTagList().subscribe(tagList => {
             this.tagList = tagList;
             this.next(this.tagList);
+            subject.next(true);
           });
           break;
         case ChangeResponse.NoChange:
         case ChangeResponse.Error:
         default:
+          subject.next(false);
           break;
       }
     });
+    return subject;
   }
 
   private update(tagList: Tag[], tag: Tag): Tag[] {
