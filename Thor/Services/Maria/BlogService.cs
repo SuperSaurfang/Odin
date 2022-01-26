@@ -142,8 +142,13 @@ namespace Thor.Services.Maria
     private Func<IGrouping<int, Article>, Article> Selection = (group) =>
     {
       var first = group.First();
-      first.Categories = group.Select(p => p.Categories.FirstOrDefault()).ToList();
+      var categories = group.Select(p => p.Categories.FirstOrDefault());
       var tags = group.Select(p => p.Tags.FirstOrDefault());
+      if(categories.All(p => p is not null))
+      {
+        first.Categories = categories.Distinct(new CategoryEqualityComparer()).ToList();
+      }
+
       if (tags.All(p => p is not null))
       {
         first.Tags = tags.Distinct(new TagEqualityComparer()).ToList();
