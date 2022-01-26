@@ -1,0 +1,53 @@
+<h1 class="article-header" *ngIf="articleType === 'blog'">
+  <a [routerLink]="['/blog/', article?.title]">{{article?.title}}</a>
+</h1>
+<h1 class="article-header page-header" *ngIf="articleType === 'page'">
+  <a [routerLink]="['/page/', article?.title]">{{article?.title}}</a>
+</h1>
+
+<div class="article-info" *ngIf="article?.hasDateAuthorEnabled">
+  <span class="icon-label">
+    <fa-icon [icon]="userIcon"></fa-icon>
+    <span>{{article?.author}}</span>
+  </span>
+  <span class="spacer">/</span>
+  <span class="icon-label">
+    <fa-icon [icon]="calendarIcon"></fa-icon>
+    <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
+  </span>
+  <div class="inline" *ngIf="articleType ==='blog' && article?.categories.length > 0">
+    <span class="spacer">/</span>
+    <span class="icon-label">
+      <fa-icon [icon]="categoryIcon"></fa-icon>
+      <span>Kategorien: </span>
+      <span *ngFor="let category of article?.categories; let last = last">
+        <a>{{category.name}}</a>
+        <span *ngIf="!last">, </span>
+      </span>
+    </span>
+  </div>
+</div>
+
+<div class="article-content" [innerHTML]="article?.articleText"></div>
+
+<div class="article-footer">
+  <div class="inline" *ngIf="articleType === 'blog' && article?.tags.length > 0">
+    <span class="icon-label">
+      <fa-icon [icon]="tagsIcon"></fa-icon>
+      <span>Tags: </span>
+      <span *ngFor="let tag of article?.tags; let last = last">
+        <a>{{tag.name}}</a>
+        <span *ngIf="!last">, </span>
+      </span>
+    </span>
+    <span class="spacer" *ngIf="hasPermisson()">/</span>
+  </div>
+  <div class="inline" *ngIf="hasPermisson()">
+    <span class="icon-label">
+      <fa-icon [icon]="editIcon"></fa-icon>
+      <a [routerLink]="['/dashboard/posts/edit', article?.title]" *ngIf="articleType === 'blog'">Bearbeiten</a>
+      <a [routerLink]="['/dashboard/pages/edit', article?.title]" *ngIf="articleType === 'page'">Bearbeiten</a>
+    </span>
+  </div>
+
+</div>
