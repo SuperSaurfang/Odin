@@ -6,6 +6,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 import { ArticleComponent } from './article.component';
 import { ArticleRoutingModule } from './article.routing';
+import { ArticleContentRendererModule } from '../shared-public-modules';
 
 
 
@@ -17,7 +18,8 @@ import { ArticleRoutingModule } from './article.routing';
     CommonModule,
     ArticleRoutingModule,
     FontAwesomeModule,
-    SharedModule
+    SharedModule,
+    ArticleContentRendererModule
   ]
 })
 export class ArticleModule { }

@@ -4,12 +4,14 @@ import { PageComponent } from './page.component';
 import { PageRoutes } from './page.routing';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ArticleContentRendererModule } from '../shared-public-modules';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedModule,
     FontAwesomeModule,
+    ArticleContentRendererModule,
     PageRoutes
   ],
   declarations: [
