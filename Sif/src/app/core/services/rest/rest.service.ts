@@ -27,6 +27,13 @@ export class RestService extends RestBase {
     );
   }
 
+  public getCategoryByName(name: string): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${this.basePath}/blog/category/${name}`).pipe(
+      map(article => this.parseDates(article)),
+      catchError(this.handleError<Article[]>('Failed to blog by category', []))
+    );
+  }
+
   public getPage(title: string): Observable<Article> {
     return this.httpClient.get<Article>(`${this.basePath}/page/${title}`).pipe(
       map(article => this.parseDate(article)),

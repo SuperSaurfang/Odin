@@ -21,7 +21,7 @@
       <fa-icon [icon]="categoryIcon"></fa-icon>
       <span>Kategorien: </span>
       <span *ngFor="let category of article?.categories; let last = last">
-        <a>{{category.name}}</a>
+        <a [routerLink]="['/category', category.name]">{{category.name}}</a>
         <span *ngIf="!last">, </span>
       </span>
     </span>
