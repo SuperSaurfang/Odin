@@ -5,11 +5,13 @@ using Thor.Util;
 
 namespace Thor.Services.Api
 {
-  public interface IBlogService : IArticleService 
+  public interface IBlogService : IArticleService
   {
     Task<IEnumerable<Article>> GetCategoryBlog(string category);
     Task<StatusResponse> AddCategoryToBlogPost(ArticleCategory articleCategory);
     Task<StatusResponse> RemoveCategoryFromBlogPost(ArticleCategory articleCategory);
+    Task<StatusResponse> AddTagToArticle(ArticleTag articleTag);
+    Task<StatusResponse> RemoveTagFromArticle(ArticleTag articleTag);
   }
   public interface IPageService: IArticleService {}
   public interface IArticleService
@@ -23,5 +25,6 @@ namespace Thor.Services.Api
     Task<StatusResponse> UpdateArticle(Article article);
     Task<StatusResponse> CreateArticle(Article article);
     Task<StatusResponse> DeleteArticle();
+
   }
 }

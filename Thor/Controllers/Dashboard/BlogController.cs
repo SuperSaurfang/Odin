@@ -145,8 +145,38 @@ namespace Thor.Controllers.Dashboard
       {
         return BadRequest("Cannot be null.");
       }
-      var result = await blogService.RemoveCategoryFromBlogPost(articleCategory);
 
+      var result = await blogService.RemoveCategoryFromBlogPost(articleCategory);
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpPost]
+    [Route("Tag")]
+    [Authorize("author")]
+    public async Task<ActionResult<StatusResponse>> AddTagToBlogPost(ArticleTag articleTag)
+    {
+      if(articleTag is null)
+      {
+        return BadRequest("Cannot be null");
+      }
+
+      var result = await blogService.AddTagToArticle(articleTag);
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpDelete]
+    [Route("Tag")]
+    [Authorize("author")]
+    public async Task<ActionResult<StatusResponse>> RemoveTagFromBlogPost(ArticleTag articleTag)
+    {
+      if(articleTag is null)
+      {
+        return BadRequest("Cannot be null");
+      }
+
+      var result = await blogService.RemoveTagFromArticle(articleTag);
       return Ok(result);
     }
 

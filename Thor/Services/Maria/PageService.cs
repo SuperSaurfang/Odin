@@ -4,25 +4,24 @@ using Thor.Models;
 using Thor.Services.Api;
 using Thor.Util;
 using System;
-using System.Linq;
 
-namespace Thor.Services.Maria {
+namespace Thor.Services.Maria
+{
 
-  public class PageService : IPageService
+  public class PageService : ArticleServiceBase, IPageService
   {
     private readonly ISqlExecuterService executer;
 
-    private readonly IRestClientService restClient;
 
     public PageService(ISqlExecuterService executer, IRestClientService restClient)
+      : base(restClient)
     {
       this.executer = executer;
-      this.restClient = restClient;
       this.UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
     #region Interface implementation
-    public UnderlayingDatabase UnderlayingDatabase{get;}
+    public UnderlayingDatabase UnderlayingDatabase { get; }
 
     public async Task<StatusResponse> CreateArticle(Article article)
     {
@@ -52,20 +51,20 @@ namespace Thor.Services.Maria {
     public async Task<int> GetArticleId(string title)
     {
       const string sql = @"SELECT `ArticleId` FROM Article WHERE IsPage = 1 AND Title = @title";
-      return await executer.ExecuteSqlSingle<int>(sql, new {title = title});
+      return await executer.ExecuteSqlSingle<int>(sql, new { title = title });
     }
 
     // one article per page, a public list of page is not supported at the moment
     public Task<IEnumerable<Article>> GetAllPublicArticles()
     {
-      throw new System.NotSupportedException();
+      throw new System.NotSupportedException("One article per page, a public list of page is not supported at the moment");
     }
 
     public async Task<Article> GetArticleByTitle(string title)
     {
       const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
       FROM Article WHERE IsPage = 1 AND Title = @title";
-      var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+      var result = await executer.ExecuteSqlSingle<Article>(sql, new { title = title });
       result.Author = await MapUserIdToAuthor(result);
       return result;
     }
@@ -74,7 +73,7 @@ namespace Thor.Services.Maria {
     {
       const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
       FROM Article WHERE Status = 'public' AND IsPage = 1 AND Title = @title";
-      var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
+      var result = await executer.ExecuteSqlSingle<Article>(sql, new { title = title });
       result.Author = await MapUserIdToAuthor(result);
       return result;
     }
@@ -87,25 +86,6 @@ namespace Thor.Services.Maria {
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
       return Utils.CreateStatusResponse(result, StatusResponseType.Update);
-    }
-    #endregion
-
-    #region  Private Helpers
-    private async Task MapUserIdToAuthor(IEnumerable<Article> result)
-    {
-      var nickNames = await restClient.GetUserNicknames();
-      var query = nickNames.AsQueryable();
-
-      foreach (var item in result)
-      {
-        item.Author = (from name in query where name.UserId.Equals(item.UserId) select name.Nickname).FirstOrDefault();
-      }
-    }
-    private async Task<string> MapUserIdToAuthor(Article result)
-    {
-      var nicknames = await restClient.GetUserNicknames();
-      var query = nicknames.AsQueryable();
-      return (from name in query where name.UserId.Equals(result.UserId) select name.Nickname).FirstOrDefault();
     }
     #endregion
   }

@@ -11,17 +11,15 @@ using System.Data;
 
 namespace Thor.Services.Maria
 {
-  public class BlogService : IBlogService
+  public class BlogService : ArticleServiceBase, IBlogService
   {
     private const string SPLIT_ON = "CategoryId, TagId";
     private readonly ISqlExecuterService executer;
 
-    private readonly IRestClientService restClient;
-
     public BlogService(ISqlExecuterService sqlExecuterService, IRestClientService restClient)
+      : base(restClient)
     {
       executer = sqlExecuterService;
-      this.restClient = restClient;
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
@@ -63,7 +61,7 @@ namespace Thor.Services.Maria
       var template = ArtilceSqlBuilder.CreateAllPublicQuery();
       var result = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON);
 
-      var mappedResult = result.GroupBy(p => p.ArticleId).Select(Selection());
+      var mappedResult = result.GroupBy(p => p.ArticleId).Select(Selection);
 
       await MapUserIdToAuthor(mappedResult);
       return mappedResult;
@@ -75,7 +73,7 @@ namespace Thor.Services.Maria
     {
       var template = ArtilceSqlBuilder.CreateDashboardQuery();
       var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
-      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection()).FirstOrDefault();
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
       result.Author = await MapUserIdToAuthor(result);
       return result;
     }
@@ -84,7 +82,7 @@ namespace Thor.Services.Maria
     {
       var template = ArtilceSqlBuilder.CreatePublicQuery();
       var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
-      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection()).FirstOrDefault();
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
       result.Author = await MapUserIdToAuthor(result);
       return result;
     }
@@ -105,7 +103,7 @@ namespace Thor.Services.Maria
       var dynamicParams = new DynamicParameters();
       dynamicParams.Add("catName", category);
       var result = await executer.ExecuteSql<Article, Category, Tag>(sql, ArticleJoinFunc, SPLIT_ON, dynamicParams, CommandType.StoredProcedure);
-      result = result.GroupBy(p => p.ArticleId).Select(Selection());
+      result = result.GroupBy(p => p.ArticleId).Select(Selection);
       await MapUserIdToAuthor(result);
       return result;
     }
@@ -124,41 +122,34 @@ namespace Thor.Services.Maria
       return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
     }
 
+    public async Task<StatusResponse> AddTagToArticle(ArticleTag articleTag)
+    {
+      const string sql = "INSERT INTO `ArticleTag`(`ArticleId`, `TagId`) VALUES (@ArticleId, @TagId)";
+      var result = await executer.ExecuteSql(sql, articleTag);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Create);
+    }
+
+    public async Task<StatusResponse> RemoveTagFromArticle(ArticleTag articleTag)
+    {
+      const string sql = "DELETE FROM `ArticleTag` WHERE `ArticleId` = @ArticleId AND `TagId` = @TagId";
+      var result = await executer.ExecuteSql(sql, articleTag);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
+    }
+
     #endregion
 
     #region  Private Helpers
-    private async Task MapUserIdToAuthor(IEnumerable<Article> result)
+    private Func<IGrouping<int, Article>, Article> Selection = (group) =>
     {
-      var nickNames = await restClient.GetUserNicknames();
-      var query = nickNames.AsQueryable();
-
-      foreach (var item in result)
+      var first = group.First();
+      first.Categories = group.Select(p => p.Categories.FirstOrDefault()).ToList();
+      var tags = group.Select(p => p.Tags.FirstOrDefault());
+      if (tags.All(p => p is not null))
       {
-        item.Author = (from name in query where name.UserId.Equals(item.UserId) select name.Nickname).FirstOrDefault();
+        first.Tags = tags.Distinct(new TagComparer()).ToList();
       }
-    }
-
-    private async Task<string> MapUserIdToAuthor(Article result)
-    {
-      var nicknames = await restClient.GetUserNicknames();
-      var query = nicknames.AsQueryable();
-      return (from name in query where name.UserId.Equals(result.UserId) select name.Nickname).FirstOrDefault();
-    }
-
-    private Func<IGrouping<int, Article>, Article> Selection()
-    {
-      return g =>
-      {
-        var first = g.First();
-        first.Categories = g.Select(p => p.Categories.FirstOrDefault()).ToList();
-        var tags = g.Select(p => p.Tags.FirstOrDefault());
-        if (tags.All(p => p is not null))
-        {
-          first.Tags = tags.Distinct(new TagComparer()).ToList();
-        }
-        return first;
-      };
-    }
+      return first;
+    };
 
     private Func<Article, Category, Tag, Article> ArticleJoinFunc = (article, category, tag) =>
     {
