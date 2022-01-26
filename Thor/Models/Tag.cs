@@ -23,7 +23,7 @@ namespace Thor.Models
 
   }
 
-  public class TagComparer : EqualityComparer<Tag>
+  public class TagEqualityComparer : EqualityComparer<Tag>
   {
     public override bool Equals(Tag x, Tag y)
     {

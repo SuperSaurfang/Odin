@@ -146,7 +146,7 @@ namespace Thor.Services.Maria
       var tags = group.Select(p => p.Tags.FirstOrDefault());
       if (tags.All(p => p is not null))
       {
-        first.Tags = tags.Distinct(new TagComparer()).ToList();
+        first.Tags = tags.Distinct(new TagEqualityComparer()).ToList();
       }
       return first;
     };
