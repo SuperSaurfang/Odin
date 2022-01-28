@@ -34,6 +34,13 @@ export class RestService extends RestBase {
     );
   }
 
+  public getBlogByTagName(name: string): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${this.basePath}/blog/tag/${name}`).pipe(
+      map(articles => this.parseDates(articles)),
+      catchError(this.handleError<Article[]>('Failed to load blog by tag', []))
+    );
+  }
+
   public getPage(title: string): Observable<Article> {
     return this.httpClient.get<Article>(`${this.basePath}/page/${title}`).pipe(
       map(article => this.parseDate(article)),

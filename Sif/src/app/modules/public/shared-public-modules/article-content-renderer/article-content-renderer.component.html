@@ -36,7 +36,7 @@
       <fa-icon [icon]="tagsIcon"></fa-icon>
       <span>Tags: </span>
       <span *ngFor="let tag of article?.tags; let last = last">
-        <a>{{tag.name}}</a>
+        <a [routerLink]="['/tag', tag.name]">{{tag.name}}</a>
         <span *ngIf="!last">, </span>
       </span>
     </span>

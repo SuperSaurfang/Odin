@@ -1,0 +1,14 @@
+<div class="flex-grow">
+  <div class="content-container">
+    <h1 class="header-icon">
+      <fa-icon [icon]="tagIcon"></fa-icon>
+      <span>Beiträge mit Tag {{tag}}:</span>
+    </h1>
+  </div>
+
+  <div *ngFor="let article of articles" class="content-container">
+    <app-article-content-renderer [article]="article" articleType="blog"></app-article-content-renderer>
+  </div>
+</div>
+
+<app-side-bar></app-side-bar>
