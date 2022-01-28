@@ -5,21 +5,55 @@
 <div class="flex">
   <div class="outer-container w-400">
     <div class="content-container">
-      <h2>Neues Element hinzufügen</h2>
-      <form [formGroup]="addPageForm" (ngSubmit)="saveMenu()" class="page-selection">
-        <label for="articile-selection" class="label control-group horizontal-group mb-2">
-          <div>
-            <span>
-              Seite wählen
-            </span>
-          </div>
-          <select id="articile-selection" formControlName="selectedArticle">
-            <option value="" disabled selected hidden>---</option>
-            <option *ngFor="let article of articles" [ngValue]="article.articleId">{{article.title}}</option>
-          </select>
-        </label>
-        <button type="submit" class="btn btn-dark" [ngClass]="{'btn-disabled': !addPageForm.valid}" [disabled]="!addPageForm.valid">Speichern</button>
-      </form>
+      <h2>Verfügbare Elemente</h2>
+      <div>
+        <h3>Seite hinzufügen</h3>
+        <form [formGroup]="addPageForm" (ngSubmit)="saveMenu('page')" class="page-selection">
+          <label for="articile-selection" class="label control-group horizontal-group mb-2">
+            <div>
+              <span>
+                Seite wählen
+              </span>
+            </div>
+            <select id="articile-selection" formControlName="selectedArticle">
+              <option value="" disabled selected hidden>---</option>
+              <option *ngFor="let article of articles" [ngValue]="article.title">{{article.title}}</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-dark" [ngClass]="{'btn-disabled': !addPageForm.valid}" [disabled]="!addPageForm.valid">Speichern</button>
+        </form>
+      </div>
+      <div>
+        <h3>Kategorie hinzufügen</h3>
+        <form [formGroup]="addCategoryForm" (ngSubmit)="saveMenu('category')" class="page-selection">
+          <label for="articile-selection" class="label control-group horizontal-group mb-2">
+            <div>
+              <span>
+                Seite wählen
+              </span>
+            </div>
+            <select id="articile-selection" formControlName="selectedCategory">
+              <option value="" disabled selected hidden>---</option>
+              <option *ngFor="let category of categories" [ngValue]="category.name">{{category.name}}</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-dark" [ngClass]="{'btn-disabled': !addCategoryForm.valid}" [disabled]="!addCategoryForm.valid">Speichern</button>
+        </form>
+      </div>
+      <div>
+        <h3>Label hinzufügen</h3>
+        <form [formGroup]="addLabelForm" (ngSubmit)="saveMenu('label')" class="page-selection">
+          <label for="articile-selection" class="label control-group horizontal-group mb-2">
+            <div>
+              <span>
+                Label
+              </span>
+            </div>
+            <input type="text" formControlName="label">
+          </label>
+          <button type="submit" class="btn btn-dark" [ngClass]="{'btn-disabled': !addLabelForm.valid}" [disabled]="!addLabelForm.valid">Speichern</button>
+        </form>
+      </div>
     </div>
   </div>
   <div class="outer-container">

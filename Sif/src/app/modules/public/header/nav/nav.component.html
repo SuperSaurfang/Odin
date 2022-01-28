@@ -3,10 +3,12 @@
     <a routerLink="/blog" routerLinkActive="primary-dark">Startseite</a>
   </li>
   <li *ngFor="let menu of navMenu" class="main-entry" [ngClass]="menu.isDropdown ? '': 'dropdown'">
-    <a [routerLink]="['/page', menu.title]" routerLinkActive="primary-dark">{{menu.displayText || menu.title}}</a>
+    <a *ngIf="!menu.isLabel" [routerLink]="[menu.link]" routerLinkActive="primary-dark">{{menu.displayText}}</a>
+    <a *ngIf="menu.isLabel" routerLinkActive="primary-dark">{{menu.displayText}}</a>
     <ul class="child-nav">
       <li *ngFor="let child of menu.children" class="child-entry">
-        <a [routerLink]="['/page', child.title]" routerLinkActive="primary-dark">{{child.displayText || child.title}}</a>
+        <a *ngIf="!child.isLabel" [routerLink]="[child.link]" routerLinkActive="primary-dark">{{child.displayText}}</a>
+        <a *ngIf="child.isLabel" routerLinkActive="primary-dark">{{child.displayText}}</a>
       </li>
     </ul>
   </li>

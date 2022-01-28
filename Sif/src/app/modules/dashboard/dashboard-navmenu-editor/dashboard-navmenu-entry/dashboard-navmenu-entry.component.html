@@ -1,6 +1,6 @@
 <div class="navmenu-entry">
   <div class="header-container">
-    <span>{{navMenuEntry.displayText || navMenuEntry.title}}</span>
+    <span>{{navMenuEntry.displayText}}</span>
     <button class="btn btn-icon" (click)="expand()">
       <fa-icon [icon]="currentExpandIcon"></fa-icon>
     </button>
@@ -19,7 +19,7 @@
           Übergeordnetes Menuelemt
         </label>
         <select id="parent-select-{{navMenuEntry.navMenuId}}" formControlName="selectedParent" (change)="setParent()">
-          <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navMenuId" [selected]="navMenu.navMenuId === navMenuEntry.parentId">{{navMenu.displayText || navMenu.title}}</option>
+          <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navMenuId" [selected]="navMenu.navMenuId === navMenuEntry.parentId">{{navMenu.displayText}}</option>
         </select>
         <button type="button" class="btn btn-icon" (click)="removeParent()">
           <fa-icon [icon]="removeIcon"></fa-icon>
