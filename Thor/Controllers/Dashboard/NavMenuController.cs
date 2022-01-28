@@ -19,11 +19,20 @@ namespace Thor.Controllers.Dashboard
     }
 
     [Produces("application/json")]
-    [HttpGet("article-list")]
+    [HttpGet("articles")]
     [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticleList()
     {
       var result = await navMenuService.GetArticleList();
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpGet("categories")]
+    [Authorize("author")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetCategoryList()
+    {
+      var result = await navMenuService.GetCategoryList();
       return Ok(result);
     }
 
@@ -41,10 +50,6 @@ namespace Thor.Controllers.Dashboard
     [Authorize("author")]
     public async Task<ActionResult<StatusResponse>> CreateNavMenuEntry(NavMenu navMenu)
     {
-      if (navMenu.PageId == 0)
-      {
-        return BadRequest("Unable to create menu entry. Please specify the page");
-      }
       var result = await navMenuService.CreateNavMenu(navMenu);
       return Ok(result);
     }

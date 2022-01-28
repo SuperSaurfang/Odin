@@ -15,6 +15,8 @@ namespace Thor.Services.Api
 
     Task<IEnumerable<Article>> GetArticleList();
 
+    Task<IEnumerable<Category>> GetCategoryList();
+
     Task<StatusResponse> CreateNavMenu(NavMenu navMenu);
 
     Task<StatusResponse> UpdateNavMenu(NavMenu navMenu);
