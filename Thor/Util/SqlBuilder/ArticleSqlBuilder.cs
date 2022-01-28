@@ -46,6 +46,19 @@ namespace Thor.Util.ThorSqlBuilder
       return GetTemplateWithJoinAndWhere(builder);
     }
 
+    public static SqlBuilder.Template CreateBlogByTagQuery()
+    {
+      var builder = CreateBuilder();
+      builder = AddCategoryFields(builder);
+      builder = AddTagFields(builder);
+      builder = AddCategoryLeftJoin(builder);
+      builder = AddTagLeftJoin(builder);
+      builder = AddWhereStatusPublic(builder);
+      builder = AddWhereIsBlog(builder);
+      builder = AddWhereTag(builder);
+      return GetTemplateWithJoinAndWhere(builder);
+    }
+
     private static SqlBuilder CreateBuilder()
     {
       var builder = new SqlBuilder();
@@ -100,6 +113,10 @@ namespace Thor.Util.ThorSqlBuilder
       return builder.Where("Status = 'public'");
     }
 
+    private static SqlBuilder AddWhereTag(SqlBuilder builder)
+    {
+      return builder.Where("`Tag`.`Name` = @tag");
+    }
     private static SqlBuilder AddWhereTitle(SqlBuilder builder)
     {
       return builder.Where("Title = @title");

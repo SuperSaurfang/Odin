@@ -86,5 +86,10 @@ namespace Thor.Services.Mongo
     {
       throw new System.NotImplementedException();
     }
+
+    public Task<IEnumerable<Article>> GetBlogByTag(string tag)
+    {
+      throw new System.NotImplementedException();
+    }
   }
 }

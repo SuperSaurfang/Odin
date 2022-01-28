@@ -8,6 +8,7 @@ namespace Thor.Services.Api
   public interface IBlogService : IArticleService
   {
     Task<IEnumerable<Article>> GetCategoryBlog(string category);
+    Task<IEnumerable<Article>> GetBlogByTag(string tag);
     Task<StatusResponse> AddCategoryToBlogPost(ArticleCategory articleCategory);
     Task<StatusResponse> RemoveCategoryFromBlogPost(ArticleCategory articleCategory);
     Task<StatusResponse> AddTagToArticle(ArticleTag articleTag);

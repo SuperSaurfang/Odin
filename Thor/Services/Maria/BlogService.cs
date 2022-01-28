@@ -136,6 +136,15 @@ namespace Thor.Services.Maria
       return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
     }
 
+    public async Task<IEnumerable<Article>> GetBlogByTag(string tag)
+    {
+      var template = ArtilceSqlBuilder.CreateBlogByTagQuery();
+      var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { tag });
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection);
+      await MapUserIdToAuthor(result);
+      return result;
+    }
+
     #endregion
 
     #region  Private Helpers

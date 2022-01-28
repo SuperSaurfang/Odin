@@ -73,6 +73,22 @@ namespace Thor.Controllers
       }
       return Ok(result);
     }
+
+    [Produces("application/json")]
+    [HttpGet("tag/{tag}")]
+    public async Task<ActionResult<IEnumerable<Article>>> GetBlogByTag(string tag)
+    {
+      if(tag is null)
+      {
+        return BadRequest("Tag cannot be null");
+      }
+      var result = await blogService.GetBlogByTag(tag);
+      if(result == null)
+      {
+        return InternalError();
+      }
+      return Ok(result);
+    }
     private ObjectResult InternalError(string message = "Internal Server Error")
     {
       return StatusCode(500, message);
