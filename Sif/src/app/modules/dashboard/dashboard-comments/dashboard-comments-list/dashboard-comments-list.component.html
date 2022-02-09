@@ -74,7 +74,7 @@
   <thead>
     <tr>
       <th>
-        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (change)="setAllSelected($event)"></app-checkbox>
       </th>
       <th>Kommentar ID</th>
       <th>Autor</th>
@@ -87,7 +87,7 @@
   <tbody>
     <tr *ngFor="let comment of comments; let i = index">
       <td>
-        <app-checkbox [isChecked]="selectedComments[i]" (StateChanged)="setSelectedComment(i)"></app-checkbox>
+        <app-checkbox [isChecked]="selectedComments[i]" (change)="setSelectedComment(i)"></app-checkbox>
       </td>
       <td>{{comment.commentId}}</td>
       <td>
@@ -146,7 +146,7 @@
   <tfoot>
     <tr>
       <th>
-        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (change)="setAllSelected($event)"></app-checkbox>
       </th>
       <th>Kommentar ID</th>
       <th>Autor</th>
