@@ -8,18 +8,20 @@ using System.Linq;
 using Thor.Util.ThorSqlBuilder;
 using Dapper;
 using System.Data;
+using Thor.Extensions;
 
 namespace Thor.Services.Maria
 {
-  public class BlogService : ArticleServiceBase, IBlogService
+  public class BlogService : IBlogService
   {
     private const string SPLIT_ON = "CategoryId, TagId";
     private readonly ISqlExecuterService executer;
+    private readonly IRestClientService restClient;
 
     public BlogService(ISqlExecuterService sqlExecuterService, IRestClientService restClient)
-      : base(restClient)
     {
       executer = sqlExecuterService;
+      this.restClient = restClient;
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
     }
 
@@ -52,7 +54,7 @@ namespace Thor.Services.Maria
     {
       var template = ArtilceSqlBuilder.CreateAllDashboardQuery();
       var result = await executer.ExecuteSql<Article>(template.RawSql);
-      await MapUserIdToAuthor(result);
+      await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
@@ -63,7 +65,7 @@ namespace Thor.Services.Maria
 
       var mappedResult = result.GroupBy(p => p.ArticleId).Select(Selection);
 
-      await MapUserIdToAuthor(mappedResult);
+      await restClient.MapUserIdToAuthor(mappedResult);
       return mappedResult;
 
 
@@ -74,7 +76,7 @@ namespace Thor.Services.Maria
       var template = ArtilceSqlBuilder.CreateDashboardQuery();
       var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
       var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
-      result.Author = await MapUserIdToAuthor(result);
+      result.Author = await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
@@ -83,7 +85,7 @@ namespace Thor.Services.Maria
       var template = ArtilceSqlBuilder.CreatePublicQuery();
       var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
       var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
-      result.Author = await MapUserIdToAuthor(result);
+      result.Author = await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
@@ -104,7 +106,7 @@ namespace Thor.Services.Maria
       dynamicParams.Add("catName", category);
       var result = await executer.ExecuteSql<Article, Category, Tag>(sql, ArticleJoinFunc, SPLIT_ON, dynamicParams, CommandType.StoredProcedure);
       result = result.GroupBy(p => p.ArticleId).Select(Selection);
-      await MapUserIdToAuthor(result);
+      await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
@@ -141,7 +143,7 @@ namespace Thor.Services.Maria
       var template = ArtilceSqlBuilder.CreateBlogByTagQuery();
       var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { tag });
       var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection);
-      await MapUserIdToAuthor(result);
+      await restClient.MapUserIdToAuthor(result);
       return result;
     }
 

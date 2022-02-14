@@ -3,16 +3,18 @@ using Thor.Models;
 using DbExtensions;
 using Thor.Services.Api;
 using Thor.Util.ThorSqlBuilder;
+using Thor.Extensions;
 
 namespace Thor.Services.Maria
 {
-  public class SearchService : ArticleServiceBase, ISearchService
+  public class SearchService : ISearchService
   {
     private readonly ISqlExecuterService executerService;
+    private readonly IRestClientService restClient;
     public SearchService(ISqlExecuterService executerService, IRestClientService restClient)
-      : base(restClient)
     {
       this.executerService = executerService;
+      this.restClient = restClient;
     }
     public async Task<SearchResult> Search(SearchRequest searchRequest)
     {
@@ -26,7 +28,7 @@ namespace Thor.Services.Maria
           searchRequest.From is not null,
           searchRequest.To is not null);
         result.Articles = await executerService.ExecuteSql<Article>(articleSqlBuilder.ToString(), searchRequest);
-        await MapUserIdToAuthor(result.Articles);
+        await restClient.MapUserIdToAuthor(result.Articles);
       }
 
 
