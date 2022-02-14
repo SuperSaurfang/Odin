@@ -10,13 +10,10 @@ using Thor.Models.Config;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Thor.Services.Api;
 using Thor.Services.Maria;
 using Microsoft.Extensions.Options;
-using Thor.Util;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
@@ -146,6 +143,7 @@ namespace Thor
       services.AddTransient<ICommentService, CommentService>();
       services.AddTransient<ICategoryService, CategoryService>();
       services.AddTransient<ITagService, TagService>();
+      services.AddTransient<ISearchService, SearchService>();
     }
 
     private void ConfigureMongoDB(IServiceCollection services)
