@@ -6,7 +6,7 @@ namespace Thor.Util.ThorSqlBuilder
   {
     public static SqlBuilder CreateArticleSearchSql(bool includeText, bool includeTitle)
     {
-      var builder = SQL.SELECT("`ArticleId`,`UserId`,`Title`,`ArticleText`,`CreationDate`,`ModificationDate`,`HasCommentsEnabled`,`HasDateAuthorEnabled` ")
+      var builder = SQL.SELECT("`ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `IsBlog`, `IsPage`")
       .FROM("Article");
 
       if (includeText && !includeTitle)

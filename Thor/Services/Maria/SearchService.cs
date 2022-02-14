@@ -29,6 +29,10 @@ namespace Thor.Services.Maria
           searchRequest.To is not null);
         result.Articles = await executerService.ExecuteSql<Article>(articleSqlBuilder.ToString(), searchRequest);
         await restClient.MapUserIdToAuthor(result.Articles);
+        foreach(var article in result.Articles)
+        {
+          ArticleLinkMap(article);
+        }
       }
 
 
@@ -44,6 +48,18 @@ namespace Thor.Services.Maria
         result.CategoryList = await executerService.ExecuteSql<Category>(categorySearchSql.ToString(), new { Term = searchRequest.Term });
       }
       return result;
+    }
+
+    private void ArticleLinkMap(Article article)
+    {
+      if(article.IsBlog == true)
+      {
+        article.Link = $"/blog/{article.Title}";
+      }
+      else if(article.IsPage == true)
+      {
+        article.Link = $"/page/{article.Title}";
+      }
     }
   }
 }

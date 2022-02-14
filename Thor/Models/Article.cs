@@ -20,11 +20,13 @@ namespace Thor.Models
     public List<Tag> Tags { get; set; }
 
     public string Status { get; set; }
+    public string Link { get; set; }
     public bool? IsBlog { get; set; }
-    public bool? IsSite { get; set; }
+    public bool? IsPage { get; set; }
 
 
-    public Article() {
+    public Article()
+    {
       Categories = new List<Category>();
       Tags = new List<Tag>();
     }
