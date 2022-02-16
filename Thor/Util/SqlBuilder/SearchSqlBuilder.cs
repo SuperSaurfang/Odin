@@ -44,16 +44,20 @@ namespace Thor.Util.ThorSqlBuilder
 
     public static SqlBuilder CreateTagSearchSql()
     {
-      return SQL.SELECT("`TagId`, `Name`, `Description` ")
+      return SQL.SELECT("`Tag`.`TagId`, `Name`, `Description`, COUNT(`ArticleTag`.`ArticleId`) AS `ArticleCount`")
         .FROM("`Tag`")
-        .WHERE("`Name` LIKE @Term");
+        .LEFT_JOIN("`ArticleTag` ON `Tag`.`TagId` = `ArticleTag`.`TagId`")
+        .WHERE("`Name` LIKE @Term")
+        .GROUP_BY("`Tag`.`TagId`");
     }
 
     public static SqlBuilder CreateCategorySearchSql()
     {
-      return SQL.SELECT("`CategoryId`, `Name`, `Description`")
+      return SQL.SELECT("`Category`.`CategoryId`, `Name`, `Description`, COUNT(`ArticleCategory`.`ArticleId`) AS `ArticleCount`")
         .FROM("`Category`")
-        .WHERE("`Name` LIKE @Term");
+        .LEFT_JOIN("`ArticleCategory` ON `Category`.`CategoryId` = `ArticleCategory`.`CategoryId`")
+        .WHERE("`Name` LIKE @Term")
+        .GROUP_BY("`Category`.`CategoryId`");
     }
   }
 }
