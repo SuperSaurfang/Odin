@@ -1,0 +1,35 @@
+@import '../../../../core/scss/variables.scss';
+
+:host  {
+  .content-header {
+    display: flex;
+  }
+
+  .action-container {
+    margin-left: auto;
+    height: fit-content;
+  }
+
+  .article-result-container {
+    border: 1px solid $grey-2;
+    padding: padding(2);
+    border-radius: $radius;
+  }
+
+  .article-result-container:not(:last-child) {
+    margin-bottom: margin(1);
+  }
+
+  .article-info {
+    font-size: .9rem
+  }
+
+  .spacer {
+    margin: 0 margin(0.5);
+  }
+
+  .icon-label > fa-icon,
+  .icon-label > .text-label {
+    margin-right: margin(0.5);
+  }
+}

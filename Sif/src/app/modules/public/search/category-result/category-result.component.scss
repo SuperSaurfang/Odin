@@ -1,0 +1,39 @@
+@import '../../../../core/scss/variables.scss';
+
+:host {
+  .content-header {
+    display: flex;
+  }
+
+  .action-container {
+    margin-left: auto;
+    height: fit-content;
+  }
+
+  .category-list-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: padding(2)
+  }
+
+  .category-list-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid $grey-2;
+    border-radius: $radius;
+    padding: padding(1);
+  }
+
+  .category-list-text-container > a {
+    display: block;
+  }
+
+  .category-list-text-container > p,
+  .category-list-text-container > a {
+    margin: margin(1) 0;
+  }
+
+  .category-list-icon {
+    padding: padding(2);
+  }
+}

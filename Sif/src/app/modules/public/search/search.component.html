@@ -1,0 +1,65 @@
+<div class="content-container">
+  <h1 class="icon-header">
+    <fa-icon [icon]="searchIcon"></fa-icon>
+    <span>Suchergebnisse für {{searchRequest.term}}:</span>
+  </h1>
+  <div class="flex">
+    <div class="ml-auto">
+      <div class="pos-relative tooltip-trigger">
+        <button class="btn btn-icon" (click)="onShowExtendedOptionsChange()">
+          <fa-icon [icon]="extendedSettingsIcon"></fa-icon>
+        </button>
+        <div class="tooltip">Mehr Sucheinstellungen</div>
+      </div>
+    </div>
+  </div>
+  <div [ngClass]="{ 'hide' : showExtendedOptions === false }">
+    <form [formGroup]="searchForm" (submit)="onStartSearch()">
+      <p>Erweiterte Sucheinstellungen</p>
+      <div class="search-setting-container">
+        <div class="search-setting-row mb-1">
+          <label class="label control-group horizontal-group">
+            <div>
+              <span>Text:</span>
+            </div>
+            <input type="text" formControlName="term">
+          </label>
+          <label class="label control-group horizontal-group">
+            <div>
+              <span>Von:</span>
+            </div>
+            <input type="date" formControlName="from" [max]="searchForm.value['to']">
+          </label>
+          <label class="label control-group horizontal-group">
+            <div>
+              <span>Bis:</span>
+            </div>
+            <input type="date" formControlName="to" [min]="searchForm.value['from']">
+          </label>
+        </div>
+        <div class="search-setting-row">
+          <app-checkbox label="Textsuche" formControlName="isTextSearch"></app-checkbox>
+          <app-checkbox label="Titelsuche" formControlName="isTitleSearch"></app-checkbox>
+          <app-checkbox label="Tagsuche" formControlName="isTagSearch"></app-checkbox>
+          <app-checkbox label="Kategoriensuche" formControlName="isCategorySearch"></app-checkbox>
+        </div>
+      </div>
+      <div class="search-action-container">
+        <button class="btn btn-primary">Suche starten</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="searchResult.articles && searchResult.articles?.length > 0" class="content-container">
+  <app-article-result [articles]="searchResult.articles"></app-article-result>
+</div>
+
+<div *ngIf="searchResult.categoryList && searchResult.categoryList?.length > 0" class="content-container">
+  <app-category-result [categoryList]="searchResult.categoryList"></app-category-result>
+</div>
+
+<div *ngIf="searchResult.tagList && searchResult.tagList?.length > 0" class="content-container">
+  <app-tag-result [tagList]="searchResult.tagList"></app-tag-result>
+</div>
+

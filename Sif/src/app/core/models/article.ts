@@ -14,4 +14,5 @@ export class Article {
   status?: string;
   categories?: Category[];
   tags?: Tag[];
+  link?: string;
 }
