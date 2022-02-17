@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app.routing';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ENV, getEnv } from 'src/environments/environemnt.provider';
 
 
 @NgModule({
@@ -22,7 +23,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: ENV, useFactory: getEnv }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
