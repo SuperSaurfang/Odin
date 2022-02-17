@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../models';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService, User } from '@auth0/auth0-angular';
 import { ACCESS_TOKEN_KEY } from '../../const';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
