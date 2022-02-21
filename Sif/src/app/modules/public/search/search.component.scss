@@ -1,0 +1,30 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  .search-setting-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+    flex-wrap: wrap;
+  }
+
+  .search-setting-row {
+    display: flex;
+
+    >:not(:last-child) {
+      margin-right: margin(1);
+    }
+  }
+
+  .search-action-container {
+    margin-left: auto;
+    display: flex;
+    width: fit-content;
+  }
+
+  .header-icon fa-icon {
+    margin-right: margin(0.5);
+  }
+}

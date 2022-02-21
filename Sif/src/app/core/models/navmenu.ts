@@ -1,10 +1,10 @@
 export class NavMenu {
-  navMenuId: number;
+  navMenuId?: number;
   parentId?: number;
-  pageId: number;
-  navMenuOrder: number;
-  title: string;
-  displayText: string;
-  isDropdown: boolean;
+  link?: string;
+  navMenuOrder?: number;
+  displayText?: string;
+  isDropdown?: boolean;
+  isLabel?: boolean;
   children?: NavMenu[];
 }

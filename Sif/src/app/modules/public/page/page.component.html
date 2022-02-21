@@ -1,20 +1,3 @@
 <div class="content-container">
-  <h1 class="page-header">
-    <a>{{article?.title}}</a>
-  </h1>
-  <div class="page-info" *ngIf="article?.hasDateAuthorEnabled">
-    <fa-icon [icon]="user"></fa-icon>
-    {{article?.author}} /
-    <fa-icon [icon]="calendar"></fa-icon>
-    verfasst am {{article?.creationDate.toLocaleDateString()}}
-  </div>
-  <div class="page-content" [innerHTML]="article?.articleText"></div>
-  <div class="page-footer">
-    <span *ngIf="article?.hasCommentsEnabled">
-      <a *ngIf="false">
-        <fa-icon [icon]="edit"></fa-icon>
-        Bearbeiten
-      </a>
-    </span>
-  </div>
+  <app-article-content-renderer [article]="article" articleType="page"></app-article-content-renderer>
 </div>

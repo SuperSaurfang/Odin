@@ -11,7 +11,7 @@
   <thead>
     <tr>
       <th>
-        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (change)="setAllSelected($event)"></app-checkbox>
       </th>
       <th>Title</th>
       <th>Autor</th>
@@ -22,7 +22,7 @@
   <tbody>
     <tr *ngFor="let article of articles; let i = index">
       <td>
-        <app-checkbox [isChecked]="selectedArticles[i]" (StateChanged)="setSelected(i)"></app-checkbox>
+        <app-checkbox [isChecked]="selectedArticles[i]" (change)="setSelected(i)"></app-checkbox>
       </td>
       <td>
         <a [routerLink]="['edit', article.title]">
@@ -55,7 +55,7 @@
   <tfoot>
     <tr>
       <th>
-        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (StateChanged)="setAllSelected($event)"></app-checkbox>
+        <app-checkbox [isIndeterminate]="isIndeterminate" [isChecked]="isAllSelected" (change)="setAllSelected($event)"></app-checkbox>
       </th>
       <th>Title</th>
       <th>Autor</th>

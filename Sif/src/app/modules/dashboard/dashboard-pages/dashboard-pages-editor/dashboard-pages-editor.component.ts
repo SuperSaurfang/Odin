@@ -1,60 +1,87 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { faSpinner, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { BlurEvent, ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { timer } from 'rxjs';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/app/core/ckeditor';
+import { BlurEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { Subscription } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
-import { Article, ChangeResponse } from 'src/app/core';
-import { RestPageService } from '../../services';
+import { ArticleEditorService, Message, MessageType } from 'src/app/core';
+import { HintType } from 'src/app/shared-modules/hintbox/hintbox.component';
+import { ImageUploadAdapter } from 'src/app/core/adapters/upload-adapter';
+import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
+
+
 @Component({
   selector: 'app-dashboard-pages-editor',
   templateUrl: './dashboard-pages-editor.component.html',
   styleUrls: ['./dashboard-pages-editor.component.scss']
 })
-export class DashboardPagesEditorComponent implements OnInit {
-
-  constructor(private activatedRoute: ActivatedRoute,
-    private userService: UserService,
-    private restService: RestPageService) {}
-
-  public article: Article = new Article();
+export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
+  public title = '';
   public editor = ClassicEditor;
-  public isEdit = false;
 
-  public iconSpinner = faSpinner;
-  public iconCheck = faCheck;
-  public iconTimes = faTimes;
 
-  public isSaving = false;
+  public message: Message;
+  public hintType: HintType = 'info';
+
   public isSaved = false;
-  public isFailed = false;
 
   @ViewChild('pageEditor')
   public pageEditor: CKEditorComponent;
 
+  private subscriptions: Subscription[] = [];
+
+  constructor(private activatedRoute: ActivatedRoute,
+    private userService: UserService,
+    private articleEditor: ArticleEditorService,
+    private imageUploadService: ImageUploadService) { }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
   ngOnInit() {
+    this.subscriptions.push(this.articleEditor.getArticle().subscribe(article => {
+      this.title = article.title;
+
+      if (article.articleText) {
+        this.pageEditor.editorInstance.setData(article.articleText);
+      }
+    }));
+
+    this.subscriptions.push(this.articleEditor.getMessage().subscribe(message => {
+      setTimeout(() => {
+        this.isSaved = false;
+      }, 2500);
+      switch (message.messageType) {
+        case MessageType.Ok:
+          this.hintType = 'ok';
+          break;
+        case MessageType.Error:
+          this.hintType = 'danger';
+          break;
+        case MessageType.Info:
+          this.hintType = 'info';
+          break;
+        case MessageType.Warning:
+          this.hintType = 'warn';
+          break;
+      }
+      this.message = message;
+      this.isSaved = true;
+    }));
+
     this.activatedRoute.params.subscribe(params => {
       if (params['title']) {
-        this.restService.getPageByTitle(params['title']).subscribe(response => {
-          this.article = response;
-          if (this.article.articleText) {
-            this.pageEditor.editorInstance.setData(this.article.articleText);
-          }
-          this.isEdit = true;
-        });
+        this.articleEditor.setArticleByTitle(params['title']);
       } else {
         this.userService.getUser().subscribe(user => {
           if (user) {
-            this.article = {
-              creationDate: new Date(),
-              modificationDate: new Date(),
-              status: 'draft',
-              hasCommentsEnabled: false,
-              userId: user.sub
-            };
+            this.articleEditor.createArticle(user);
           }
         });
       }
@@ -62,82 +89,16 @@ export class DashboardPagesEditorComponent implements OnInit {
   }
 
   public onUpdateArticleTitle() {
-    this.saveArticle();
+    this.articleEditor.updateTitle((this.title));
   }
 
-  public onUpdateArticleText({editor}: BlurEvent) {
-    this.article.articleText = editor.getData();
-    this.saveArticle();
+  public onUpdateArticleText({ editor }: BlurEvent) {
+    this.articleEditor.updateText(editor.getData());
   }
 
-  public onUpdateStatus(event: string) {
-    this.article.status = event;
-    this.saveArticle();
+  public onReady(editor: ClassicEditor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return new ImageUploadAdapter(loader, this.imageUploadService);
+    };
   }
-
-  public onUpdateAllowComment(event: boolean) {
-    this.article.hasCommentsEnabled = event;
-    this.saveArticle();
-  }
-
-  public onUpdateCreationDate(event: string) {
-    this.article.creationDate = new Date(event);
-    this.saveArticle();
-  }
-
-  private saveArticle() {
-    this.isSaving = true;
-    if (!this.isEdit && this.article.title) {
-      this.restService.savePage(this.article).subscribe(response => {
-        switch (response.change) {
-          case ChangeResponse.Change:
-            this.restService.getPageId(this.article.title).subscribe(id => {
-              this.article.articleId = id;
-              this.isEdit = true;
-              this.isSaving = false;
-              this.isSaved = true;
-              this.createHideTimer();
-            });
-            break;
-          case ChangeResponse.Error:
-          case ChangeResponse.NoChange:
-          default:
-            this.isSaving = false;
-            this.isFailed = true;
-            this.createHideTimer();
-            break;
-        }
-      });
-    } else {
-      this.updateArticle();
-    }
-  }
-
-  private updateArticle() {
-    this.restService.updatePage(this.article).subscribe(response => {
-      this.createHideTimer();
-      switch (response.change) {
-        case ChangeResponse.Change:
-          this.isSaving = false;
-          this.isSaved = true;
-          break;
-        case ChangeResponse.Error:
-        case ChangeResponse.NoChange:
-        default:
-          this.isSaving = false;
-          this.isFailed = true;
-          break;
-      }
-    });
-  }
-
-  private createHideTimer() {
-    const hideTimer = timer(5000);
-    const hideSubscribtion =  hideTimer.subscribe(() => {
-      this.isSaved = false;
-      this.isFailed = false;
-      hideSubscribtion.unsubscribe();
-    });
-  }
-
 }

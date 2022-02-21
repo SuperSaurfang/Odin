@@ -1,8 +1,7 @@
 <h2>Suche</h2>
-<div class="search-container control-group horizontal-group">
-  <input type="search">
-  <button class="btn btn-primary">
-    Suchen
-  </button>
-</div>
-
+<form (submit)="startSearch()">
+  <div class="search-container control-group horizontal-group">
+    <input type="search" [(ngModel)]="term" name="term">
+    <button class="btn btn-primary" type="submit">Suchen</button>
+  </div>
+</form>

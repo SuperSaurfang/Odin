@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { faUser, faCalendar, faComments, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Article } from 'src/app/core/models';
 import { RestService } from 'src/app/core/services/rest/rest.service';
 
@@ -9,13 +8,9 @@ import { RestService } from 'src/app/core/services/rest/rest.service';
   styleUrls: ['./blog.component.scss']
 })
 export class BlogComponent implements OnInit {
-  constructor(private restService: RestService) { }
-
-  public calendar = faCalendar;
-  public comments = faComments;
-  public edit = faEdit;
-  public user = faUser;
   public articles: Article[] = [];
+
+  constructor(private restService: RestService) { }
 
   ngOnInit() {
     this.restService.getBlog().subscribe(articles => {

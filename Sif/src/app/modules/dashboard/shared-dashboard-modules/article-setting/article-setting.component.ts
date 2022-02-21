@@ -1,21 +1,30 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { faAngleUp, faAngleDown, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { Article } from 'src/app/core';
+import { ArticleEditorService } from 'src/app/core/baseClass';
+
+type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' | 'category' | 'tag';
 
 @Component({
   selector: 'app-article-setting',
   templateUrl: './article-setting.component.html',
   styleUrls: ['./article-setting.component.scss']
 })
-export class ArticleSettingComponent implements OnInit, OnChanges {
-
-  constructor() { }
+export class ArticleSettingComponent implements OnInit, OnDestroy {
 
   public isSettingOpen = true;
   public iconStatus = faAngleUp;
   public iconCircle = faCircle;
+  public article: Article = new Article();
+  public displayedDate: string;
+
+  private subscription: Subscription;
+
+  constructor(private articleEditor: ArticleEditorService) { }
 
   @Input()
-  public type: string;
+  public type: SettingType;
 
   @Input()
   public name: string;
@@ -23,30 +32,19 @@ export class ArticleSettingComponent implements OnInit, OnChanges {
   @Input()
   public label: string;
 
-  @Input()
-  public setting: any;
-
-  @Output()
-  public settingChange = new EventEmitter<any>();
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.type === 'date' && this.setting !== undefined) {
-      const temp = new Date(this.setting);
-      const month = temp.getMonth() + 1;
-      const date = temp.getDate();
-      let monthString = `${month}`;
-      let dateString = `${date}`;
-      if (month < 10) {
-        monthString = `0${month}`;
-      }
-      if (date < 10) {
-        dateString = `0${date}`;
-      }
-      this.setting = `${temp.getFullYear()}-${monthString}-${dateString}`;
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
   ngOnInit() {
+    this.subscription = this.articleEditor.getArticle().subscribe(article => {
+      this.article = article;
+      if (this.type === 'createDate' && this.displayedDate === undefined) {
+        this.displayedDate = this.parseDate(article.creationDate);
+      }
+    });
   }
 
   public openStatusSettings() {
@@ -56,6 +54,48 @@ export class ArticleSettingComponent implements OnInit, OnChanges {
     } else {
       this.iconStatus = faAngleDown;
     }
+  }
+
+  public updateStatus() {
+    this.articleEditor.updateStatus(this.article.status);
+  }
+
+  public updateToggle() {
+    switch (this.type) {
+      case 'allowComments':
+        this.articleEditor.updateCommentsEnabled(this.article.hasCommentsEnabled);
+        break;
+      case 'showDateAuthor':
+        this.articleEditor.updateDateAuthorEnabled(this.article.hasDateAuthorEnabled);
+        break;
+    }
+  }
+
+  public updateCreationDate() {
+    let date: Date;
+    if (!this.displayedDate) {
+      date = new Date(this.article.creationDate);
+      this.displayedDate = this.parseDate(date);
+    } else {
+      date = new Date(Date.parse(this.displayedDate));
+      console.log(date);
+    }
+    this.articleEditor.updateCreationDate(date);
+  }
+
+  private parseDate(date: Date): string {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    let monthString = `${month}`;
+    let dayString = `${day}`;
+    if (month < 10) {
+      monthString = `0${month}`;
+    }
+    if (day < 10) {
+      dayString = `0${day}`;
+    }
+    return `${date.getFullYear()}-${monthString}-${dayString}`;
+
   }
 
 }

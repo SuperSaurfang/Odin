@@ -6,19 +6,24 @@
     </span>
   </div>
   <div class="setting-body" [ngClass]="{'open': isSettingOpen === true}">
-    <div *ngIf="type === 'select'">
-      <select [ngModel]="setting" (ngModelChange)="settingChange.emit($event)" class="mr-1">
+    <div *ngIf="type === 'status'">
+      <select [(ngModel)]="article.status" (ngModelChange)="updateStatus()" class="mr-1">
         <option value="public">Öffentlich</option>
         <option value="private">Privat</option>
         <option value="draft" selected>Entwurf</option>
       </select>
-      <fa-icon [ngClass]="{'danger-text': setting === 'draft', 
-                'warn-text': setting === 'private',
-                'ok-text': setting === 'public'}" [icon]="iconCircle"></fa-icon>
+      <fa-icon [ngClass]="{'danger-text': article.status === 'draft',
+                'warn-text': article.status  === 'private',
+                'ok-text': article.status  === 'public'}" [icon]="iconCircle"></fa-icon>
     </div>
-    
-    <app-toggle-switch *ngIf="type === 'switch'" [isToggleOn]="setting" (isToggleOnChange)="settingChange.emit($event)" [label]="label"></app-toggle-switch>
 
-    <input *ngIf="type === 'date'" type="date" [value]="setting" [ngModel]="setting" (ngModelChange)="settingChange.emit($event)">
+    <app-toggle-switch *ngIf="type === 'allowComments'" [(isToggleOn)]="article.hasCommentsEnabled" (isToggleOnChange)="updateToggle()" [label]="label"></app-toggle-switch>
+    <app-toggle-switch *ngIf="type === 'showDateAuthor'" [(isToggleOn)]="article.hasDateAuthorEnabled" (isToggleOnChange)="updateToggle()" [label]="label"></app-toggle-switch>
+
+    <input *ngIf="type === 'createDate'" type="date" [(ngModel)]="displayedDate" (ngModelChange)="updateCreationDate()">
+
+    <app-category-setting *ngIf="type === 'category'"></app-category-setting>
+
+    <app-tag-setting *ngIf="type === 'tag'"></app-tag-setting>
   </div>
 </div>

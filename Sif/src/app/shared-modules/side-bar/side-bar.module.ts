@@ -5,17 +5,18 @@ import { RouterModule } from '@angular/router';
 import { SideBarComponent } from './side-bar.component';
 import { SideBarSearchComponent } from './side-bar-search/side-bar-search.component';
 import { SideBarMetaComponent } from './side-bar-meta/side-bar-meta.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     SideBarComponent,
     SideBarMetaComponent,
     SideBarSearchComponent,
-    
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
   exports: [
     SideBarComponent

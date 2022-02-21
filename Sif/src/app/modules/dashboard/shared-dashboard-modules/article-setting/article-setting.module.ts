@@ -6,6 +6,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { ArticleSettingComponent } from './article-setting.component';
 import { ToggleSwitchModule } from 'src/app/shared-modules/toggle-switch/toggle-switch.module';
+import { CategorySettingComponent } from './category-setting/category-setting.component';
+import { TagSettingComponent } from './tag-setting/tag-setting.component';
 
 @NgModule({
   imports: [
@@ -14,7 +16,11 @@ import { ToggleSwitchModule } from 'src/app/shared-modules/toggle-switch/toggle-
     FontAwesomeModule,
     ToggleSwitchModule
   ],
-  declarations: [ArticleSettingComponent],
+  declarations: [
+    ArticleSettingComponent,
+    CategorySettingComponent,
+    TagSettingComponent
+  ],
   exports: [
     ArticleSettingComponent
   ]

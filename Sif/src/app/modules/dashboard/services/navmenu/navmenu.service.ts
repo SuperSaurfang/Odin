@@ -17,7 +17,7 @@ export class NavmenuService {
   }
 
   public loadNavMenu() {
-    this.restService.GetFlatList().subscribe(response => {
+    this.restService.getFlatList().subscribe(response => {
       this.navMenuList = response;
       this.originalList = response.map(item => Object.assign(new NavMenu(), item));
       this.navMenuListSubject.next(response);
@@ -29,7 +29,7 @@ export class NavmenuService {
    * @param navMenu nav menu entry to save
    */
   public saveNavMenuEntry(navMenu: NavMenu) {
-    this.restService.UpdateNavMenu(navMenu).subscribe(response => {
+    this.restService.updateNavMenu(navMenu).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
           const index = this.navMenuList.findIndex(item => item.navMenuId === navMenu.navMenuId);
@@ -48,7 +48,7 @@ export class NavmenuService {
   }
 
   public deleteNavMenuEnty(navMenuId: number) {
-    this.restService.DeleteNavMenu(navMenuId).subscribe(response => {
+    this.restService.deleteNavMenu(navMenuId).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
           const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
@@ -68,8 +68,10 @@ export class NavmenuService {
     return this.messageSubject;
   }
 
-  public getLength(): number {
-    return this.navMenuList.length;
+  public getNextOrderValue(): number {
+    let currentMax = 0;
+    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navMenuOrder));
+    return ++currentMax;
   }
 
   /**

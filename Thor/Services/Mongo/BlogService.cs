@@ -61,5 +61,35 @@ namespace Thor.Services.Mongo
     {
       throw new System.NotImplementedException();
     }
+
+    public Task<IEnumerable<Article>> GetCategoryBlog(string category)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<StatusResponse> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<StatusResponse> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<StatusResponse> AddTagToArticle(ArticleTag articleTag)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<StatusResponse> RemoveTagFromArticle(ArticleTag articleTag)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    public Task<IEnumerable<Article>> GetBlogByTag(string tag)
+    {
+      throw new System.NotImplementedException();
+    }
   }
 }

@@ -4,21 +4,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.FileProviders;
 using Thor.Services;
 using Thor.Authorization;
 using Thor.Models.Config;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Thor.Services.Api;
 using Thor.Services.Maria;
 using Microsoft.Extensions.Options;
-using Thor.Util;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace Thor
 {
@@ -42,6 +41,7 @@ namespace Thor
       services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
       services.AddSingleton<IRestClientService, RestClientService>();
+      services.AddTransient<IFileStoreService, FileStoreService>();
 
       var DatabaseType = Configuration.GetValue<string>("DatabaseConfig:DatabaseType").ToLower();
       switch (DatabaseType)
@@ -127,6 +127,11 @@ namespace Thor
 
       app.UseRouting();
 
+      app.UseStaticFiles(new StaticFileOptions {
+        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "MyFiles")),
+        RequestPath = "/files"
+      });
+
       app.UseAuthentication();
       app.UseAuthorization();
 
@@ -145,6 +150,8 @@ namespace Thor
       services.AddTransient<INavMenuService, NavMenuService>();
       services.AddTransient<ICommentService, CommentService>();
       services.AddTransient<ICategoryService, CategoryService>();
+      services.AddTransient<ITagService, TagService>();
+      services.AddTransient<ISearchService, SearchService>();
     }
 
     private void ConfigureMongoDB(IServiceCollection services)

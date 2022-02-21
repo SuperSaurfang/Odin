@@ -5,16 +5,21 @@ using Thor.Services.Api;
 using Thor.Util;
 using System;
 using System.Linq;
+using Thor.Util.ThorSqlBuilder;
+using Dapper;
+using System.Data;
+using Thor.Extensions;
 
 namespace Thor.Services.Maria
 {
-  public class BlogService: IBlogService {
-
+  public class BlogService : IBlogService
+  {
+    private const string SPLIT_ON = "CategoryId, TagId";
     private readonly ISqlExecuterService executer;
-
     private readonly IRestClientService restClient;
 
-    public BlogService(ISqlExecuterService sqlExecuterService, IRestClientService restClient) {
+    public BlogService(ISqlExecuterService sqlExecuterService, IRestClientService restClient)
+    {
       executer = sqlExecuterService;
       this.restClient = restClient;
       UnderlayingDatabase = UnderlayingDatabase.MariaDB;
@@ -42,73 +47,138 @@ namespace Thor.Services.Maria
     public async Task<int> GetArticleId(string title)
     {
       const string sql = @"SELECT `ArticleId` FROM Article WHERE IsBlog = 1 AND Title = @title";
-      return await executer.ExecuteSqlSingle<int>(sql, new {title = title});
+      return await executer.ExecuteSqlSingle<int>(sql, new { title = title });
     }
 
     public async Task<IEnumerable<Article>> GetAllArticles()
     {
-      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
-      FROM Article WHERE  IsBlog = 1";
-      var result = await executer.ExecuteSql<Article>(sql);
-      await MapUserIdToAuthor(result);
+      var template = ArtilceSqlBuilder.CreateAllDashboardQuery();
+      var result = await executer.ExecuteSql<Article>(template.RawSql);
+      await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
     public async Task<IEnumerable<Article>> GetAllPublicArticles()
     {
-      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
-      FROM Article WHERE Status = 'public' AND IsBlog = 1";
-      var result = await executer.ExecuteSql<Article>(sql);
-      await MapUserIdToAuthor(result);
-      return result;
+      var template = ArtilceSqlBuilder.CreateAllPublicQuery();
+      var result = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON);
+
+      var mappedResult = result.GroupBy(p => p.ArticleId).Select(Selection);
+
+      await restClient.MapUserIdToAuthor(mappedResult);
+      return mappedResult;
+
+
     }
 
     public async Task<Article> GetArticleByTitle(string title)
     {
-      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`, `Status`
-      FROM Article WHERE IsBlog = 1 AND Title = @title";
-      var result = await executer.ExecuteSqlSingle<Article>(sql, new { title = title });
-      result.Author = await MapUserIdToAuthor(result);
+      var template = ArtilceSqlBuilder.CreateDashboardQuery();
+      var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
+      result.Author = await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
     public async Task<Article> GetPublicArticleByTitle(string title)
     {
-      const string sql = @"SELECT `ArticleId`, `UserId`, `Title`, `ArticleText`, `CreationDate`, `ModificationDate`, `HasCommentsEnabled`, `HasDateAuthorEnabled`
-      FROM Article WHERE Status = 'public' AND IsBlog = 1 AND Title = @title";
-      var result = await executer.ExecuteSqlSingle<Article>(sql, new {title = title});
-      result.Author = await MapUserIdToAuthor(result);
+      var template = ArtilceSqlBuilder.CreatePublicQuery();
+      var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { title = title });
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection).FirstOrDefault();
+      result.Author = await restClient.MapUserIdToAuthor(result);
       return result;
     }
 
     public async Task<StatusResponse> UpdateArticle(Article article)
     {
-      const string sql = @"UPDATE `Article` SET `Title`=@Title, `ArticleText`=@ArticleText, `CreationDate`=@CreationDate, `ModificationDate`=@ModificationDate,
-      `HasCommentsEnabled`=@HasCommentsEnabled,`HasDateAuthorEnabled`=@HasDateAuthorEnabled, `Status`=@Status
-      WHERE `ArticleId`=@ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
+      const string sql = @"UPDATE `Article` SET `Title`= @Title, `ArticleText`= @ArticleText, `CreationDate`= @CreationDate, `ModificationDate`= @ModificationDate,
+      `HasCommentsEnabled`= @HasCommentsEnabled,`HasDateAuthorEnabled`= @HasDateAuthorEnabled, `Status`= @Status
+      WHERE `ArticleId`= @ArticleId AND `IsBlog`= 1 AND `IsPage`= 0";
       article.ModificationDate = DateTime.Now;
       var result = await executer.ExecuteSql(sql, article);
       return Utils.CreateStatusResponse(result, StatusResponseType.Update);
     }
+
+    public async Task<IEnumerable<Article>> GetCategoryBlog(string category)
+    {
+      const string sql = "`articlesByCategory`";
+      var dynamicParams = new DynamicParameters();
+      dynamicParams.Add("catName", category);
+      var result = await executer.ExecuteSql<Article, Category, Tag>(sql, ArticleJoinFunc, SPLIT_ON, dynamicParams, CommandType.StoredProcedure);
+      result = result.GroupBy(p => p.ArticleId).Select(Selection);
+      await restClient.MapUserIdToAuthor(result);
+      return result;
+    }
+
+    public async Task<StatusResponse> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    {
+      const string sql = "INSERT INTO `ArticleCategory`(`ArticleId`, `CategoryId`) VALUES (@ArticleId, @CategoryId)";
+      var result = await executer.ExecuteSql(sql, articleCategory);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Create);
+    }
+
+    public async Task<StatusResponse> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
+    {
+      const string sql = "DELETE FROM `ArticleCategory` WHERE `ArticleId` = @ArticleId AND `CategoryId` = @CategoryId";
+      var result = await executer.ExecuteSql(sql, articleCategory);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
+    }
+
+    public async Task<StatusResponse> AddTagToArticle(ArticleTag articleTag)
+    {
+      const string sql = "INSERT INTO `ArticleTag`(`ArticleId`, `TagId`) VALUES (@ArticleId, @TagId)";
+      var result = await executer.ExecuteSql(sql, articleTag);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Create);
+    }
+
+    public async Task<StatusResponse> RemoveTagFromArticle(ArticleTag articleTag)
+    {
+      const string sql = "DELETE FROM `ArticleTag` WHERE `ArticleId` = @ArticleId AND `TagId` = @TagId";
+      var result = await executer.ExecuteSql(sql, articleTag);
+      return Utils.CreateStatusResponse(result, StatusResponseType.Delete);
+    }
+
+    public async Task<IEnumerable<Article>> GetBlogByTag(string tag)
+    {
+      var template = ArtilceSqlBuilder.CreateBlogByTagQuery();
+      var rawResult = await executer.ExecuteSql<Article, Category, Tag>(template.RawSql, ArticleJoinFunc, SPLIT_ON, new { tag });
+      var result = rawResult.GroupBy(p => p.ArticleId).Select(Selection);
+      await restClient.MapUserIdToAuthor(result);
+      return result;
+    }
+
     #endregion
 
     #region  Private Helpers
-    private async Task MapUserIdToAuthor(IEnumerable<Article> result)
+    private Func<IGrouping<int, Article>, Article> Selection = (group) =>
     {
-      var nickNames = await restClient.GetUserNicknames();
-      var query = nickNames.AsQueryable();
-
-      foreach (var item in result)
+      var first = group.First();
+      var categories = group.Select(p => p.Categories.FirstOrDefault());
+      var tags = group.Select(p => p.Tags.FirstOrDefault());
+      if(categories.All(p => p is not null))
       {
-        item.Author = (from name in query where name.UserId.Equals(item.UserId) select name.Nickname).FirstOrDefault();
+        first.Categories = categories.Distinct(new CategoryEqualityComparer()).ToList();
       }
-    }
-    private async Task<string> MapUserIdToAuthor(Article result)
+
+      if (tags.All(p => p is not null))
+      {
+        first.Tags = tags.Distinct(new TagEqualityComparer()).ToList();
+      }
+      return first;
+    };
+
+    private Func<Article, Category, Tag, Article> ArticleJoinFunc = (article, category, tag) =>
     {
-      var nicknames = await restClient.GetUserNicknames();
-      var query = nicknames.AsQueryable();
-      return (from name in query where name.UserId.Equals(result.UserId) select name.Nickname).FirstOrDefault();
-    }
+      if (category is not null)
+      {
+        article.Categories.Add(category);
+      }
+      if (tag is not null)
+      {
+        article.Tags.Add(tag);
+      }
+      return article;
+    };
     #endregion
   }
 }

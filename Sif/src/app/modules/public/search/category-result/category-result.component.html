@@ -1,0 +1,24 @@
+<div class="content-header">
+  <p>Gefundende Kategorien: {{categoryList?.length}}</p>
+  <div class="action-container">
+    <button class="btn btn-icon" (click)="onShowResultChange()">
+      <fa-icon [icon]="showResultIcon"></fa-icon>
+    </button>
+  </div>
+</div>
+
+<div class="category-list-container" [ngClass]="{ 'hide' : showResult === false }">
+  <div class="category-list-item" *ngFor="let category of categoryList">
+    <div class="category-list-icon">
+      <fa-icon [icon]="categoryIcon"></fa-icon>
+    </div>
+    <div class="category-list-text-container">
+      <p>Name: {{category.name}}</p>
+      <p>Artikel in dieser Kategorie: {{category.articleCount}}</p>
+      <a [routerLink]="['/category', category.name]">
+        <span>Artikel ansehen</span>
+        <fa-icon [icon]="externalLinkIcon"></fa-icon>
+      </a>
+    </div>
+  </div>
+</div>

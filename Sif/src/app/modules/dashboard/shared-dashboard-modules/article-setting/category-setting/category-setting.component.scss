@@ -1,0 +1,30 @@
+@import '../../../../../core/scss/variables.scss';
+
+:host {
+    .badge-container {
+        padding: padding(2) 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between
+    }
+
+    .badge {
+        border: 1px solid black;
+        padding: padding(0.5) 0;
+        border-radius: $radius;
+        background-color: $grey-1;
+        margin-bottom: margin(1);
+    }
+
+    .badge-content {
+      padding-left: padding(0.5);
+    }
+
+    .badge-remove {
+        display: inline;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        padding: 0 padding(0.5);
+    }
+}

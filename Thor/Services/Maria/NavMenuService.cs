@@ -20,7 +20,7 @@ namespace Thor.Services
 
     public async Task<StatusResponse> CreateNavMenu(NavMenu navMenu)
     {
-      const string sql = "INSERT INTO `Navmenu`(`PageId`, `NavMenuOrder`) VALUES (@PageId, @NavMenuOrder)";
+      const string sql = "INSERT INTO `Navmenu`(`Link`, `NavmenuOrder`, `DisplayText`) VALUES (@Link, @NavmenuOrder, @DisplayText)";
       var result = await executer.ExecuteSql(sql, navMenu);
       return Utils.CreateStatusResponse(result, StatusResponseType.Create);
     }
@@ -38,9 +38,15 @@ namespace Thor.Services
       return executer.ExecuteSql<Article>(sql);
     }
 
+    public Task<IEnumerable<Category>> GetCategoryList()
+    {
+      const string sql = "SELECT `CategoryId`, `Name` FROM `Category`";
+      return executer.ExecuteSql<Category>(sql);
+    }
+
     public async Task<IEnumerable<NavMenu>> GetNavMenu()
     {
-      const string sql = "SELECT `NavMenuId`, `Article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId` FROM `Navmenu`, `Article` WHERE `PageId` = `Article`.`ArticleId`";
+      const string sql = "SELECT `NavMenuId`, `Link`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`ParentId`, 'true', 'false') AS 'IsDropdown', IF(`Link` <=> NULL, 'true', 'false') AS 'IsLabel' FROM `Navmenu`";
       List<NavMenu> result = (List<NavMenu>)await executer.ExecuteSql<NavMenu>(sql);
 
       result.Sort((a, b) => b.NavMenuOrder.CompareTo(a.NavMenuOrder));
@@ -66,15 +72,17 @@ namespace Thor.Services
 
     public Task<IEnumerable<NavMenu>> GetFlatList()
     {
-      const string sql = "SELECT `NavMenuId`, `Article`.`Title`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`Navmenu`.`ParentId`, 'true', 'false') AS 'IsDropdown' FROM `Navmenu`, `Article` WHERE `PageId` = `Article`.`ArticleId`";
+      const string sql = "SELECT `NavMenuId`, `Link`, `DisplayText`, `NavMenuOrder`, `ParentId`, IF(`ParentId`, 'true', 'false') AS 'IsDropdown', IF(`Link` <=> NULL, 'true', 'false') AS 'IsLabel' FROM `Navmenu`";
       return executer.ExecuteSql<NavMenu>(sql);
     }
 
     public async Task<StatusResponse> UpdateNavMenu(NavMenu navMenu)
     {
-      const string sql = "UPDATE `Navmenu` SET `ParentId`= @ParentId, `DisplayText`= @DisplayText, `NavMenuOrder` = @NavMenuOrder WHERE `NavMenuId` = @NavMenuId";
+      const string sql = "UPDATE `Navmenu` SET `ParentId`= @ParentId, `NavmenuOrder` = @NavmenuOrder, `DisplayText` = @DisplayText WHERE `NavmenuId` = @NavmenuId";
       var result = await executer.ExecuteSql(sql, navMenu);
       return Utils.CreateStatusResponse(result, StatusResponseType.Update);
     }
+
+    
   }
 }

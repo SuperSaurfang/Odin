@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Category, ChangeResponse } from 'src/app/core';
 import { RestCategoryService } from '../rest-category/rest-category.service';
 
@@ -7,7 +7,7 @@ import { RestCategoryService } from '../rest-category/rest-category.service';
 export class CategoryService {
 
   private categories: Category[] = [];
-  private categoryList = new BehaviorSubject<Category[]>(this.categories);
+  private categoryList = new Subject<Category[]>();
   constructor(private restService: RestCategoryService) { }
 
 
@@ -20,7 +20,6 @@ export class CategoryService {
   }
 
   public updateCategory(category: Category) {
-    console.log(category);
     this.restService.updateCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
@@ -50,19 +49,25 @@ export class CategoryService {
     });
   }
 
-  public createCategory(category: Category) {
+  public createCategory(category: Category): Observable<boolean> {
+    const resultSubject = new Subject<boolean>();
     this.restService.createCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.categories = this.add(this.categories, category);
-          this.next(this.categories);
+          this.restService.getCategoryList().subscribe(categories => {
+            this.categories = categories;
+            this.categoryList.next(categories);
+            resultSubject.next(true);
+          });
           break;
         case ChangeResponse.Error:
         case ChangeResponse.NoChange:
         default:
+          resultSubject.next(false);
           break;
       }
     });
+    return resultSubject;
   }
 
   private update(categories: Category[], category: Category): Category[] {

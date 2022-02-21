@@ -1,5 +1,5 @@
 
-import { User } from './user';
+import { User } from '@auth0/auth0-angular';
 export class Comment {
     commentId?: number;
     userMail?: string;

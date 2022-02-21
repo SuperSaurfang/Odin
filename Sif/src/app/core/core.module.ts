@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 
 import { RestService, UserService } from './services';
 import { AuthGuard } from './guard';
-import { InterceptorService } from './services/http/Interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthModule, AuthHttpInterceptor } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 import { tokenGetter } from './const';
+import { SearchService } from './services/search/search.service';
 
 
 @NgModule({
@@ -36,6 +36,7 @@ import { tokenGetter } from './const';
   providers: [
     RestService,
     UserService,
+    SearchService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
   ]

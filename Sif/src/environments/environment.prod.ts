@@ -1,10 +1,10 @@
-import { apiUri, appUri, audience, clientId, domain } from 'auth_config.json';
+import { IEnvironemnt, AUTH_CONFIG } from './iEnvironment';
 
-export const environment = {
+export const environment: IEnvironemnt  = {
   auth0: {
-    domain: domain,
-    clientId: clientId,
-    audience: audience,
+    domain: AUTH_CONFIG.domain,
+    clientId: AUTH_CONFIG.clientId,
+    audience: AUTH_CONFIG.audience,
     redirectUri: window.location.origin
   },
   production: true,

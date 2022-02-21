@@ -1,3 +1,6 @@
+import { Category } from './category';
+import { Tag } from './tag';
+
 export class Article {
   articleId?: number;
   title?: string;
@@ -9,4 +12,7 @@ export class Article {
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
   status?: string;
+  categories?: Category[];
+  tags?: Tag[];
+  link?: string;
 }

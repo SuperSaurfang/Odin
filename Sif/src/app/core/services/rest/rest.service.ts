@@ -1,8 +1,15 @@
 import { Injectable} from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Article, Comment, User, ChangeResponse, NavMenu, StatusResponse, StatusResponseType } from '../../models';
+import { Article,
+  Comment,
+  User,
+  NavMenu,
+  StatusResponse,
+  StatusResponseType,
+  SearchRequest,
+  SearchResult } from '../../models';
 import { RestBase } from '../../baseClass';
 
 
@@ -27,6 +34,20 @@ export class RestService extends RestBase {
     );
   }
 
+  public getCategoryByName(name: string): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${this.basePath}/blog/category/${name}`).pipe(
+      map(article => this.parseDates(article)),
+      catchError(this.handleError<Article[]>('Failed to blog by category', []))
+    );
+  }
+
+  public getBlogByTagName(name: string): Observable<Article[]> {
+    return this.httpClient.get<Article[]>(`${this.basePath}/blog/tag/${name}`).pipe(
+      map(articles => this.parseDates(articles)),
+      catchError(this.handleError<Article[]>('Failed to load blog by tag', []))
+    );
+  }
+
   public getPage(title: string): Observable<Article> {
     return this.httpClient.get<Article>(`${this.basePath}/page/${title}`).pipe(
       map(article => this.parseDate(article)),
@@ -45,13 +66,26 @@ export class RestService extends RestBase {
       map(comments => {
         comments.forEach(item => this.parseCommentDate(item));
         return comments;
-      })
+      }),
+      catchError(this.handleError<Comment[]>('Failed to load comments for artcile', []))
     );
   }
 
   public postComment(comment: Comment): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(this.basePath + '/comment', comment).pipe(
+    return this.httpClient.post<StatusResponse>(`${this.basePath}/comment`, comment).pipe(
       catchError(this.handleError<StatusResponse>('Failed to save comment', this.errorResponse(StatusResponseType.Create)))
+    );
+  }
+
+  public postSearch(searchRequest: SearchRequest): Observable<SearchResult> {
+    return this.httpClient.post<SearchResult>(`${this.basePath}/search`, searchRequest).pipe(
+      map(result => {
+        if (result.articles && result.articles.length > 0) {
+          result.articles = this.parseDates(result.articles);
+        }
+        return result;
+      }),
+      catchError(this.handleError<SearchResult>('Search failed', new SearchResult()))
     );
   }
 
