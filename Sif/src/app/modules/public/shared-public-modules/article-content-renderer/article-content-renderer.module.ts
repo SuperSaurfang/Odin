@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     SharedModule,
     FontAwesomeModule,
-    RouterModule
+    RouterModule,
   ],
   declarations: [
     ArticleContentRendererComponent

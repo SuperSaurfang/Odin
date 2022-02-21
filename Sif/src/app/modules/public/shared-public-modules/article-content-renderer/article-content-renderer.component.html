@@ -28,7 +28,8 @@
   </div>
 </div>
 
-<div class="article-content" [innerHTML]="article?.articleText"></div>
+<div class="article-content ck-content" [innerHTML]="article?.articleText | keepHtml"></div>
+<!-- <app-ckeditor-readonly [content]="article?.articleText"></app-ckeditor-readonly> -->
 
 <div class="article-footer">
   <div class="inline" *ngIf="articleType === 'blog' && article?.tags.length > 0">
