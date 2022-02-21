@@ -27,7 +27,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/core/scss/ckcontent.scss"
             ],
             "scripts": [],
             "vendorChunk": true,
