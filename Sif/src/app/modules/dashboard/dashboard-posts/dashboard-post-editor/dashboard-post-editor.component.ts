@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/app/core/ckeditor';
 import { BlurEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 
 import { UserService } from 'src/app/core/services';
@@ -9,6 +10,8 @@ import { ArticleEditorService } from 'src/app/core/baseClass';
 import { Subscription } from 'rxjs';
 import { Message, MessageType } from 'src/app/core/models';
 import { HintType } from 'src/app/shared-modules/hintbox/hintbox.component';
+import { ImageUploadAdapter } from 'src/app/core/adapters/upload-adapter';
+import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
 
 @Component({
   selector: 'app-dashboard-post-editor',
@@ -31,7 +34,8 @@ export class DashboardPostEditorComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     private userService: UserService,
-    private articleService: ArticleEditorService) {
+    private articleService: ArticleEditorService,
+    private imageUploadService: ImageUploadService) {
   }
 
   ngOnDestroy(): void {
@@ -91,5 +95,11 @@ export class DashboardPostEditorComponent implements OnInit, OnDestroy {
 
   public onUpdateArticleText({editor}: BlurEvent) {
     this.articleService.updateText(editor.getData());
+  }
+
+  public onReady(editor: ClassicEditor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return new ImageUploadAdapter(loader, this.imageUploadService);
+    };
   }
 }

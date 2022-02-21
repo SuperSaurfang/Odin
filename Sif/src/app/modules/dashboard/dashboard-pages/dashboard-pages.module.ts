@@ -16,6 +16,7 @@ import { StatusChangeMenuModule } from '../shared-dashboard-modules/status-chang
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 import { PageEditorService } from '../services/page-editor/page-editor.service';
+import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { PageEditorService } from '../services/page-editor/page-editor.service';
   providers: [
     ArticleFilterService,
     RestPageService,
+    ImageUploadService,
 
     { provide: ArticleEditorService, useClass: PageEditorService}
   ]

@@ -11,7 +11,8 @@
     <ckeditor
       #blogEditor
       [editor]="editor"
-      (blur)="onUpdateArticleText($event)">
+      (blur)="onUpdateArticleText($event)"
+      (ready)="onReady($event)">
     </ckeditor>
   </div>
   <div class="article-setting-container flex-shrink ml-1">

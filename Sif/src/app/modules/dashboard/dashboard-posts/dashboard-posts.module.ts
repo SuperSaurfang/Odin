@@ -21,6 +21,7 @@ import { ArticleFilterService,
   PostEditorService } from '../services';
 import { ListActionBarModule, StatusChangeMenuModule, ArticleSettingModule } from '../shared-dashboard-modules';
 import { ArticleEditorService } from 'src/app/core';
+import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
 
 
 
@@ -51,6 +52,7 @@ import { ArticleEditorService } from 'src/app/core';
     RestTagService,
     CategoryService,
     TagService,
+    ImageUploadService,
     { provide: ArticleEditorService, useClass: PostEditorService }
   ]
 })

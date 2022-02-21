@@ -1,13 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/app/core/ckeditor';
 import { BlurEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { Subscription } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
 import { ArticleEditorService, Message, MessageType } from 'src/app/core';
 import { HintType } from 'src/app/shared-modules/hintbox/hintbox.component';
+import { ImageUploadAdapter } from 'src/app/core/adapters/upload-adapter';
+import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
+
 
 @Component({
   selector: 'app-dashboard-pages-editor',
@@ -17,6 +21,7 @@ import { HintType } from 'src/app/shared-modules/hintbox/hintbox.component';
 export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
   public title = '';
   public editor = ClassicEditor;
+
 
   public message: Message;
   public hintType: HintType = 'info';
@@ -30,7 +35,8 @@ export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
 
   constructor(private activatedRoute: ActivatedRoute,
     private userService: UserService,
-    private articleEditor: ArticleEditorService) { }
+    private articleEditor: ArticleEditorService,
+    private imageUploadService: ImageUploadService) { }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
@@ -88,5 +94,11 @@ export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
 
   public onUpdateArticleText({ editor }: BlurEvent) {
     this.articleEditor.updateText(editor.getData());
+  }
+
+  public onReady(editor: ClassicEditor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return new ImageUploadAdapter(loader, this.imageUploadService);
+    };
   }
 }
