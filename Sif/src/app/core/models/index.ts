@@ -11,3 +11,4 @@ export * from './tag';
 export * from './articleTag';
 export * from './searchRequest';
 export * from './searchResult';
+export * from './fileUploadResponse';
