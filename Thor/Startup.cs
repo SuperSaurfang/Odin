@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.FileProviders;
 using Thor.Services;
 using Thor.Authorization;
 using Thor.Models.Config;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace Thor
 {
@@ -39,6 +41,7 @@ namespace Thor
       services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
       services.AddSingleton<IRestClientService, RestClientService>();
+      services.AddTransient<IFileStoreService, FileStoreService>();
 
       var DatabaseType = Configuration.GetValue<string>("DatabaseConfig:DatabaseType").ToLower();
       switch (DatabaseType)
@@ -123,6 +126,11 @@ namespace Thor
       });
 
       app.UseRouting();
+
+      app.UseStaticFiles(new StaticFileOptions {
+        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "MyFiles")),
+        RequestPath = "/files"
+      });
 
       app.UseAuthentication();
       app.UseAuthorization();
