@@ -46,7 +46,7 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'Thor/bin/Release/*'
+    targetPath: 'Thor/bin/Release/'
     artifact: 'Thor'
     publishLocation: 'pipeline'
 
