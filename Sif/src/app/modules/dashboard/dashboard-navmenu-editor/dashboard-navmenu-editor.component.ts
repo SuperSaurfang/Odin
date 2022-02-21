@@ -49,12 +49,11 @@ export class DashboardNavmenuEditorComponent implements OnInit {
 
   public saveMenu(type: MenuType) {
     let navMenu = new NavMenu();
-    navMenu.navMenuOrder = this.navMenuService.getLength() + 1;
+    navMenu.navMenuOrder = this.navMenuService.getNextOrderValue();
     navMenu.displayText = this.getFormValue(type);
     navMenu = createNavMenuLink(type, navMenu);
     this.restNavmenuService.createNavMenu(navMenu).subscribe(response => {
       if (response.change === ChangeResponse.Change && response.responseType === StatusResponseType.Create) {
-        console.log(response);
         this.navMenuService.loadNavMenu();
         this.resetAll();
       }

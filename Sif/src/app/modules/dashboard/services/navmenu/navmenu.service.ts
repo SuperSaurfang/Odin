@@ -68,8 +68,10 @@ export class NavmenuService {
     return this.messageSubject;
   }
 
-  public getLength(): number {
-    return this.navMenuList.length;
+  public getNextOrderValue(): number {
+    let currentMax = 0;
+    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navMenuOrder));
+    return ++currentMax;
   }
 
   /**
