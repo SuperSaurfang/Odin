@@ -27,7 +27,11 @@
     </Content>
   </ItemGroup>
 
-<!-- disabled temporary
+  <Target Name="MyFiles" AfterTargets="AfterPublish">
+    <MakeDir Directories="$(PublishUrl)MyFiles" Condition="!Exists('$(PublishUrl)MyFiles')" />
+  </Target>
+
+  <!-- disabled temporary
   <ItemGroup>
     <ProjectReference Include="..\Thor.DatabaseProvider\Thor.DatabaseProvider.csproj" />
     <ProjectReference Include="..\Thor.Models\Thor.Models.csproj" />
