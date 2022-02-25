@@ -62,7 +62,7 @@ namespace Thor
       services.AddControllers()
         .AddJsonOptions(o =>
         {
-          o.JsonSerializerOptions.IgnoreNullValues = true;
+          o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
         })
         .AddNewtonsoftJson(o =>
         {
