@@ -25,7 +25,7 @@ namespace Thor.Services
     public async Task<FileUploadResponse> SaveFile(IFormFile file)
     {
       string typePathSection = MapMimeType(file.ContentType);
-      string relativePath = Path.Combine(typePathSection, DateTime.UtcNow.ToShortDateString());
+      string relativePath = Path.Combine(typePathSection, GetShortDate());
       string relativeUrlPath = Path.Combine("files", relativePath, file.FileName);
 
       string absolutePath = Path.Combine(contentRooPath, relativePath);
@@ -63,6 +63,12 @@ namespace Thor.Services
         return "video";
       }
       return string.Empty;
+    }
+
+    private string GetShortDate() 
+    {
+      var date = DateTime.UtcNow;
+      return date.ToString("dd-MM-yyyy");
     }
   }
 }
