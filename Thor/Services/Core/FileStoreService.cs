@@ -17,7 +17,7 @@ namespace Thor.Services
     public FileStoreService(IWebHostEnvironment environment)
     {
       this.environment = environment;
-      contentRooPath = Path.Combine(Environment.ContentRootPath, "MyFiles");
+      contentRooPath = Path.Combine(Environment.ContentRootPath, "uploads");
     }
 
     public IWebHostEnvironment Environment { get => environment; }

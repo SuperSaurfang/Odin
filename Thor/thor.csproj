@@ -27,9 +27,11 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="MyFiles" AfterTargets="AfterPublish">
-    <MakeDir Directories="$(PublishUrl)MyFiles" Condition="!Exists('$(PublishUrl)MyFiles')" />
-  </Target>
+  <ItemGroup>
+    <None Update="uploads\.gitkeep">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <!-- disabled temporary
   <ItemGroup>

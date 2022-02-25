@@ -37,8 +37,8 @@ node_modules/
 Thor/wwwroot/index.html
 Thor/appsettings.Development.json
 Thor/appsettings.json
-Thor/MyFiles/*
-!Thor/MyFiles/.gitkeep
+Thor/uploads/*
+!Thor/uploads/.gitkeep
 !Sif/src/app/core/ckeditor/build/
 dist
 Sif/auth_config.json

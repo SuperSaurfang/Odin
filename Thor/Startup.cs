@@ -128,7 +128,7 @@ namespace Thor
       app.UseRouting();
 
       app.UseStaticFiles(new StaticFileOptions {
-        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "MyFiles")),
+        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "uploads")),
         RequestPath = "/files"
       });
 
