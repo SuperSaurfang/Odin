@@ -97,12 +97,17 @@ namespace Thor.Services.Maria
 
     private async Task MapUserIdToAuthor(IEnumerable<Comment> result)
     {
-      var nickNames = await restClient.GetUserNicknames();
+      const string Item = "guest";
+      var listOfSearchQuery = new List<string>() { "user_id:" };
+      var uniqueUserIds = result.Select(item => item.UserId).Distinct();
+      listOfSearchQuery.AddRange(uniqueUserIds);
+      listOfSearchQuery.Remove(Item);
+      var nickNames = await restClient.GetUserNicknames(listOfSearchQuery, new List<string>() { "user_id", "nickname", "picture" });
       var query = nickNames.AsQueryable();
 
       foreach (var item in result)
       {
-        if(item.UserId.Equals("guest"))
+        if(item.UserId.Equals(Item))
         {
           if(item.User == null) {
             item.User = new User();
