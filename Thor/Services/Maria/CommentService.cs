@@ -102,7 +102,7 @@ namespace Thor.Services.Maria
       var uniqueUserIds = result.Select(item => item.UserId).Distinct();
       listOfSearchQuery.AddRange(uniqueUserIds);
       listOfSearchQuery.Remove(Item);
-      var nickNames = await restClient.GetUserNicknames(listOfSearchQuery, new List<string>() { "user_id", "nickname", "picture" });
+      var nickNames = await restClient.GetUsers(listOfSearchQuery);
       var query = nickNames.AsQueryable();
 
       foreach (var item in result)

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Text;
+using System.Reflection;
+using Thor.Attributes;
 
 namespace Thor.Services
 {
@@ -46,7 +48,19 @@ namespace Thor.Services
       token = new Token();
     }
 
-    public async Task<IEnumerable<User>> GetUserNicknames(List<string> listOfSearchQuery, List<string> fields)
+    public async Task<IEnumerable<User>> GetUsers(IEnumerable<string> listOfSearchQuery)
+    {
+      var type = typeof(User);
+      var fields = type.GetProperties().Select(item =>
+      {
+        // reflect the fieldnames via attribute, because e.g UserId doesn't exits in Auth0
+        var jsonPropertyName = item.GetCustomAttribute<Auth0FieldAttribute>();
+        return jsonPropertyName.FieldName;
+      });
+      return await GetUsers(listOfSearchQuery, fields);
+    }
+
+    public async Task<IEnumerable<User>> GetUsers(IEnumerable<string> listOfSearchQuery, IEnumerable<string> fields)
     {
       if (await RefreshCheck())
       {
@@ -86,9 +100,9 @@ namespace Thor.Services
       return url;
     }
 
-    private string BuildFieldQuery(List<string> fields)
+    private string BuildFieldQuery(IEnumerable<string> fields)
     {
-      if (fields.Count == 0) return string.Empty;
+      if (fields.Count() == 0) return string.Empty;
 
       var builder = new StringBuilder("fields=");
       var joined = string.Join(',', fields);
@@ -96,15 +110,15 @@ namespace Thor.Services
       return builder.ToString();
     }
 
-    public string BuildSearchQuery(List<string> searchFields)
+    public string BuildSearchQuery(IEnumerable<string> searchFields)
     {
-      if (searchFields.Count == 0) return string.Empty;
+      if (searchFields.Count() == 0) return string.Empty;
 
       var builder = new StringBuilder("q=");
       foreach (var item in searchFields.Select((value, index) => new { value, index }))
       {
         builder.Append(item.value);
-        if (item.index != searchFields.Count && !item.value.EndsWith(":"))
+        if (item.index != searchFields.Count() && !item.value.EndsWith(":"))
         {
           builder.Append(" ");
         }

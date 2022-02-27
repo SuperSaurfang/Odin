@@ -10,7 +10,7 @@ namespace Thor.Extensions
   {
     public static async Task<string> MapUserIdToAuthor(this IRestClientService restClient, Article result)
     {
-      IEnumerable<User> nicknames = await restClient.GetUserNicknames(new List<string>() { "user_id:", result.UserId }, new List<string>() { "user_id", "nickname", "picture" });
+      IEnumerable<User> nicknames = await restClient.GetUsers(new List<string>() { "user_id:", result.UserId });
       var query = nicknames.AsQueryable();
       return (from name in query where name.UserId.Equals(result.UserId) select name.Nickname).FirstOrDefault();
     }
@@ -20,7 +20,7 @@ namespace Thor.Extensions
       var listOfSearchQuery = new List<string>() { "user_id:" };
       var uniqueUserIds = result.Select(item => item.UserId).Distinct();
       listOfSearchQuery.AddRange(uniqueUserIds);
-      IEnumerable<User> nickNames = await restClient.GetUserNicknames(listOfSearchQuery, new List<string>() { "user_id", "nickname", "picture" });
+      IEnumerable<User> nickNames = await restClient.GetUsers(listOfSearchQuery);
       var query = nickNames.AsQueryable();
 
       foreach (var item in result)
