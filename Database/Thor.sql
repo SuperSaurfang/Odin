@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Jan 2022 um 16:49
+-- Erstellungszeit: 24. Feb 2022 um 09:59
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `Article`
 --
 
+DROP TABLE IF EXISTS `Article`;
 CREATE TABLE `Article` (
   `ArticleId` int(11) NOT NULL,
   `UserId` varchar(255) NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE `Article` (
 -- Tabellenstruktur für Tabelle `ArticleCategory`
 --
 
+DROP TABLE IF EXISTS `ArticleCategory`;
 CREATE TABLE `ArticleCategory` (
   `ArticleId` int(11) NOT NULL,
   `CategoryId` int(11) NOT NULL
@@ -58,6 +60,7 @@ CREATE TABLE `ArticleCategory` (
 -- Tabellenstruktur für Tabelle `ArticleTag`
 --
 
+DROP TABLE IF EXISTS `ArticleTag`;
 CREATE TABLE `ArticleTag` (
   `ArticleId` int(11) NOT NULL,
   `TagId` int(11) NOT NULL
@@ -69,6 +72,7 @@ CREATE TABLE `ArticleTag` (
 -- Tabellenstruktur für Tabelle `Category`
 --
 
+DROP TABLE IF EXISTS `Category`;
 CREATE TABLE `Category` (
   `CategoryId` int(11) NOT NULL,
   `ParentId` int(11) DEFAULT NULL,
@@ -82,6 +86,7 @@ CREATE TABLE `Category` (
 -- Tabellenstruktur für Tabelle `Comment`
 --
 
+DROP TABLE IF EXISTS `Comment`;
 CREATE TABLE `Comment` (
   `CommentId` int(11) NOT NULL,
   `ArticleId` int(11) NOT NULL,
@@ -98,12 +103,11 @@ CREATE TABLE `Comment` (
 -- Tabellenstruktur für Tabelle `Navmenu`
 --
 
+DROP TABLE IF EXISTS `Navmenu`;
 CREATE TABLE `Navmenu` (
   `NavmenuId` int(11) NOT NULL,
-  `PageId` int(11) DEFAULT NULL,
-  `CategoryId` int(11) DEFAULT NULL,
   `ParentId` int(11) DEFAULT NULL,
-  `NavmenuType` enum('article','category') NOT NULL DEFAULT 'article',
+  `Link` varchar(255) DEFAULT NULL,
   `NavmenuOrder` int(11) NOT NULL,
   `DisplayText` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -114,6 +118,7 @@ CREATE TABLE `Navmenu` (
 -- Tabellenstruktur für Tabelle `Tag`
 --
 
+DROP TABLE IF EXISTS `Tag`;
 CREATE TABLE `Tag` (
   `TagId` int(11) NOT NULL,
   `Name` varchar(255) NOT NULL,
@@ -169,9 +174,7 @@ ALTER TABLE `Comment`
 ALTER TABLE `Navmenu`
   ADD PRIMARY KEY (`NavmenuId`),
   ADD UNIQUE KEY `NavMenuOrder` (`NavmenuOrder`),
-  ADD KEY `articleId_navmenu_const` (`PageId`),
-  ADD KEY `parentId_navmenu_const` (`ParentId`),
-  ADD KEY `category_navmenu_const` (`CategoryId`);
+  ADD KEY `parentId_navmenu_const` (`ParentId`);
 
 --
 -- Indizes für die Tabelle `Tag`
@@ -249,8 +252,6 @@ ALTER TABLE `Comment`
 -- Constraints der Tabelle `Navmenu`
 --
 ALTER TABLE `Navmenu`
-  ADD CONSTRAINT `articleId_navmenu_const` FOREIGN KEY (`PageId`) REFERENCES `Article` (`ArticleId`),
-  ADD CONSTRAINT `category_navmenu_const` FOREIGN KEY (`CategoryId`) REFERENCES `Category` (`CategoryId`),
   ADD CONSTRAINT `parentId_navmenu_const` FOREIGN KEY (`ParentId`) REFERENCES `Navmenu` (`NavMenuId`);
 COMMIT;
 

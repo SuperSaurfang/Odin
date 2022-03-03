@@ -62,7 +62,7 @@ namespace Thor
       services.AddControllers()
         .AddJsonOptions(o =>
         {
-          o.JsonSerializerOptions.IgnoreNullValues = true;
+          o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
         })
         .AddNewtonsoftJson(o =>
         {
@@ -128,7 +128,7 @@ namespace Thor
       app.UseRouting();
 
       app.UseStaticFiles(new StaticFileOptions {
-        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "MyFiles")),
+        FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "uploads")),
         RequestPath = "/files"
       });
 

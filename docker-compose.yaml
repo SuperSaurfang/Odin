@@ -3,7 +3,7 @@ services:
   mariadb:
     image: mariadb:latest
     volumes: 
-      - /var/lib/docker/volumes/database/_data
+      - database:/var/lib/docker/volumes/database/_data
     environment:
       MYSQL_ROOT_PASSWORD: "toor"
     networks: 
@@ -14,6 +14,8 @@ services:
     build: 
      context: ./Thor
      dockerfile: Dockerfile
+    volumes:
+      - uploads:/app/uploads
     networks: 
       frontend:
         ipv4_address: 172.30.0.6
@@ -29,6 +31,10 @@ services:
       - "127.0.0.1:80:80"
     networks: 
       - frontend
+
+volumes:
+    database:
+    uploads:
 
 networks: 
   frontend:

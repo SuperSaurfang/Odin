@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +27,13 @@
     </Content>
   </ItemGroup>
 
-<!-- disabled temporary
+  <ItemGroup>
+    <None Update="uploads\.gitkeep">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- disabled temporary
   <ItemGroup>
     <ProjectReference Include="..\Thor.DatabaseProvider\Thor.DatabaseProvider.csproj" />
     <ProjectReference Include="..\Thor.Models\Thor.Models.csproj" />
