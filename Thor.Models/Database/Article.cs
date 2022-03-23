@@ -11,6 +11,8 @@ namespace Thor.Models.Database
       Comments = new HashSet<Comment>();
       Categories = new HashSet<Category>();
       Tags = new HashSet<Tag>();
+      ArticleCategories = new HashSet<ArticleCategory>();
+      ArticleTags = new HashSet<ArticleTag>();
     }
 
     public Article(Dto.Article article)

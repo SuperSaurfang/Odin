@@ -10,6 +10,22 @@ namespace Thor.Models.Database
         {
             ChildNavmenu = new HashSet<Navmenu>();
         }
+
+        public Navmenu(Dto.Navmenu navmenu)
+          : this()
+        {
+          NavmenuId = navmenu.NavmenuId;
+          ParentId = navmenu.ParentId;
+          NavmenuOrder = navmenu.NavmenuOrder;
+          DisplayText = navmenu.DisplayText;
+
+          if(!navmenu.IsLabel)
+          {
+            Link = navmenu.Link;
+          }
+        }
+
+
         [NotMapped]
         public int Id { get; set; }
         public int NavmenuId { get; set; }

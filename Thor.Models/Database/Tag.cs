@@ -10,7 +10,17 @@ namespace Thor.Models.Database
         public Tag()
         {
             Articles = new HashSet<Article>();
+            ArticleTags = new HashSet<ArticleTag>();
         }
+
+        public Tag(Dto.Tag tag)
+          : this()
+        {
+          TagId = tag.TagId;
+          Name = tag.Name;
+          Description = tag.Description;
+        }
+
         [NotMapped]
         public int Id { get; set; }
         public int TagId { get; set; }
