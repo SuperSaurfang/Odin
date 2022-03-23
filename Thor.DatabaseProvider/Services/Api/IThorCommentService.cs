@@ -7,7 +7,7 @@ namespace Thor.DatabaseProvider.Services.Api;
 public interface IThorCommentService
 {
   Task<IEnumerable<Comment>> GetComments();
-  Task UpdateComment();
+  Task UpdateComment(Comment comment);
   Task DeleteComments();
   Task<Comment> CreateComment(Comment comment);
   Task<IEnumerable<Article>> GetArticles();
