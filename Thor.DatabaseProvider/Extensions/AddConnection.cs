@@ -23,13 +23,17 @@ namespace Thor.DatabaseProvider.Extensions
         case "maria":
           services.AddDbContext<ThorContext>();
 
+          services.AddTransient<IThorBlogService, DefaultBlogService>();
+          services.AddTransient<IThorCategoryService, DefaultCategoryService>();
+          services.AddTransient<IThorCommentService, DefaultCommentService>();
+          services.AddTransient<IThorNavmenuService, DefaultNavmenuService>();
+          services.AddTransient<IThorPageService, DefaultPageService>();
           services.AddTransient<IThorPublicService, DefaultPublicService>();
+          services.AddTransient<IThorTagService, DefaultTagService>();
           break;
         case "mongo":
         case "mongodb":
-          // services.AddTransient<IDBContext<MongoClient>, MongoContext>();
-          // ConfigureMongoDB(services);
-          // break;
+          // maybe mongodb support?!
         default:
           throw new Exception("failed to configure database interface");
       }
