@@ -26,6 +26,7 @@ namespace Thor.Models.Database
 
         [JsonIgnore]
         public ICollection<Article> Articles { get; set; }
+        public ICollection<ArticleCategory> ArticleCategories { get; set; }
 
   }
 }
