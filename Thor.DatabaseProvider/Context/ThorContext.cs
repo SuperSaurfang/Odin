@@ -24,6 +24,8 @@ namespace Thor.DatabaseProvider.Context
     public virtual DbSet<Comment> Comments { get; set; }
     public virtual DbSet<Navmenu> Navmenus { get; set; }
     public virtual DbSet<Tag> Tags { get; set; }
+    public virtual DbSet<ArticleCategory> ArticleCategories { get; set; }
+    public virtual DbSet<ArticleTag> ArticleTags { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -83,10 +85,10 @@ namespace Thor.DatabaseProvider.Context
 
         entity.HasMany(d => d.Categories)
                   .WithMany(p => p.Articles)
-                  .UsingEntity<Dictionary<string, object>>(
+                  .UsingEntity<ArticleCategory>(
                       "ArticleCategory",
-                      l => l.HasOne<Category>().WithMany().HasForeignKey("CategoryId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("categoryId_category_const"),
-                      r => r.HasOne<Article>().WithMany().HasForeignKey("ArticleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("articleId_category_const"),
+                      l => l.HasOne<Category>(e => e.Category).WithMany(e => e.ArticleCategories).HasForeignKey(e => e.CategoryId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("categoryId_category_const"),
+                      r => r.HasOne<Article>(e => e.Article).WithMany(e => e.ArticleCategories).HasForeignKey(e => e.ArticleId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("articleId_category_const"),
                       j =>
                       {
                     j.HasKey("ArticleId", "CategoryId").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -96,18 +98,14 @@ namespace Thor.DatabaseProvider.Context
                     j.HasIndex(new[] { "ArticleId" }, "articleId_category_const");
 
                     j.HasIndex(new[] { "CategoryId" }, "categoryId_category_const");
-
-                    j.IndexerProperty<int>("ArticleId").HasColumnType("int(11)");
-
-                    j.IndexerProperty<int>("CategoryId").HasColumnType("int(11)");
                   });
 
         entity.HasMany(d => d.Tags)
                   .WithMany(p => p.Articles)
-                  .UsingEntity<Dictionary<string, object>>(
+                  .UsingEntity<ArticleTag>(
                       "ArticleTag",
-                      l => l.HasOne<Tag>().WithMany().HasForeignKey("TagId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("tagid_tag_const"),
-                      r => r.HasOne<Article>().WithMany().HasForeignKey("ArticleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("articleId_article_const"),
+                      l => l.HasOne<Tag>(e => e.Tag).WithMany(e => e.ArticleTags).HasForeignKey(e => e.TagId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("tagid_tag_const"),
+                      r => r.HasOne<Article>(e => e.Article).WithMany(e => e.ArticleTags).HasForeignKey(e => e.ArticleId).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("articleId_article_const"),
                       j =>
                       {
                     j.HasKey("ArticleId", "TagId").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -117,10 +115,6 @@ namespace Thor.DatabaseProvider.Context
                     j.HasIndex(new[] { "ArticleId" }, "articleId_article_const");
 
                     j.HasIndex(new[] { "TagId" }, "tagid_tag_const");
-
-                    j.IndexerProperty<int>("ArticleId").HasColumnType("int(11)");
-
-                    j.IndexerProperty<int>("TagId").HasColumnType("int(11)");
                   });
       });
 

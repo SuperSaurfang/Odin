@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Thor.DatabaseProvider.Services.Api;
 using DB = Thor.Models.Database;
 using DTO = Thor.Models.Dto;
-using System;
+using Thor.DatabaseProvider.Util;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
@@ -24,10 +24,10 @@ internal class DefaultPublicService : IThorPublicService
     var articles = await context.Articles
       .Include(s => s.Categories)
       .Include(s => s.Tags)
-      .Where(a => IsPublicBlog(a))
+      .Where(a => a.Status.Equals(ARTICLE_STATUS) && a.IsBlog == true)
       .OrderByDescending(x => x.CreationDate)
       .ToListAsync();
-    return ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
+    return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
   }
 
 
@@ -47,7 +47,7 @@ internal class DefaultPublicService : IThorPublicService
       .Where(a => IsPublicBlog(a))
       .OrderByDescending(x => x.CreationDate);
 
-    return ConvertToDto<DB.Article, DTO.Article>(filtered, article => new DTO.Article(article));
+    return Utils.ConvertToDto<DB.Article, DTO.Article>(filtered, article => new DTO.Article(article));
   }
 
 
@@ -67,7 +67,7 @@ internal class DefaultPublicService : IThorPublicService
       .Where(a => IsPublicBlog(a))
       .OrderByDescending(x => x.CreationDate);
 
-    return ConvertToDto<DB.Article, DTO.Article>(filtered, article => new DTO.Article(article));
+    return Utils.ConvertToDto<DB.Article, DTO.Article>(filtered, article => new DTO.Article(article));
   }
 
   public async Task<DTO.Article> GetBlogByTitle(string title)
@@ -75,7 +75,7 @@ internal class DefaultPublicService : IThorPublicService
     var article = await context.Articles
       .Include(c => c.Categories)
       .Include(c => c.Tags)
-      .Where(a => IsPublicBlog(a) && a.Title.Equals(title))
+      .Where(a => a.Status.Equals(ARTICLE_STATUS) && a.IsBlog == true && a.Title.Equals(title))
       .FirstOrDefaultAsync();
 
 
@@ -99,7 +99,7 @@ internal class DefaultPublicService : IThorPublicService
       .OrderBy(x => x.NavmenuOrder)
       .ToListAsync();
 
-    return ConvertToDto<DB.Navmenu, DTO.Navmenu>(navmenus, navmenu => new DTO.Navmenu(navmenu));
+    return Utils.ConvertToDto<DB.Navmenu, DTO.Navmenu>(navmenus, navmenu => new DTO.Navmenu(navmenu));
   }
 
   public async Task CreateComment(DTO.Comment comment)
@@ -119,7 +119,7 @@ internal class DefaultPublicService : IThorPublicService
       .OrderByDescending(x => x.CreationDate)
       .ToListAsync();
 
-    return ConvertToDto<DB.Comment, DTO.Comment>(comments, comment => new DTO.Comment(comment));
+    return Utils.ConvertToDto<DB.Comment, DTO.Comment>(comments, comment => new DTO.Comment(comment));
   }
 
   private static bool IsPublicBlog(DB.Article article)
@@ -129,15 +129,5 @@ internal class DefaultPublicService : IThorPublicService
   private static bool IsPublicPage(DB.Article article)
   {
     return article.Status.Equals(ARTICLE_STATUS) && article.IsPage == true;
-  }
-
-  private static IEnumerable<TResult> ConvertToDto<TSource, TResult>(IEnumerable<TSource> list, Func<TSource, TResult> newFunc)
-  {
-    var results = new List<TResult>();
-    foreach (var item in list)
-    {
-      results.Add(newFunc(item));
-    }
-    return results;
   }
 }
