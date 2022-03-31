@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Thor.Models.Dto;
 
 namespace Thor.Models
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
+using Thor.Models.Dto;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.Services.Api;
 using Thor.Extensions;

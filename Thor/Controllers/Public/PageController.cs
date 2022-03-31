@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Thor.Services.Api;
 using System.Threading.Tasks;
 using Thor.Extensions;
-using Thor.Models;
+using Thor.Models.Dto;
 using Thor.DatabaseProvider.Services.Api;
 
 namespace Thor.Controllers
