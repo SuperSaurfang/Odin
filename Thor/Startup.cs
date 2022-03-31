@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +13,11 @@ using Microsoft.IdentityModel.Tokens;
 using Thor.Services.Api;
 using Thor.Services.Maria;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using Thor.DatabaseProvider.Extensions;
+using Thor.DatabaseProvider;
 
 namespace Thor
 {
@@ -43,30 +43,15 @@ namespace Thor
       services.AddSingleton<IRestClientService, RestClientService>();
       services.AddTransient<IFileStoreService, FileStoreService>();
 
-      var DatabaseType = Configuration.GetValue<string>("DatabaseConfig:DatabaseType").ToLower();
-      switch (DatabaseType)
-      {
-        case "mariadb":
-        case "maria":
-          ConfigureMariaDB(services);
-          break;
-        case "mongo":
-        case "mongodb":
-        // ConfigureMongoDB(services);
-        // break;
-        default:
-          throw new Exception("failed to configure database interface");
-      }
+      var databaseConfig = Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>();
+      services.AddDBConnection(databaseConfig);
 
+      services.AddTransient<ISearchService, SearchService>();
 
       services.AddControllers()
         .AddJsonOptions(o =>
         {
           o.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-        })
-        .AddNewtonsoftJson(o =>
-        {
-          o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
 
 
@@ -139,28 +124,6 @@ namespace Thor
       {
         endpoints.MapControllers();
       });
-    }
-
-    private void ConfigureMariaDB(IServiceCollection services)
-    {
-      services.AddTransient<ISqlExecuterService, SqlExecuterService>();
-
-      services.AddTransient<IBlogService, BlogService>();
-      services.AddTransient<IPageService, PageService>();
-      services.AddTransient<INavMenuService, NavMenuService>();
-      services.AddTransient<ICommentService, CommentService>();
-      services.AddTransient<ICategoryService, CategoryService>();
-      services.AddTransient<ITagService, TagService>();
-      services.AddTransient<ISearchService, SearchService>();
-    }
-
-    private void ConfigureMongoDB(IServiceCollection services)
-    {
-
-      services.AddTransient<IMongoConnectionService, MongoConnectionService>();
-
-      services.AddTransient<IBlogService, Thor.Services.Mongo.BlogService>();
-      services.AddTransient<ICommentService, Thor.Services.Mongo.CommentService>();
     }
   }
 }
