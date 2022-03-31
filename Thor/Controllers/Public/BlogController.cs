@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Thor.Models;
+using Thor.DatabaseProvider.Services.Api;
 using Thor.Services.Api;
-using Thor.Util;
-using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Authentication;
+using Thor.Extensions;
 
 namespace Thor.Controllers
 {
@@ -14,11 +13,13 @@ namespace Thor.Controllers
   public class BlogController : ControllerBase
   {
 
-    private readonly IBlogService blogService;
+    private readonly IThorPublicService blogService;
+    private readonly IRestClientService restClient;
 
-    public BlogController(IBlogService blogService)
+    public BlogController(IThorPublicService blogService, IRestClientService restClient)
     {
       this.blogService = blogService;
+      this.restClient = restClient;
     }
 
     /// <summary>
@@ -29,11 +30,14 @@ namespace Thor.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllPublicBlog()
     {
-      var result = await blogService.GetAllPublicArticles();
+      // var result = await blogService.GetAllPublicArticles();
+      var result = await blogService.GetBlog();
       if (result == null)
       {
         return InternalError();
       }
+
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -50,11 +54,14 @@ namespace Thor.Controllers
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetPublicArticleByTitle(title);
+      // var result = await blogService.GetPublicArticleByTitle(title);
+      var result = await blogService.GetBlogByTitle(title);
       if (result == null)
       {
         return InternalError();
       }
+
+      result.User = await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -66,11 +73,13 @@ namespace Thor.Controllers
       {
         return BadRequest("Category cannot be null");
       }
-      var result = await blogService.GetCategoryBlog(category);
+      // var result = await blogService.GetCategoryBlog(category);
+      var result = await blogService.GetBlogByCategory(category);
       if(result == null)
       {
         return InternalError();
       }
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -87,6 +96,7 @@ namespace Thor.Controllers
       {
         return InternalError();
       }
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
     private ObjectResult InternalError(string message = "Internal Server Error")
