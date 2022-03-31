@@ -12,7 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Text;
 using System.Reflection;
-using Thor.Attributes;
+using Thor.Models.Dto;
+using Thor.Models.Attributes;
 
 namespace Thor.Services
 {
