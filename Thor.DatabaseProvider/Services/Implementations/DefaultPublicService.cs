@@ -85,7 +85,7 @@ internal class DefaultPublicService : IThorPublicService
   public async Task<DTO.Article> GetPage(string title)
   {
     var article = await context.Articles
-      .Where(a => IsPublicPage(a) && a.Title.Equals(title))
+      .Where(a => a.Status.Equals(ARTICLE_STATUS) && a.IsPage == true && a.Title.Equals(title))
       .FirstOrDefaultAsync();
 
     return new DTO.Article(article);
@@ -97,6 +97,8 @@ internal class DefaultPublicService : IThorPublicService
   {
     var navmenus = await context.Navmenus
       .OrderBy(x => x.NavmenuOrder)
+      .Include(n => n.ChildNavmenu)
+      .Where(n => n.ParentId == null)
       .ToListAsync();
 
     return Utils.ConvertToDto<DB.Navmenu, DTO.Navmenu>(navmenus, navmenu => new DTO.Navmenu(navmenu));
@@ -125,9 +127,5 @@ internal class DefaultPublicService : IThorPublicService
   private static bool IsPublicBlog(DB.Article article)
   {
     return article.Status.Equals(ARTICLE_STATUS) && article.IsBlog == true;
-  }
-  private static bool IsPublicPage(DB.Article article)
-  {
-    return article.Status.Equals(ARTICLE_STATUS) && article.IsPage == true;
   }
 }
