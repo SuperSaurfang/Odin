@@ -6,6 +6,7 @@ using Thor.Services.Api;
 using Thor.Extensions;
 using Thor.DatabaseProvider.Services.Api;
 using Microsoft.AspNetCore.Authorization;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -67,16 +68,15 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdateArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> UpdateArticle(Article article)
     {
       if (article.ArticleId == 0)
       {
         return BadRequest("the article id cannot be zero.");
       }
 
-      await blogService.UpdateArticle(article);
-
-      return Ok();
+      var response = await blogService.UpdateArticle(article);
+      return Ok(response);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<Article>> CreateArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> CreateArticle(Article article)
     {
       if (article.UserId == string.Empty)
       {
@@ -106,69 +106,69 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpDelete]
     [Authorize("author")]
-    public async Task<ActionResult> DeleteBlogArticle()
+    public async Task<ActionResult<StatusResponse<IEnumerable<Article>>>> DeleteBlogArticle()
     {
-      await blogService.DeleteArticles();
-      return Ok();
+      var response = await blogService.DeleteArticles();
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpPost]
     [Route("Category")]
     [Authorize("author")]
-    public async Task<ActionResult> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleCategory>>>> AddCategoryToBlogPost(ArticleCategory articleCategory)
     {
       if(articleCategory is null)
       {
         return BadRequest("Cannot be null.");
       }
-      await blogService.AddCategory(articleCategory);
-      return Ok();
+      var response = await blogService.AddCategory(articleCategory);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Route("Category")]
     [Authorize("author")]
-    public async Task<ActionResult> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleCategory>>>> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
     {
       if(articleCategory is null)
       {
         return BadRequest("Cannot be null.");
       }
 
-      await blogService.RemoveCategory(articleCategory);
-      return Ok();
+      var response = await blogService.RemoveCategory(articleCategory);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpPost]
     [Route("Tag")]
     [Authorize("author")]
-    public async Task<ActionResult> AddTagToBlogPost(ArticleTag articleTag)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleTag>>>> AddTagToBlogPost(ArticleTag articleTag)
     {
       if(articleTag is null)
       {
         return BadRequest("Cannot be null");
       }
 
-      await blogService.AddTag(articleTag);
-      return Ok();
+      var response = await blogService.AddTag(articleTag);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Route("Tag")]
     [Authorize("author")]
-    public async Task<ActionResult> RemoveTagFromBlogPost(ArticleTag articleTag)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleTag>>>> RemoveTagFromBlogPost(ArticleTag articleTag)
     {
       if(articleTag is null)
       {
         return BadRequest("Cannot be null");
       }
 
-      await blogService.RemoveTag(articleTag);
-      return Ok();
+      var response = await blogService.RemoveTag(articleTag);
+      return Ok(response);
     }
 
     private ObjectResult InternalError(string message = "Internal Server Error")
