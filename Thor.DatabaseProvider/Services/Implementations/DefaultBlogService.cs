@@ -7,47 +7,69 @@ using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
 using Thor.DatabaseProvider.Util;
+using Thor.Models.Dto.Responses;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
 internal class DefaultBlogService : IThorBlogService
 {
   private readonly ThorContext context;
+  private readonly ILogger<DefaultBlogService> logger;
 
-  public DefaultBlogService(ThorContext context)
+  public DefaultBlogService(ThorContext context, ILogger<DefaultBlogService> logger)
   {
     this.context = context;
-  }
-  public async Task AddCategory(DTO.ArticleCategory articleCategory)
-  {
-    await context.ArticleCategories.AddAsync(new DB.ArticleCategory(articleCategory));
-    await context.SaveChangesAsync();
+    this.logger = logger;
   }
 
-  public async Task AddTag(DTO.ArticleTag articleTag)
-  {
-    await context.ArticleTags.AddAsync(new DB.ArticleTag(articleTag));
-    await context.SaveChangesAsync();
-  }
 
-  public async Task<DTO.Article> CreateArticle(DTO.Article article)
+  public async Task<StatusResponse<DTO.Article>> CreateArticle(DTO.Article article)
   {
-    var dbArticle = new DB.Article(article)
+    var response = new StatusResponse<DTO.Article>()
     {
-      IsBlog = true,
-      IsPage = false
+      ResponseType = StatusResponseType.Create
     };
-    var result = await context.Articles.AddAsync(dbArticle);
-    await context.SaveChangesAsync();
-    return new DTO.Article(result.Entity);
+    DB.Article dbArticle = ConvertArticle(article);
+    try
+    {
+      var result = await context.Articles.AddAsync(dbArticle);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Article(result.Entity);
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on creatinf new blog article:", ex);
+      response.Change = Change.Error;
+      return response;
+    }
   }
 
-  public async Task DeleteArticles()
+  public async Task<StatusResponse<IEnumerable<DTO.Article>>> DeleteArticles()
   {
-    var trash = await context.Articles
-      .Where(a => a.IsBlog == true && a.Status.Equals("trash"))
-      .ToListAsync();
-    context.Articles.RemoveRange(trash);
+    var response = new StatusResponse<IEnumerable<DTO.Article>>()
+    {
+      ResponseType = StatusResponseType.Delete
+    };
+    try
+    {
+      var trash = await context.Articles
+        .Where(a => a.IsBlog == true && a.Status.Equals("trash"))
+        .ToListAsync();
+      context.Articles.RemoveRange(trash);
+      response.Model = await GetArticles();
+      response.Change = Change.Change;
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on deleting trash: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
   }
 
   public async Task<DTO.Article> GetArticle(string title)
@@ -69,23 +91,132 @@ internal class DefaultBlogService : IThorBlogService
     return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
   }
 
-  public async Task RemoveCategory(DTO.ArticleCategory articleCategory)
+  public async Task<StatusResponse<IEnumerable<DTO.ArticleCategory>>> RemoveCategory(DTO.ArticleCategory articleCategory)
   {
-    var entity = new DB.ArticleCategory(articleCategory);
-    context.ArticleCategories.Remove(entity);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.ArticleCategory>>()
+    {
+      ResponseType = StatusResponseType.Delete
+    };
+    var dbSet = context.Set<DB.ArticleCategory>(nameof(DB.ArticleCategory));
+    try
+    {
+      var result = dbSet.Remove(new DB.ArticleCategory(articleCategory));
+      await context.SaveChangesAsync();
+      var entities = await dbSet.ToListAsync();
+      response.Change = Change.Change;
+      response.Model = Utils.ConvertToDto<DB.ArticleCategory, DTO.ArticleCategory>(entities, articleCategory => new DTO.ArticleCategory(articleCategory));
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on removing category from article: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
   }
 
-  public async Task RemoveTag(DTO.ArticleTag articleTag)
+  public async Task<StatusResponse<IEnumerable<DTO.ArticleCategory>>> AddCategory(DTO.ArticleCategory articleCategory)
   {
-    var entity = new DB.ArticleTag(articleTag);
-    context.ArticleTags.Remove(entity);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.ArticleCategory>>()
+    {
+      ResponseType = StatusResponseType.Create
+    };
+    var dbSet = context.Set<DB.ArticleCategory>(nameof(DB.ArticleCategory));
+    try
+    {
+      await dbSet.AddAsync(new DB.ArticleCategory(articleCategory));
+      await context.SaveChangesAsync();
+      var entities = await dbSet.ToListAsync();
+      response.Change = Change.Change;
+      response.Model = Utils.ConvertToDto<DB.ArticleCategory, DTO.ArticleCategory>(entities, articleCategory => new DTO.ArticleCategory(articleCategory));
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on add category to article: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
   }
 
-  public async Task UpdateArticle(DTO.Article article)
+  public async Task<StatusResponse<IEnumerable<DTO.ArticleTag>>> AddTag(DTO.ArticleTag articleTag)
   {
-    context.Articles.Update(new DB.Article(article));
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.ArticleTag>>()
+    {
+      ResponseType = StatusResponseType.Create
+    };
+    var dbSet = context.Set<DB.ArticleTag>(nameof(DB.ArticleTag));
+    try
+    {
+      await dbSet.AddAsync(new DB.ArticleTag(articleTag));
+      await context.SaveChangesAsync();
+      var entities = await dbSet.ToListAsync();
+      response.Change = Change.Change;
+      response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, articleTag => new DTO.ArticleTag(articleTag));
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on add tag to article: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
+
+  }
+
+  public async Task<StatusResponse<IEnumerable<DTO.ArticleTag>>> RemoveTag(DTO.ArticleTag articleTag)
+  {
+    var response = new StatusResponse<IEnumerable<DTO.ArticleTag>>()
+    {
+      ResponseType = StatusResponseType.Delete
+    };
+    var dbSet = context.Set<DB.ArticleTag>(nameof(DB.ArticleTag));
+    try
+    {
+      dbSet.Remove(new DB.ArticleTag(articleTag));
+      await context.SaveChangesAsync();
+      var entities = await dbSet.ToListAsync();
+      response.Change = Change.Change;
+      response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, articleTag => new DTO.ArticleTag(articleTag));
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on remove tag from article: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
+  }
+
+  public async Task<StatusResponse<DTO.Article>> UpdateArticle(DTO.Article article)
+  {
+    var response = new StatusResponse<DTO.Article>()
+    {
+      ResponseType = StatusResponseType.Update
+    };
+    var dbArticle = ConvertArticle(article);
+    try
+    {
+      var change = context.Articles.Update(dbArticle);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Article(change.Entity);
+      return response;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on updating artcile: ", ex);
+      response.Change = Change.Error;
+      return response;
+    }
+  }
+
+  private static DB.Article ConvertArticle(DTO.Article article)
+  {
+    return new DB.Article(article)
+    {
+      IsBlog = true,
+      IsPage = false
+    };
   }
 }

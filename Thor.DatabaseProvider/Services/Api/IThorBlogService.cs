@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Thor.Models.Dto;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.DatabaseProvider.Services.Api;
 
@@ -8,11 +9,11 @@ public interface IThorBlogService
 {
   Task<IEnumerable<Article>> GetArticles();
   Task<Article> GetArticle(string title);
-  Task UpdateArticle(Article article);
-  Task<Article> CreateArticle(Article article);
-  Task DeleteArticles();
-  Task AddCategory(ArticleCategory articleCategory);
-  Task RemoveCategory(ArticleCategory articleCategory);
-  Task AddTag(ArticleTag articleTag);
-  Task RemoveTag(ArticleTag articleTag);
+  Task<StatusResponse<Article>> UpdateArticle(Article article);
+  Task<StatusResponse<Article>> CreateArticle(Article article);
+  Task<StatusResponse<IEnumerable<Article>>> DeleteArticles();
+  Task<StatusResponse<IEnumerable<ArticleCategory>>> AddCategory(ArticleCategory articleCategory);
+  Task<StatusResponse<IEnumerable<ArticleCategory>>> RemoveCategory(ArticleCategory articleCategory);
+  Task<StatusResponse<IEnumerable<ArticleTag>>> AddTag(ArticleTag articleTag);
+  Task<StatusResponse<IEnumerable<ArticleTag>>> RemoveTag(ArticleTag articleTag);
 }
