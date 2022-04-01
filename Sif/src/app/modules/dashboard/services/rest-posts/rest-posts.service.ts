@@ -24,12 +24,6 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public getBlogId(title: string): Observable<number> {
-    return this.httpClient.get<number>(`${this.basePath}/id/${title}`).pipe(
-      catchError(this.handleError<number>('Failed to load blog', -1))
-    );
-  }
-
   public getArticleByTitle(title: string): Observable<Article> {
     return this.httpClient.get<Article>(`${this.basePath}/${title}`).pipe(
       map(article => this.parseDate(article)),
@@ -37,9 +31,9 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public createBlog(article: Article): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to load blog', this.errorResponse(StatusResponseType.Create)))
+  public createBlog(article: Article): Observable<Article> {
+    return this.httpClient.post<Article>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<Article>('Failed to load blog', new Article()))
     );
   }
 

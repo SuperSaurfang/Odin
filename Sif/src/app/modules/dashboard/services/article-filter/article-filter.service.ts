@@ -29,7 +29,7 @@ export class ArticleFilterService extends FilterBase<Article> {
     // simple search
     if (this.currentFilter.searchTerm.length > 0) {
       filtered = filtered.filter(article =>
-        article.author.includes(this.currentFilter.searchTerm) || article.title.includes(this.currentFilter.searchTerm)
+        article.user.nickname.includes(this.currentFilter.searchTerm) || article.title.includes(this.currentFilter.searchTerm)
         );
     }
     this.filteredObject.next(filtered);

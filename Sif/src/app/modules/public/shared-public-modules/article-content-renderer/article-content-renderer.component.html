@@ -8,7 +8,7 @@
 <div class="article-info" *ngIf="article?.hasDateAuthorEnabled">
   <span class="icon-label">
     <fa-icon [icon]="userIcon"></fa-icon>
-    <span>{{article?.author}}</span>
+    <span>{{article?.user?.nickname}}</span>
   </span>
   <span class="spacer">/</span>
   <span class="icon-label">
@@ -32,7 +32,7 @@
 <!-- <app-ckeditor-readonly [content]="article?.articleText"></app-ckeditor-readonly> -->
 
 <div class="article-footer">
-  <div class="inline" *ngIf="articleType === 'blog' && article?.tags.length > 0">
+  <div class="inline" *ngIf="articleType === 'blog' && article?.tags?.length > 0">
     <span class="icon-label">
       <fa-icon [icon]="tagsIcon"></fa-icon>
       <span>Tags: </span>
