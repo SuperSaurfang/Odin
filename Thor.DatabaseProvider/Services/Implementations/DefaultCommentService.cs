@@ -7,31 +7,63 @@ using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
 using Thor.DatabaseProvider.Util;
+using Thor.Models.Dto.Responses;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
 internal class DefaultCommentService : IThorCommentService
 {
   private readonly ThorContext context;
+  private readonly ILogger<DefaultCommentService> logger;
 
-  public DefaultCommentService(ThorContext context)
+  public DefaultCommentService(ThorContext context, ILogger<DefaultCommentService> logger)
   {
     this.context = context;
+    this.logger = logger;
   }
 
-  public async Task<DTO.Comment> CreateComment(DTO.Comment comment)
+  public async Task<StatusResponse<DTO.Comment>> CreateComment(DTO.Comment comment)
   {
-    var dbComment = new DB.Comment(comment);
-    var result = await context.Comments.AddAsync(dbComment);
-    await context.SaveChangesAsync();
-    return new DTO.Comment(result.Entity);
+    var response = new StatusResponse<DTO.Comment>() {
+      ResponseType = StatusResponseType.Create
+    };
+    try
+    {
+      var dbComment = new DB.Comment(comment);
+      var tracking = await context.Comments.AddAsync(dbComment);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Comment(tracking.Entity);
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on creating new comment", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 
-  public async Task DeleteComments()
+  public async Task<StatusResponse<IEnumerable<DTO.Comment>>> DeleteComments()
   {
-    var trash = await context.Comments.Where(c => c.Status.Equals("trash")).ToListAsync();
-    context.Comments.RemoveRange(trash);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.Comment>>() {
+      ResponseType = StatusResponseType.Delete
+    };
+    try
+    {
+      var trash = await context.Comments.Where(c => c.Status.Equals("trash")).ToListAsync();
+      context.Comments.RemoveRange(trash);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = await GetComments();
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on deleting comment", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 
   public async Task<IEnumerable<DTO.Article>> GetArticles()
@@ -46,9 +78,23 @@ internal class DefaultCommentService : IThorCommentService
     return Utils.ConvertToDto<DB.Comment, DTO.Comment>(comments, comment => new DTO.Comment(comment));
   }
 
-  public async Task UpdateComment(DTO.Comment comment)
+  public async Task<StatusResponse<DTO.Comment>> UpdateComment(DTO.Comment comment)
   {
-    context.Comments.Update(new DB.Comment(comment));
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<DTO.Comment>() {
+      ResponseType = StatusResponseType.Update
+    };
+    try
+    {
+      var tracking = context.Comments.Update(new DB.Comment(comment));
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Comment(tracking.Entity);
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on updating comment", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 }

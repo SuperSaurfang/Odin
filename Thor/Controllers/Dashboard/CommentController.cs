@@ -6,6 +6,7 @@ using Thor.DatabaseProvider.Services.Api;
 using Thor.Models.Dto;
 using Thor.Services.Api;
 using Thor.Extensions;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -28,44 +29,44 @@ namespace Thor.Controllers.Dashboard
     [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
     {
-      var comments = await commentService.GetComments();
-      return Ok(comments);
+      var result = await commentService.GetComments();
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdateComment(Comment comment)
+    public async Task<ActionResult<StatusResponse<Comment>>> UpdateComment(Comment comment)
     {
       if(comment.CommentId == 0)
       {
         return BadRequest("The comment id cannot be 0.");
       }
 
-      await commentService.UpdateComment(comment);
-      return Ok();
+      var result = await commentService.UpdateComment(comment);
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Authorize("author")]
-    public async Task<ActionResult> DeleteComments()
+    public async Task<ActionResult<StatusResponse<IEnumerable<Comment>>>> DeleteComments()
     {
-      await commentService.DeleteComments();
-      return Ok();
+      var result = await commentService.DeleteComments();
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult> CreateComment(Comment comment)
+    public async Task<ActionResult<StatusResponse<Comment>>> CreateComment(Comment comment)
     {
       if(comment.ArticleId == 0)
       {
         return BadRequest("The article id cannot be 0");
       }
       var result = await commentService.CreateComment(comment);
-      await restClient.MapUserIdToUser(result);
+      await restClient.MapUserIdToUser(result.Model);
       return Ok(result);
     }
 
