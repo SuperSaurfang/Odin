@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Thor.Models.Dto;
 using Thor.DatabaseProvider.Services.Api;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -30,7 +31,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<Category>> CreateCategory(Category category)
+    public async Task<ActionResult<StatusResponse<Category>>> CreateCategory(Category category)
     {
       if (category == null)
       {
@@ -44,29 +45,29 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdateCategory(Category category)
+    public async Task<ActionResult<StatusResponse<Category>>> UpdateCategory(Category category)
     {
       if (category == null || category.CategoryId == 0)
       {
         return BadRequest("No data or Id was 0, cannot update the category");
       }
 
-      await categoryService.UpdateCategory(category);
-      return Ok();
+      var result = await categoryService.UpdateCategory(category);
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpDelete("{id}")]
     [Authorize("author")]
-    public async Task<ActionResult> DeleteCategory(int id)
+    public async Task<ActionResult<StatusResponse<IEnumerable<Category>>>> DeleteCategory(int id)
     {
       if(id == 0)
       {
         return BadRequest("Id was 0, cannot delete a category");
       }
 
-      await categoryService.DeleteCategory(id);
-      return Ok();
+      var result = await categoryService.DeleteCategory(id);
+      return Ok(result);
     }
   }
 }
