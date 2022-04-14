@@ -15,7 +15,7 @@
     <fa-icon [icon]="calendarIcon"></fa-icon>
     <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
   </span>
-  <div class="inline" *ngIf="articleType ==='blog' && article?.categories.length > 0">
+  <div class="inline" *ngIf="articleType ==='blog' && article?.categories?.length > 0">
     <span class="spacer">/</span>
     <span class="icon-label">
       <fa-icon [icon]="categoryIcon"></fa-icon>
