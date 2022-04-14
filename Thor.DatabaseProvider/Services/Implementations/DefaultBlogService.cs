@@ -60,6 +60,7 @@ internal class DefaultBlogService : IThorBlogService
         .Where(a => a.IsBlog == true && a.Status.Equals("trash"))
         .ToListAsync();
       context.Articles.RemoveRange(trash);
+      await context.SaveChangesAsync();
       response.Model = await GetArticles();
       response.Change = Change.Change;
       return response;
@@ -102,7 +103,9 @@ internal class DefaultBlogService : IThorBlogService
     {
       var result = dbSet.Remove(new DB.ArticleCategory(articleCategory));
       await context.SaveChangesAsync();
-      var entities = await dbSet.ToListAsync();
+      var entities = await dbSet
+        .Where(c => c.ArticleId == articleCategory.ArticleId)
+        .ToListAsync();
       response.Change = Change.Change;
       response.Model = Utils.ConvertToDto<DB.ArticleCategory, DTO.ArticleCategory>(entities, articleCategory => new DTO.ArticleCategory(articleCategory));
       return response;
@@ -115,9 +118,9 @@ internal class DefaultBlogService : IThorBlogService
     }
   }
 
-  public async Task<StatusResponse<IEnumerable<DTO.ArticleCategory>>> AddCategory(DTO.ArticleCategory articleCategory)
+  public async Task<StatusResponse<DTO.ArticleCategory>> AddCategory(DTO.ArticleCategory articleCategory)
   {
-    var response = new StatusResponse<IEnumerable<DTO.ArticleCategory>>()
+    var response = new StatusResponse<DTO.ArticleCategory>()
     {
       ResponseType = StatusResponseType.Create
     };
@@ -126,9 +129,11 @@ internal class DefaultBlogService : IThorBlogService
     {
       await dbSet.AddAsync(new DB.ArticleCategory(articleCategory));
       await context.SaveChangesAsync();
-      var entities = await dbSet.ToListAsync();
+      var entity = await dbSet
+        .Where(c => c.ArticleId == articleCategory.ArticleId && c.CategoryId == articleCategory.CategoryId)
+        .FirstOrDefaultAsync();
       response.Change = Change.Change;
-      response.Model = Utils.ConvertToDto<DB.ArticleCategory, DTO.ArticleCategory>(entities, articleCategory => new DTO.ArticleCategory(articleCategory));
+      response.Model = new DTO.ArticleCategory(entity);
       return response;
     }
     catch (Exception ex)
@@ -139,9 +144,9 @@ internal class DefaultBlogService : IThorBlogService
     }
   }
 
-  public async Task<StatusResponse<IEnumerable<DTO.ArticleTag>>> AddTag(DTO.ArticleTag articleTag)
+  public async Task<StatusResponse<DTO.ArticleTag>> AddTag(DTO.ArticleTag articleTag)
   {
-    var response = new StatusResponse<IEnumerable<DTO.ArticleTag>>()
+    var response = new StatusResponse<DTO.ArticleTag>()
     {
       ResponseType = StatusResponseType.Create
     };
@@ -150,9 +155,11 @@ internal class DefaultBlogService : IThorBlogService
     {
       await dbSet.AddAsync(new DB.ArticleTag(articleTag));
       await context.SaveChangesAsync();
-      var entities = await dbSet.ToListAsync();
+      var entity = await dbSet
+        .Where(c => c.ArticleId == articleTag.ArticleId && c.TagId == articleTag.TagId)
+        .FirstOrDefaultAsync();
       response.Change = Change.Change;
-      response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, articleTag => new DTO.ArticleTag(articleTag));
+      response.Model = new DTO.ArticleTag(entity);
       return response;
     }
     catch (Exception ex)
@@ -175,7 +182,9 @@ internal class DefaultBlogService : IThorBlogService
     {
       dbSet.Remove(new DB.ArticleTag(articleTag));
       await context.SaveChangesAsync();
-      var entities = await dbSet.ToListAsync();
+      var entities = await dbSet
+        .Where(c => c.ArticleId == articleTag.ArticleId)
+        .ToListAsync();
       response.Change = Change.Change;
       response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, articleTag => new DTO.ArticleTag(articleTag));
       return response;

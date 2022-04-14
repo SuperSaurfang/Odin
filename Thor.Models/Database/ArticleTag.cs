@@ -9,7 +9,7 @@ public class ArticleTag
   public ArticleTag(DTO.ArticleTag articleTag)
   {
     ArticleId = articleTag.ArticleId;
-    TagId = articleTag.ArticleId;
+    TagId = articleTag.TagId;
   }
 
   public int ArticleId { get; set; }

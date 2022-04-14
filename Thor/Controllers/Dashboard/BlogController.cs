@@ -116,7 +116,7 @@ namespace Thor.Controllers.Dashboard
     [HttpPost]
     [Route("Category")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleCategory>>>> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    public async Task<ActionResult<StatusResponse<ArticleCategory>>> AddCategoryToBlogPost(ArticleCategory articleCategory)
     {
       if(articleCategory is null)
       {
@@ -145,7 +145,7 @@ namespace Thor.Controllers.Dashboard
     [HttpPost]
     [Route("Tag")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleTag>>>> AddTagToBlogPost(ArticleTag articleTag)
+    public async Task<ActionResult<StatusResponse<ArticleTag>>> AddTagToBlogPost(ArticleTag articleTag)
     {
       if(articleTag is null)
       {
