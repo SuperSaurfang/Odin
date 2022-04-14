@@ -1,18 +1,33 @@
 import { HttpResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable, of } from 'rxjs';
-import { Article, ChangeResponse, StatusResponse, StatusResponseType } from '../models';
+import { Article, ChangeResponse, StatusResponse, StatusResponseOld, StatusResponseType } from '../models';
 
 export abstract class RestBase {
   protected basePath: string;
 
-  protected errorResponse(type: StatusResponseType): StatusResponse {
+  /**
+   * @deprecated
+   * @param type type of the status response e.q delete, create or update
+   * @returns a statusresponse
+   */
+  protected errorResponseOld(type: StatusResponseType): StatusResponseOld {
     return {
       change: ChangeResponse.Error,
       message: 'Error Response',
       responseType: type
     };
   }
+
+  protected errorResponse<TModel>(type: StatusResponseType, model: TModel): StatusResponse<TModel> {
+    return {
+      change: ChangeResponse.Error,
+      model: model,
+      responseType: type
+    };
+  }
+
+
 
   /**
    * the base constructor for the htpp interface
