@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.Models.Dto;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
   [ApiController]
   [Route("api/dashboard/[controller]")]
-  // [Authorize("author")]
+  [Authorize("author")]
 
   public class TagController : ControllerBase
   {
@@ -29,7 +30,7 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPost]
-    public async Task<ActionResult> CreateTag(Tag tag)
+    public async Task<ActionResult<StatusResponse<Tag>>> CreateTag(Tag tag)
     {
       if (tag == null)
       {
@@ -42,27 +43,27 @@ namespace Thor.Controllers.Dashboard
 
     [Produces("application/json")]
     [HttpPut]
-    public async Task<ActionResult> UpdateTag(Tag tag)
+    public async Task<ActionResult<StatusResponse<Tag>>> UpdateTag(Tag tag)
     {
       if (tag == null || tag.TagId <= 0)
       {
         return BadRequest($"No data or Id was {tag?.TagId}, cannot update the tag.");
       }
 
-      await tagService.UpdateTag(tag);
-      return Ok();
+      var result = await tagService.UpdateTag(tag);
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteTag(int id)
+    public async Task<ActionResult<StatusResponse<IEnumerable<Tag>>>> DeleteTag(int id)
     {
       if (id <= 0)
       {
         return BadRequest($"Id was {id}, cannot delete a tag");
       }
-      await tagService.DeleteTag(id);
-      return Ok();
+      var result = await tagService.DeleteTag(id);
+      return Ok(result);
     }
   }
 }
