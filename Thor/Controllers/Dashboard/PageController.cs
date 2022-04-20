@@ -6,6 +6,7 @@ using Thor.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.Extensions;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -57,34 +58,34 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdatePageArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> UpdatePageArticle(Article article)
     {
       if (article.ArticleId == 0)
       {
         return BadRequest("Article id cannot be null");
       }
 
-      await pageService.UpdatePage(article);
-      return Ok();
+      var response = await pageService.UpdatePage(article);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<Article>> CreatePageArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> CreatePageArticle(Article article)
     {
-      var page = await pageService.CreatePage(article);
-      page.User = await restClient.MapUserIdToUser((Article)page);
-      return base.Ok(page);
+      var response = await pageService.CreatePage(article);
+      response.Model.User = await restClient.MapUserIdToUser(response.Model);
+      return base.Ok(response);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Authorize("author")]
-    public async Task<ActionResult> DeletePageArticle()
+    public async Task<ActionResult<StatusResponse<IEnumerable<Article>>>> DeletePageArticle()
     {
-      await pageService.DeletePages();
-      return Ok();
+      var response = await pageService.DeletePages();
+      return Ok(response);
     }
     private ObjectResult InternalError(string message = "Internal Server Error")
     {
