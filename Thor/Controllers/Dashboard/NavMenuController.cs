@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Thor.DatabaseProvider.Services.Api;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -40,7 +41,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpGet]
     [Authorize("author")]
-    public async Task<ActionResult<IEnumerable<Navmenu>>> GetFlatList()
+    public async Task<ActionResult<IEnumerable<Navmenu>>> GetNavmenu()
     {
       var result = await navMenuService.GetNavmenus();
       return Ok(result);
@@ -49,7 +50,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<Navmenu>> CreateNavMenuEntry(Navmenu navMenu)
+    public async Task<ActionResult<StatusResponse<Navmenu>>> CreateNavMenuEntry(Navmenu navMenu)
     {
       var result = await navMenuService.CreateNavmenu(navMenu);
       return Ok(result);
@@ -58,27 +59,36 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult> UpdateNavMenuEntry(Navmenu navMenu)
+    public async Task<ActionResult<StatusResponse<Navmenu>>> UpdateNavMenuEntry(Navmenu navMenu)
     {
       if (navMenu.NavmenuId == 0)
       {
         return BadRequest("NavMenuId is required to update the menu entry");
       }
-      await navMenuService.UpdateNavmenu(navMenu);
-      return Ok();
+      var result = await navMenuService.UpdateNavmenu(navMenu);
+      return Ok(result);
+    }
+
+    [Produces("application/json")]
+    [HttpPut("reorder")]
+    [Authorize("author")]
+    public async Task<ActionResult<StatusResponse<Navmenu>>> ReorderNavmenu(IEnumerable<Navmenu> navMenus)
+    {
+      var result = await navMenuService.ReorderNavmenu(navMenus);
+      return Ok(result);
     }
 
     [Produces("application/json")]
     [HttpDelete("{id}")]
     [Authorize("author")]
-    public async Task<ActionResult> DeleteNavMenuEntry(int id)
+    public async Task<ActionResult<StatusResponse<IEnumerable<Navmenu>>>> DeleteNavMenuEntry(int id)
     {
       if(id == 0)
       {
         return BadRequest("Id cannot be null");
       }
-      await navMenuService.DeleteNavmenu(id);
-      return Ok();
+      var result = await navMenuService.DeleteNavmenu(id);
+      return Ok(result);
     }
   }
 }

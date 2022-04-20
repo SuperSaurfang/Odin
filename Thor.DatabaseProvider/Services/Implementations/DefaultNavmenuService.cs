@@ -7,31 +7,64 @@ using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
 using Thor.DatabaseProvider.Util;
+using Thor.Models.Dto.Responses;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
 internal class DefaultNavmenuService : IThorNavmenuService
 {
   private readonly ThorContext context;
+  private readonly ILogger<DefaultNavmenuService> logger;
 
-  public DefaultNavmenuService(ThorContext context)
+  public DefaultNavmenuService(ThorContext context, ILogger<DefaultNavmenuService> logger)
   {
     this.context = context;
+    this.logger = logger;
   }
 
-  public async Task<DTO.Navmenu> CreateNavmenu(DTO.Navmenu navmenu)
+  public async Task<StatusResponse<DTO.Navmenu>> CreateNavmenu(DTO.Navmenu navmenu)
   {
-    var result = await context.Navmenus.AddAsync(new DB.Navmenu(navmenu));
-    await context.SaveChangesAsync();
-    return new DTO.Navmenu(result.Entity);
+    var response = new StatusResponse<DTO.Navmenu>() {
+      ResponseType = StatusResponseType.Create
+    };
+    try
+    {
+      var tracking = await context.Navmenus.AddAsync(new DB.Navmenu(navmenu));
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Navmenu(tracking.Entity);
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on creating new Navmenu", ex);
+      response.Change = Change.Error;
+    }
+    return response;
+
   }
 
 
-  public async Task DeleteNavmenu(int id)
+  public async Task<StatusResponse<IEnumerable<DTO.Navmenu>>> DeleteNavmenu(int id)
   {
-    var entity = await context.Navmenus.Where(n => n.NavmenuId == id).FirstOrDefaultAsync();
-    context.Navmenus.Remove(entity);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.Navmenu>>() {
+      ResponseType = StatusResponseType.Delete
+    };
+    try
+    {
+      var entity = await context.Navmenus.Where(n => n.NavmenuId == id).FirstOrDefaultAsync();
+      context.Navmenus.Remove(entity);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = await GetNavmenus();
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error on delting navmenu", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 
   public async Task<IEnumerable<DTO.Article>> GetArticles()
@@ -52,21 +85,48 @@ internal class DefaultNavmenuService : IThorNavmenuService
       .Include(n => n.ChildNavmenu)
       .OrderBy(n => n.NavmenuOrder)
       .ToListAsync();
-
     return Utils.ConvertToDto<DB.Navmenu, DTO.Navmenu>(navmenus, navmenu => new DTO.Navmenu(navmenu));
   }
 
-  public async Task ReorderNavmenu(IEnumerable<DTO.Navmenu> navmenus)
+  public async Task<StatusResponse<IEnumerable<DTO.Navmenu>>> ReorderNavmenu(IEnumerable<DTO.Navmenu> navmenus)
   {
-    var dbNavmenus = Utils.ConvertToDto<DTO.Navmenu, DB.Navmenu>(navmenus, navmenu => new DB.Navmenu(navmenu));
-    context.Navmenus.UpdateRange(dbNavmenus);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<IEnumerable<DTO.Navmenu>>() {
+      ResponseType = StatusResponseType.Update
+    };
+    try
+    {
+      var dbNavmenus = Utils.ConvertToDto<DTO.Navmenu, DB.Navmenu>(navmenus, navmenu => new DB.Navmenu(navmenu));
+      context.Navmenus.UpdateRange(dbNavmenus);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = await GetNavmenus();
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error reordering navmenu", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 
-  public async Task UpdateNavmenu(DTO.Navmenu navmenu)
+  public async Task<StatusResponse<DTO.Navmenu>> UpdateNavmenu(DTO.Navmenu navmenu)
   {
-    var dbnavmneu = new DB.Navmenu(navmenu);
-    context.Navmenus.Update(dbnavmneu);
-    await context.SaveChangesAsync();
+    var response = new StatusResponse<DTO.Navmenu>() {
+      ResponseType = StatusResponseType.Update
+    };
+    try
+    {
+      var dbnavmneu = new DB.Navmenu(navmenu);
+      var tracking = context.Navmenus.Update(dbnavmneu);
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+      response.Model = new DTO.Navmenu(tracking.Entity);
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Error reordering navmenu", ex);
+      response.Change = Change.Error;
+    }
+    return response;
   }
 }
