@@ -68,7 +68,9 @@ internal class DefaultCategoryService : IThorCategoryService
 
   public async Task<IEnumerable<DTO.Category>> GetCategories()
   {
-    var categories = await context.Categories.ToListAsync();
+    var categories = await context.Categories
+      .Include(c => c.Articles)
+      .ToListAsync();
     return Utils.ConvertToDto<DB.Category, DTO.Category>(categories, category => new DTO.Category(category));
   }
 

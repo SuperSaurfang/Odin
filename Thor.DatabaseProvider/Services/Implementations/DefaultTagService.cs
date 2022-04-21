@@ -67,7 +67,9 @@ internal class DefaultTagService : IThorTagService
 
   public async Task<IEnumerable<DTO.Tag>> GetTags()
   {
-    var tags = await context.Tags.ToListAsync();
+    var tags = await context.Tags
+      .Include(t => t.Articles)
+      .ToListAsync();
     return Utils.ConvertToDto<DB.Tag, DTO.Tag>(tags, tag => new DTO.Tag(tag));
   }
 
