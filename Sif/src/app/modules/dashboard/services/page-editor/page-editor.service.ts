@@ -13,8 +13,7 @@ export class PageEditorService extends ArticleEditorService {
 
   public setArticleByTitle(title: string): void {
     this.restService.getPageByTitle(title).subscribe(article => {
-      this.article = article;
-      this.articleSubject.next(this.article);
+      this.updateArticleObject(article);
       this.setMode('edit');
     });
   }
@@ -38,14 +37,14 @@ export class PageEditorService extends ArticleEditorService {
 
     this.restService.savePage(this.article).subscribe(response => {
       if (response.responseType === StatusResponseType.Create && response.change === ChangeResponse.Change) {
-        this.restService.getPageId(this.article.title).subscribe(id => {
-          this.article.articleId = id;
-          this.setMode('edit');
-          this.createMessage(MessageType.Ok, 'Seite erstellt');
-        });
+        this.article = response.model;
+        this.articleSubject.next(this.article);
+        this.setMode('edit');
+        this.createMessage(MessageType.Ok, 'Seite erstellt');
       }
     });
   }
+
   public update(): void {
     if (this.mode === 'create') {
       return;
@@ -53,12 +52,13 @@ export class PageEditorService extends ArticleEditorService {
 
     this.restService.updatePage(this.article).subscribe(response => {
       if (response.responseType !== StatusResponseType.Update) {
-        this.createMessage(MessageType.Error, `Fehler: ${response.message}`);
+        this.createMessage(MessageType.Error, 'Fehler beim aktualisieren der Seite ');
         return;
       }
 
       switch (response.change) {
         case ChangeResponse.Change:
+          this.updateArticleObject(response.model);
           this.createMessage(MessageType.Ok, 'Seite aktualisiert.');
           break;
         case ChangeResponse.NoChange:

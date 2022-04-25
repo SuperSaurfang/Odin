@@ -19,12 +19,6 @@ export class RestPageService extends RestBase {
     );
   }
 
-  public getPageId(title: string): Observable<number> {
-    return this.httpClient.get<number>(`${this.basePath}/id/${title}`).pipe(
-      catchError(this.handleError<number>('Failed to get page id', -1))
-    );
-  }
-
   public getPages(): Observable<Article[]> {
     return this.httpClient.get<Article[]>(`${this.basePath}`).pipe(
       map(articles => this.parseDates(articles)),
@@ -32,21 +26,21 @@ export class RestPageService extends RestBase {
     );
   }
 
-  public savePage(article: Article): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to save page', this.errorResponse(StatusResponseType.Create)))
+  public savePage(article: Article): Observable<StatusResponse<Article>> {
+    return this.httpClient.post<StatusResponse<Article>>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<StatusResponse<Article>>('Unable to save page', this.errorResponse(StatusResponseType.Create, new Article())))
     );
   }
 
-  public updatePage(article: Article): Observable<StatusResponse> {
-    return this.httpClient.put<StatusResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to update page', this.errorResponse(StatusResponseType.Update)))
+  public updatePage(article: Article): Observable<StatusResponse<Article>> {
+    return this.httpClient.put<StatusResponse<Article>>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<StatusResponse<Article>>('Unable to update page', this.errorResponse(StatusResponseType.Update, new Article)))
     );
   }
 
-  public deletePages(): Observable<StatusResponse> {
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}`).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to delete pages', this.errorResponse(StatusResponseType.Delete)))
+  public deletePages(): Observable<StatusResponse<Article[]>> {
+    return this.httpClient.delete<StatusResponse<Article[]>>(`${this.basePath}`).pipe(
+      catchError(this.handleError<StatusResponse<Article[]>>('Unable to delete pages', this.errorResponse(StatusResponseType.Delete, [])))
     );
   }
 
