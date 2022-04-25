@@ -23,7 +23,7 @@ export class DashboardPostCategoryEditorComponent implements OnInit, OnDestroy {
   public createCategoryForm = this.formBuilder.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
-    parentId: ['']
+    parent: [null]
   });
 
   public currentEditing = DEFAULT_EDITING_INDEX;
@@ -35,7 +35,37 @@ export class DashboardPostCategoryEditorComponent implements OnInit, OnDestroy {
   constructor(private categoryService: CategoryService,
     private formBuilder: FormBuilder) { }
 
-    ngOnDestroy() {
+  public get selectParentCategoryList(): Category[] {
+    const categories = [...this.categoryList];
+    if (this.currentEditing > DEFAULT_EDITING_INDEX) {
+      // remove the current item, that is edited by the user
+      categories.splice(this.currentEditing, 1);
+
+      // remove all the items that cannot set as the parent, to prevent circle references e.g.:
+      // category 'b' has 'a' as the parent, so category 'a' cannot have 'b' as the parent
+      // this also affects to grandparents of the categories
+      const currentItem = this.categoryList[this.currentEditing];
+      const results = this.getInvalidCategories(currentItem);
+      results.forEach(result => {
+        const index = categories.findIndex(item => item.categoryId === result.categoryId);
+        categories.splice(index, 1);
+      });
+    }
+    return categories;
+  }
+
+  private getInvalidCategories(currentItem: Category) {
+    const results: Category[] = [];
+    this.categoryList.forEach(item => {
+      if (item.parent?.categoryId === currentItem.categoryId) {
+        results.push(item);
+        results.push(...this.getInvalidCategories(item));
+      }
+    });
+    return results;
+  }
+
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
@@ -69,24 +99,6 @@ export class DashboardPostCategoryEditorComponent implements OnInit, OnDestroy {
 
     this.categoryService.updateCategory(item);
     this.reset();
-  }
-
-  public getParentNameById(id: number): string {
-    if (id === undefined) {
-      return;
-    }
-
-    // if the id was changed by the selection it will be a string?!
-    if (typeof id === 'string') {
-      // tslint:disable-next-line: radix
-      id = parseInt(id);
-    }
-    const result = this.categoryList.find(item => item.categoryId === id);
-    if (result === undefined) {
-      return '';
-    }
-
-    return result.name;
   }
 
   public setCurrentEditing(index: number): void {

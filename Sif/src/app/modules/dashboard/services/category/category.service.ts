@@ -23,7 +23,7 @@ export class CategoryService {
     this.restService.updateCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.categories = this.update(this.categories, category);
+          this.categories = this.update(this.categories, response.model);
           this.next(this.categories);
           break;
         case ChangeResponse.NoChange:
@@ -38,7 +38,7 @@ export class CategoryService {
     this.restService.deleteCategory(id).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.categories = this.removeById(this.categories, id);
+          this.categories = response.model;
           this.next(this.categories);
           break;
         case ChangeResponse.Error:
@@ -54,11 +54,9 @@ export class CategoryService {
     this.restService.createCategory(category).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.restService.getCategoryList().subscribe(categories => {
-            this.categories = categories;
-            this.categoryList.next(categories);
-            resultSubject.next(true);
-          });
+          this.categories.push(response.model);
+          this.next(this.categories);
+          resultSubject.next(true);
           break;
         case ChangeResponse.Error:
         case ChangeResponse.NoChange:
@@ -76,22 +74,9 @@ export class CategoryService {
         item.articleCount = item.articleCount;
         item.description = category.description;
         item.name = category.name;
-        item.parentId = category.parentId;
+        item.parent = category.parent;
       }
     });
-    return categories;
-  }
-
-  private removeById(categories: Category[], id: number): Category[] {
-    const index = categories.findIndex(item => item.categoryId === id);
-    if (index >= 0) {
-      categories.splice(index, 1);
-    }
-    return categories;
-  }
-
-  private add(categories: Category[], category: Category): Category[] {
-    categories.push(category);
     return categories;
   }
 

@@ -29,9 +29,9 @@
           <div>
             <span>Übergeordnete Kategorie:</span>
           </div>
-          <select formControlName="parentId">
-            <option selected value="">--</option>
-            <option *ngFor="let category of categoryList" [value]="category.categoryId">{{category.name}}</option>
+          <select formControlName="parent">
+            <option selected [value]="null">--</option>
+            <option *ngFor="let category of categoryList" [ngValue]="category">{{category.name}}</option>
           </select>
         </label>
         <p class="input-helper-text">Wähle hier eine Übergeordnete Kategorie aus.</p>
@@ -67,11 +67,11 @@
               </div>
             </td>
             <td>
-              <div *ngIf="currentEditing !== i">{{getParentNameById(category.parentId)}}</div>
+              <div *ngIf="currentEditing !== i">{{category.parent?.name}}</div>
               <div *ngIf="currentEditing === i">
-                <select [(ngModel)]="category.parentId">
+                <select [(ngModel)]="category.parent">
                   <option value=""></option>
-                  <option *ngFor="let optionItem of categoryList" [value]="optionItem.categoryId">{{optionItem.name}}</option>
+                  <option *ngFor="let optionItem of selectParentCategoryList" [ngValue]="optionItem">{{optionItem.name}}</option>
                 </select>
               </div>
             </td>
