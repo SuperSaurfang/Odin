@@ -20,8 +20,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   public searchForm = this.formBuilder.group({
     term: [''],
-    from: [''],
-    to: [''],
+    start: [null],
+    end: [null],
     isTextSearch: [false],
     isTitleSearch: [false],
     isTagSearch: [false],
@@ -39,7 +39,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchForm.setValue(this.searchRequest);
     this.subscription = this.searchService.getSearchResult().subscribe(result => {
       this.searchResult = result;
-      console.log(result);
     });
   }
 

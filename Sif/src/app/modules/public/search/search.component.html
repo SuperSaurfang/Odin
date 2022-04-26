@@ -28,13 +28,13 @@
             <div>
               <span>Von:</span>
             </div>
-            <input type="date" formControlName="from" [max]="searchForm.value['to']">
+            <input type="date" formControlName="start" [max]="searchForm.value['end']">
           </label>
           <label class="label control-group horizontal-group">
             <div>
               <span>Bis:</span>
             </div>
-            <input type="date" formControlName="to" [min]="searchForm.value['from']">
+            <input type="date" formControlName="end" [min]="searchForm.value['start']">
           </label>
         </div>
         <div class="search-setting-row">
