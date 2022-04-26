@@ -1,4 +1,4 @@
-namespace Thor.Models
+namespace Thor.Models.Dto.Responses
 {
   public class FileUploadResponse
   {

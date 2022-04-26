@@ -4,6 +4,7 @@ using Thor.DatabaseProvider.Builder;
 using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.DatabaseProvider.Services.Implementations;
+using Thor.Models.Config;
 
 namespace Thor.DatabaseProvider.Extensions
 {

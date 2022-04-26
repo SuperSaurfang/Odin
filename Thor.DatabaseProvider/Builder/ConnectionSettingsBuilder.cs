@@ -1,3 +1,5 @@
+using Thor.Models.Config;
+
 namespace Thor.DatabaseProvider.Builder
 {
   internal class ConnectionSettingsBuilder

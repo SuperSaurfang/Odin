@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Thor.Models.Config;
 using Thor.Models.Database;
 
 namespace Thor.DatabaseProvider.Context

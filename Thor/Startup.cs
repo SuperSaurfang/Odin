@@ -33,9 +33,6 @@ namespace Thor
     public void ConfigureServices(IServiceCollection services)
     {
       // set config
-      services.Configure<ConnectionConfig>(Configuration.GetSection("DatabaseConfig:ConnectionSettings"));
-      services.AddTransient(option => option.GetRequiredService<IOptions<ConnectionConfig>>().Value);
-
       services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
       services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 

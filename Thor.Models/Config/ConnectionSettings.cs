@@ -1,11 +1,5 @@
-namespace Thor.DatabaseProvider
+namespace Thor.Models.Config
 {
-  public class DatabaseConfig
-  {
-    public string DatabaseType { get; set; }
-    public ConnectionSettings ConnectionSettings { get; set; }
-  }
-
   public class ConnectionSettings
   {
     public string Host { get; set; }

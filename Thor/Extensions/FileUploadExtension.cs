@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Thor.Models;
 using Thor.Services.Api;
 using Microsoft.AspNetCore.Http;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Extensions
 {
