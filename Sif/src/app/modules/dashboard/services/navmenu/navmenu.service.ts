@@ -43,7 +43,7 @@ export class NavmenuService {
         default:
           break;
       }
-      this.messageSubject.next(response.message);
+      // this.messageSubject.next(response.message);
     });
   }
 
