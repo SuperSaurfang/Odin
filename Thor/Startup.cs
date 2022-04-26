@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Thor.Services.Api;
-using Thor.Services.Maria;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
@@ -45,8 +44,6 @@ namespace Thor
 
       var databaseConfig = Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>();
       services.AddDBConnection(databaseConfig);
-
-      services.AddTransient<ISearchService, SearchService>();
 
       services.AddControllers()
         .AddJsonOptions(o =>

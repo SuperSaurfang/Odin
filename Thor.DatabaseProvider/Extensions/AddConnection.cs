@@ -2,7 +2,6 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Thor.DatabaseProvider.Builder;
 using Thor.DatabaseProvider.Context;
-using Thor.DatabaseProvider.Services;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.DatabaseProvider.Services.Implementations;
 
@@ -30,6 +29,7 @@ namespace Thor.DatabaseProvider.Extensions
           services.AddTransient<IThorPageService, DefaultPageService>();
           services.AddTransient<IThorPublicService, DefaultPublicService>();
           services.AddTransient<IThorTagService, DefaultTagService>();
+          services.AddTransient<IThorSearchService, DefaultSearchService>();
           break;
         case "mongo":
         case "mongodb":

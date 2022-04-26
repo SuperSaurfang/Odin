@@ -16,6 +16,7 @@ public class Article
   public bool? HasCommentsEnabled { get; set; }
   public bool? HasDateAuthorEnabled { get; set; }
   public string Status { get; set; }
+  public string Link { get; set; }
   public User User { get; set; }
   public IEnumerable<Comment> Comments { get; set; }
   public IEnumerable<Category> Categories { get; set; }
@@ -34,6 +35,16 @@ public class Article
     HasCommentsEnabled = article.HasCommentsEnabled;
     HasDateAuthorEnabled = article.HasDateAuthorEnabled;
     Status = article.Status;
+
+    if(article.IsBlog)
+    {
+      Link = $"/blog/{article.Title}";
+    }
+
+    if(article.IsPage)
+    {
+      Link = $"/page/{article.Title}";
+    }
 
     if(article.Comments.Count > 0) {
       var comments = new List<Comment>();
