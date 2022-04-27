@@ -6,7 +6,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
+using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using Microsoft.Extensions.Logging;
 using System;
@@ -89,7 +89,7 @@ internal class DefaultBlogService : IThorBlogService
       .Where(a => a.IsBlog == true)
       .ToListAsync();
 
-    return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
+    return articles.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
   }
 
   public async Task<StatusResponse<IEnumerable<DTO.ArticleCategory>>> RemoveCategory(DTO.ArticleCategory articleCategory)
@@ -107,7 +107,7 @@ internal class DefaultBlogService : IThorBlogService
         .Where(c => c.ArticleId == articleCategory.ArticleId)
         .ToListAsync();
       response.Change = Change.Change;
-      response.Model = Utils.ConvertToDto<DB.ArticleCategory, DTO.ArticleCategory>(entities, articleCategory => new DTO.ArticleCategory(articleCategory));
+      response.Model = entities.ConvertList<DB.ArticleCategory, DTO.ArticleCategory>(articleCategory => new DTO.ArticleCategory(articleCategory));
       return response;
     }
     catch (Exception ex)
@@ -186,7 +186,7 @@ internal class DefaultBlogService : IThorBlogService
         .Where(c => c.ArticleId == articleTag.ArticleId)
         .ToListAsync();
       response.Change = Change.Change;
-      response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, articleTag => new DTO.ArticleTag(articleTag));
+      response.Model = entities.ConvertList<DB.ArticleTag, DTO.ArticleTag>(articleTag => new DTO.ArticleTag(articleTag));
       return response;
     }
     catch (Exception ex)

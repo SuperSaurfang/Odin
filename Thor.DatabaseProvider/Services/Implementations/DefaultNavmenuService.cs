@@ -6,7 +6,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
+using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using Microsoft.Extensions.Logging;
 using System;
@@ -70,13 +70,13 @@ internal class DefaultNavmenuService : IThorNavmenuService
   public async Task<IEnumerable<DTO.Article>> GetArticles()
   {
     var articles = await context.Articles.Where(a => a.IsPage == true && a.Status.Equals("public")).ToListAsync();
-    return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
+    return articles.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
   }
 
   public async Task<IEnumerable<DTO.Category>> GetCategories()
   {
     var categories = await context.Categories.ToListAsync();
-    return Utils.ConvertToDto<DB.Category, DTO.Category>(categories, category => new DTO.Category(category));
+    return categories.ConvertList<DB.Category, DTO.Category>(category => new DTO.Category(category));
   }
 
   public async Task<IEnumerable<DTO.Navmenu>> GetNavmenus()
@@ -85,7 +85,7 @@ internal class DefaultNavmenuService : IThorNavmenuService
       .Include(n => n.ChildNavmenu)
       .OrderBy(n => n.NavmenuOrder)
       .ToListAsync();
-    return Utils.ConvertToDto<DB.Navmenu, DTO.Navmenu>(navmenus, navmenu => new DTO.Navmenu(navmenu));
+    return navmenus.ConvertList<DB.Navmenu, DTO.Navmenu>(navmenu => new DTO.Navmenu(navmenu));
   }
 
   public async Task<StatusResponse<IEnumerable<DTO.Navmenu>>> ReorderNavmenu(IEnumerable<DTO.Navmenu> navmenus)
@@ -95,7 +95,7 @@ internal class DefaultNavmenuService : IThorNavmenuService
     };
     try
     {
-      var dbNavmenus = Utils.ConvertToDto<DTO.Navmenu, DB.Navmenu>(navmenus, navmenu => new DB.Navmenu(navmenu));
+      var dbNavmenus = navmenus.ConvertList<DTO.Navmenu, DB.Navmenu>(navmenu => new DB.Navmenu(navmenu));
       context.Navmenus.UpdateRange(dbNavmenus);
       await context.SaveChangesAsync();
       response.Change = Change.Change;

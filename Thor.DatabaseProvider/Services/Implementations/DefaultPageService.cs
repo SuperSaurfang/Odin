@@ -6,7 +6,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
+using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using System;
 using Microsoft.Extensions.Logging;
@@ -82,7 +82,7 @@ internal class DefaultPageService : IThorPageService
     var pages = await context.Articles
       .Where(a => a.IsPage == true)
       .ToListAsync();
-    return Utils.ConvertToDto<DB.Article, DTO.Article>(pages, page => new DTO.Article(page));
+    return pages.ConvertList<DB.Article, DTO.Article>(page => new DTO.Article(page));
   }
 
   public async Task<StatusResponse<DTO.Article>> UpdatePage(DTO.Article page)
@@ -146,7 +146,7 @@ internal class DefaultPageService : IThorPageService
         .Where(a => a.ArticleId == articleTag.ArticleId)
         .ToListAsync();
       response.Change = Change.Change;
-      response.Model = Utils.ConvertToDto<DB.ArticleTag, DTO.ArticleTag>(entities, entity => new DTO.ArticleTag(entity));
+      response.Model = entities.ConvertList<DB.ArticleTag, DTO.ArticleTag>(entity => new DTO.ArticleTag(entity));
     }
     catch (Exception ex)
     {

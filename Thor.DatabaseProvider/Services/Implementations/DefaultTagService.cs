@@ -6,7 +6,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
+using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using System;
 using Microsoft.Extensions.Logging;
@@ -70,7 +70,7 @@ internal class DefaultTagService : IThorTagService
     var tags = await context.Tags
       .Include(t => t.Articles)
       .ToListAsync();
-    return Utils.ConvertToDto<DB.Tag, DTO.Tag>(tags, tag => new DTO.Tag(tag));
+    return tags.ConvertList<DB.Tag, DTO.Tag>(tag => new DTO.Tag(tag));
   }
 
   public async Task<StatusResponse<DTO.Tag>> UpdateTag(DTO.Tag tag)

@@ -6,10 +6,10 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
 using Thor.Models.Dto.Responses;
 using Microsoft.Extensions.Logging;
 using System;
+using Thor.DatabaseProvider.Extensions;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
@@ -71,7 +71,7 @@ internal class DefaultCategoryService : IThorCategoryService
     var categories = await context.Categories
       .Include(c => c.Articles)
       .ToListAsync();
-    return Utils.ConvertToDto<DB.Category, DTO.Category>(categories, category => new DTO.Category(category));
+    return categories.ConvertList<DB.Category, DTO.Category>(category => new DTO.Category(category));
   }
 
   public async Task<StatusResponse<DTO.Category>> UpdateCategory(DTO.Category category)

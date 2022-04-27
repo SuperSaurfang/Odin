@@ -6,7 +6,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using DTO = Thor.Models.Dto;
 using DB = Thor.Models.Database;
-using Thor.DatabaseProvider.Util;
+using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using System;
 using Microsoft.Extensions.Logging;
@@ -69,13 +69,13 @@ internal class DefaultCommentService : IThorCommentService
   public async Task<IEnumerable<DTO.Article>> GetArticles()
   {
     var articles = await context.Articles.Where(a => a.IsBlog == true).ToListAsync();
-    return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
+    return articles.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
   }
 
   public async Task<IEnumerable<DTO.Comment>> GetComments()
   {
     var comments = await context.Comments.ToListAsync();
-    return Utils.ConvertToDto<DB.Comment, DTO.Comment>(comments, comment => new DTO.Comment(comment));
+    return comments.ConvertList<DB.Comment, DTO.Comment>(comment => new DTO.Comment(comment));
   }
 
   public async Task<StatusResponse<DTO.Comment>> UpdateComment(DTO.Comment comment)
