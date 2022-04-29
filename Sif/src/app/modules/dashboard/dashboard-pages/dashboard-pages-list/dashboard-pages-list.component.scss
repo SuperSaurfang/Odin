@@ -1,6 +1,6 @@
 @import '../../../../core/scss/variables.scss';
 :host {
-  flex: 1 1 auto;
+  display: block;
   padding: padding(1);
 
   .dashboard-sites-list-header {

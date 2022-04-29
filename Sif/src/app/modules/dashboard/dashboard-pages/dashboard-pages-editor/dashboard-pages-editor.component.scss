@@ -1,6 +1,6 @@
 @import '../../../../core/scss/variables.scss';
 :host {
-  flex: 1;
+  display: block;
   padding: padding(1);
 
   .editor-head-container {
