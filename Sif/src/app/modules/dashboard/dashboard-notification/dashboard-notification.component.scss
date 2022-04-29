@@ -1,0 +1,49 @@
+@import '../../../core/scss/variables.scss';
+
+:host {
+  display: block;
+
+  .status-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .left-site-status-container {
+    padding: padding(.5);
+  }
+
+  .right-site-status-container {
+    padding-right: padding(.5);
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: padding(1);
+  }
+
+  .notification-container {
+    padding: 4px 0px;
+    grid-column: 1;
+  }
+
+  .history-button-container {
+    grid-column: 2;
+  }
+
+  .history-button {
+    padding: 0;
+    border-radius: 0;
+    width: 27px;
+    height: 100%;
+    background-color: transparent;
+    color: inherit;
+  }
+
+  .history-button:hover {
+    background-color: #ffffff40;
+  }
+
+  .tooltip-position {
+    bottom: 105%;
+    left: -250%;
+    margin-left: -80px;
+  }
+}

@@ -12,3 +12,5 @@ export * from './articleTag';
 export * from './searchRequest';
 export * from './searchResult';
 export * from './fileUploadResponse';
+export * from './notification';
+export * from './dateProcessState';
