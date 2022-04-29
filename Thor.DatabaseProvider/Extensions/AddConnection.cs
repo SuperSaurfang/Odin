@@ -1,10 +1,10 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
-using MySql.Data.MySqlClient;
 using Thor.DatabaseProvider.Builder;
-using Thor.DatabaseProvider.ContextProvider;
-using Thor.DatabaseProvider.Dapper;
+using Thor.DatabaseProvider.Context;
+using Thor.DatabaseProvider.Services.Api;
+using Thor.DatabaseProvider.Services.Implementations;
+using Thor.Models.Config;
 
 namespace Thor.DatabaseProvider.Extensions
 {
@@ -21,14 +21,20 @@ namespace Thor.DatabaseProvider.Extensions
       {
         case "mariadb":
         case "maria":
-          services.AddTransient<MariaContextProvider>();
-          services.AddTransient<ISqlExecutor, MariaSqlExecutor>();
+          services.AddDbContext<ThorContext>();
+
+          services.AddTransient<IThorBlogService, DefaultBlogService>();
+          services.AddTransient<IThorCategoryService, DefaultCategoryService>();
+          services.AddTransient<IThorCommentService, DefaultCommentService>();
+          services.AddTransient<IThorNavmenuService, DefaultNavmenuService>();
+          services.AddTransient<IThorPageService, DefaultPageService>();
+          services.AddTransient<IThorPublicService, DefaultPublicService>();
+          services.AddTransient<IThorTagService, DefaultTagService>();
+          services.AddTransient<IThorSearchService, DefaultSearchService>();
           break;
         case "mongo":
         case "mongodb":
-          // services.AddTransient<IDBContext<MongoClient>, MongoContext>();
-          // ConfigureMongoDB(services);
-          // break;
+          // maybe mongodb support?!
         default:
           throw new Exception("failed to configure database interface");
       }

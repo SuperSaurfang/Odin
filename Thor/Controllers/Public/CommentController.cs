@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
-using Thor.Services;
+using Thor.DatabaseProvider.Services.Api;
+using Thor.Models.Dto;
 using Thor.Services.Api;
+using Thor.Extensions;
 
 namespace Thor.Controllers
 {
@@ -11,22 +12,24 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class CommentController : ControllerBase
   {
-    private readonly ICommentService commentService;
-    public CommentController(ICommentService commentService)
+    private readonly IThorPublicService publicService;
+    private readonly IRestClientService restClient;
+    public CommentController(IThorPublicService publicService, IRestClientService restClient)
     {
-      this.commentService = commentService;
+      this.publicService = publicService;
+      this.restClient = restClient;
     }
 
     [Produces("application/json")]
     [HttpPost]
-    public async Task<ActionResult<StatusResponse>> PostComment(Comment comment)
+    public async Task<ActionResult> PostComment(Comment comment)
     {
       if (comment.ArticleId == 0)
       {
         return BadRequest("The article id cannot be 0");
       }
-      var result = await commentService.PostComment(comment);
-      return Ok(result);
+      await publicService.CreateComment(comment);
+      return Ok();
     }
 
     [Produces("application/json")]
@@ -37,11 +40,13 @@ namespace Thor.Controllers
       {
         return BadRequest("Article id cannot be zero");
       }
-      var result = await commentService.GetPublicComments(articleId);
+      var result = await publicService.GetCommentsForArticle(articleId);
       if (result == null)
       {
         return InternalError();
       }
+
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 

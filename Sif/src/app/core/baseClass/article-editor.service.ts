@@ -86,6 +86,11 @@ export abstract class ArticleEditorService {
       return this.messageSubject;
     }
 
+    protected updateArticleObject(article: Article): void {
+      this.article = article;
+      this.articleSubject.next(this.article);
+    }
+
     protected createMessage(type: MessageType, messageContent: string): void {
       const message = new Message();
       message.messageType = type;

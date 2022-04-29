@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
+using Thor.Models.Dto;
 using Thor.Services.Api;
+using Thor.Extensions;
+using Thor.DatabaseProvider.Services.Api;
 using Microsoft.AspNetCore.Authorization;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -11,11 +14,14 @@ namespace Thor.Controllers.Dashboard
   [Route("api/dashboard/[controller]")]
   public class BlogController : ControllerBase
   {
-    private readonly IBlogService blogService;
+    private readonly IThorBlogService blogService;
 
-    public BlogController(IBlogService blogService)
+    private readonly IRestClientService restClient;
+
+    public BlogController(IThorBlogService blogService, IRestClientService restClient)
     {
       this.blogService = blogService;
+      this.restClient = restClient;
     }
 
     [Produces("application/json")]
@@ -27,28 +33,12 @@ namespace Thor.Controllers.Dashboard
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetArticleByTitle(title);
+      var result = await blogService.GetArticle(title);
       if (result == null)
       {
         return InternalError();
       }
-      return Ok(result);
-    }
-
-    [Produces("application/json")]
-    [HttpGet("id/{title}")]
-    [Authorize("author")]
-    public async Task<ActionResult<int>> GetBlogId(string title)
-    {
-      if (title == null)
-      {
-        return BadRequest("Title cannot be null");
-      }
-      var result = await blogService.GetArticleId(title);
-      if (result == 0)
-      {
-        return InternalError();
-      }
+      result.User = await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -61,11 +51,12 @@ namespace Thor.Controllers.Dashboard
     [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticles()
     {
-      var result = await blogService.GetAllArticles();
+      var result = await blogService.GetArticles();
       if (result == null)
       {
         return InternalError();
       }
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -77,7 +68,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> UpdateArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> UpdateArticle(Article article)
     {
       if (article.ArticleId == 0)
       {
@@ -96,11 +87,11 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> CreateArticle(Article article)
+    public async Task<ActionResult<StatusResponse<Article>>> CreateArticle(Article article)
     {
-      if (article.Author == string.Empty)
+      if (article.UserId == string.Empty)
       {
-        return BadRequest("Author cannot be zero");
+        return BadRequest("UserId cannot be zero");
       }
 
       var response = await blogService.CreateArticle(article);
@@ -115,9 +106,9 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpDelete]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> DeleteBlogArticle()
+    public async Task<ActionResult<StatusResponse<IEnumerable<Article>>>> DeleteBlogArticle()
     {
-      var response = await blogService.DeleteArticle();
+      var response = await blogService.DeleteArticles();
       return Ok(response);
     }
 
@@ -125,59 +116,59 @@ namespace Thor.Controllers.Dashboard
     [HttpPost]
     [Route("Category")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> AddCategoryToBlogPost(ArticleCategory articleCategory)
+    public async Task<ActionResult<StatusResponse<ArticleCategory>>> AddCategoryToBlogPost(ArticleCategory articleCategory)
     {
       if(articleCategory is null)
       {
         return BadRequest("Cannot be null.");
       }
-      var result = await blogService.AddCategoryToBlogPost(articleCategory);
-      return Ok(result);
+      var response = await blogService.AddCategory(articleCategory);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Route("Category")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleCategory>>>> RemoveCategoryFromBlogPost(ArticleCategory articleCategory)
     {
       if(articleCategory is null)
       {
         return BadRequest("Cannot be null.");
       }
 
-      var result = await blogService.RemoveCategoryFromBlogPost(articleCategory);
-      return Ok(result);
+      var response = await blogService.RemoveCategory(articleCategory);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpPost]
     [Route("Tag")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> AddTagToBlogPost(ArticleTag articleTag)
+    public async Task<ActionResult<StatusResponse<ArticleTag>>> AddTagToBlogPost(ArticleTag articleTag)
     {
       if(articleTag is null)
       {
         return BadRequest("Cannot be null");
       }
 
-      var result = await blogService.AddTagToArticle(articleTag);
-      return Ok(result);
+      var response = await blogService.AddTag(articleTag);
+      return Ok(response);
     }
 
     [Produces("application/json")]
     [HttpDelete]
     [Route("Tag")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> RemoveTagFromBlogPost(ArticleTag articleTag)
+    public async Task<ActionResult<StatusResponse<IEnumerable<ArticleTag>>>> RemoveTagFromBlogPost(ArticleTag articleTag)
     {
       if(articleTag is null)
       {
         return BadRequest("Cannot be null");
       }
 
-      var result = await blogService.RemoveTagFromArticle(articleTag);
-      return Ok(result);
+      var response = await blogService.RemoveTag(articleTag);
+      return Ok(response);
     }
 
     private ObjectResult InternalError(string message = "Internal Server Error")

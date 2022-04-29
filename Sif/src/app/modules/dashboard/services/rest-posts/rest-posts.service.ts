@@ -24,12 +24,6 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public getBlogId(title: string): Observable<number> {
-    return this.httpClient.get<number>(`${this.basePath}/id/${title}`).pipe(
-      catchError(this.handleError<number>('Failed to load blog', -1))
-    );
-  }
-
   public getArticleByTitle(title: string): Observable<Article> {
     return this.httpClient.get<Article>(`${this.basePath}/${title}`).pipe(
       map(article => this.parseDate(article)),
@@ -37,47 +31,47 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public createBlog(article: Article): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to load blog', this.errorResponse(StatusResponseType.Create)))
+  public createBlog(article: Article): Observable<StatusResponse<Article>> {
+    return this.httpClient.post<StatusResponse<Article>>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<StatusResponse<Article>>('Failed to load blog', this.errorResponse(StatusResponseType.Create, new Article())))
     );
   }
 
-  public updateBlog(article: Article): Observable<StatusResponse> {
-    return this.httpClient.put<StatusResponse>(`${this.basePath}`, article).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to load blog', this.errorResponse(StatusResponseType.Update)))
+  public updateBlog(article: Article): Observable<StatusResponse<Article>> {
+    return this.httpClient.put<StatusResponse<Article>>(`${this.basePath}`, article).pipe(
+      catchError(this.handleError<StatusResponse<Article>>('Failed to load blog', this.errorResponse(StatusResponseType.Update, new Article)))
     );
   }
 
-  public deleteArticles(): Observable<StatusResponse> {
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}`).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to load blog', this.errorResponse(StatusResponseType.Delete)))
+  public deleteArticles(): Observable<StatusResponse<Article[]>> {
+    return this.httpClient.delete<StatusResponse<Article[]>>(`${this.basePath}`).pipe(
+      catchError(this.handleError<StatusResponse<Article[]>>('Failed to load blog', this.errorResponse<Article[]>(StatusResponseType.Delete, [])))
     );
   }
 
-  public addCategoryToArticle(articleCategory: ArticleCategory): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}/category`, articleCategory).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to add category', this.errorResponse(StatusResponseType.Create)))
+  public addCategoryToArticle(articleCategory: ArticleCategory): Observable<StatusResponse<ArticleCategory>> {
+    return this.httpClient.post<StatusResponse<ArticleCategory>>(`${this.basePath}/category`, articleCategory).pipe(
+      catchError(this.handleError<StatusResponse<ArticleCategory>>('Failed to add category', this.errorResponse<ArticleCategory>(StatusResponseType.Create, { })))
     );
   }
 
-  public removeCategoryFromArticle(articleCategory: ArticleCategory): Observable<StatusResponse> {
+  public removeCategoryFromArticle(articleCategory: ArticleCategory): Observable<StatusResponse<ArticleCategory[]>> {
     const options = this.createOptions(articleCategory);
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}/category`, options).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to remove category', this.errorResponse(StatusResponseType.Delete)))
+    return this.httpClient.delete<StatusResponse<ArticleCategory[]>>(`${this.basePath}/category`, options).pipe(
+      catchError(this.handleError<StatusResponse<ArticleCategory[]>>('Failed to remove category', this.errorResponse<ArticleCategory[]>(StatusResponseType.Delete, [])))
     );
   }
 
-  public addTagToArticle(articleTag: ArticleTag): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}/tag`, articleTag).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to add tag', this.errorResponse(StatusResponseType.Create)))
+  public addTagToArticle(articleTag: ArticleTag): Observable<StatusResponse<ArticleTag>> {
+    return this.httpClient.post<StatusResponse<ArticleTag>>(`${this.basePath}/tag`, articleTag).pipe(
+      catchError(this.handleError<StatusResponse<ArticleTag>>('Failed to add tag', this.errorResponse<ArticleTag>(StatusResponseType.Create, {})))
     );
   }
 
-  public removeTagFromArticle(articleTag: ArticleTag): Observable<StatusResponse> {
+  public removeTagFromArticle(articleTag: ArticleTag): Observable<StatusResponse<ArticleTag[]>> {
     const options = this.createOptions(articleTag);
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}/tag`, options).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to remove tag', this.errorResponse(StatusResponseType.Delete)))
+    return this.httpClient.delete<StatusResponse<ArticleTag[]>>(`${this.basePath}/tag`, options).pipe(
+      catchError(this.handleError<StatusResponse<ArticleTag[]>>('Failed to remove tag', this.errorResponse<ArticleTag[]>(StatusResponseType.Delete, [])))
     );
   }
 

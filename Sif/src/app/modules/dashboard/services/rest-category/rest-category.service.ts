@@ -18,21 +18,21 @@ export class RestCategoryService extends RestBase {
     );
   }
 
-  public createCategory(category: Category): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, category).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to create new category', this.errorResponse(StatusResponseType.Create)))
+  public createCategory(category: Category): Observable<StatusResponse<Category>> {
+    return this.httpClient.post<StatusResponse<Category>>(`${this.basePath}`, category).pipe(
+      catchError(this.handleError<StatusResponse<Category>>('Unable to create new category', this.errorResponse(StatusResponseType.Create, new Category())))
     );
   }
 
-  public updateCategory(category: Category): Observable<StatusResponse> {
-    return this.httpClient.put<StatusResponse>(`${this.basePath}`, category).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to update category', this.errorResponse(StatusResponseType.Update)))
+  public updateCategory(category: Category): Observable<StatusResponse<Category>> {
+    return this.httpClient.put<StatusResponse<Category>>(`${this.basePath}`, category).pipe(
+      catchError(this.handleError<StatusResponse<Category>>('Unable to update category', this.errorResponse(StatusResponseType.Update, new Category())))
     );
   }
 
-  public deleteCategory(id: number): Observable<StatusResponse> {
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}/${id}`).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to delete category', this.errorResponse(StatusResponseType.Delete)))
+  public deleteCategory(id: number): Observable<StatusResponse<Category[]>> {
+    return this.httpClient.delete<StatusResponse<Category[]>>(`${this.basePath}/${id}`).pipe(
+      catchError(this.handleError<StatusResponse<Category[]>>('Failed to delete category', this.errorResponse(StatusResponseType.Delete, [])))
     );
   }
 

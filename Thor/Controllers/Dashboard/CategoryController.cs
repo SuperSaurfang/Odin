@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
-using Thor.Services.Api;
+using Thor.Models.Dto;
+using Thor.DatabaseProvider.Services.Api;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {
@@ -11,9 +12,9 @@ namespace Thor.Controllers.Dashboard
   [Route("api/dashboard/[controller]")]
   public class CategoryController : ControllerBase
   {
-    private readonly ICategoryService categoryService;
+    private readonly IThorCategoryService categoryService;
 
-    public CategoryController(ICategoryService categoryService)
+    public CategoryController(IThorCategoryService categoryService)
     {
       this.categoryService = categoryService;
     }
@@ -30,7 +31,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPost]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> CreateCategory(Category category)
+    public async Task<ActionResult<StatusResponse<Category>>> CreateCategory(Category category)
     {
       if (category == null)
       {
@@ -44,7 +45,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpPut]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> UpdateCategory(Category category)
+    public async Task<ActionResult<StatusResponse<Category>>> UpdateCategory(Category category)
     {
       if (category == null || category.CategoryId == 0)
       {
@@ -58,7 +59,7 @@ namespace Thor.Controllers.Dashboard
     [Produces("application/json")]
     [HttpDelete("{id}")]
     [Authorize("author")]
-    public async Task<ActionResult<StatusResponse>> DeleteCategory(int id)
+    public async Task<ActionResult<StatusResponse<IEnumerable<Category>>>> DeleteCategory(int id)
     {
       if(id == 0)
       {

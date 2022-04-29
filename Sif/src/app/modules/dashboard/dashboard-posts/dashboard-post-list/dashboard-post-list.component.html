@@ -29,7 +29,7 @@
           {{article.title}}
         </a>
       </td>
-      <td>{{article.author}}</td>
+      <td>{{article.user.nickname}}</td>
       <td>
         <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger cursor-pointer">
           <fa-icon *ngIf="article.status !== 'trash'"

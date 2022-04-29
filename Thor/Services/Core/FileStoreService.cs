@@ -3,8 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Thor.Models;
+using Thor.Models.Dto.Responses;
 using Thor.Services.Api;
 
 namespace Thor.Services
@@ -65,7 +64,7 @@ namespace Thor.Services
       return string.Empty;
     }
 
-    private string GetShortDate() 
+    private string GetShortDate()
     {
       var date = DateTime.UtcNow;
       return date.ToString("dd-MM-yyyy");

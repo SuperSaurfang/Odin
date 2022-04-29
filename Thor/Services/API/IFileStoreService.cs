@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Thor.Models;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Services.Api
 {

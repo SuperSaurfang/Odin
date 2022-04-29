@@ -19,21 +19,21 @@ export class RestCommentService extends RestBase {
     );
   }
 
-  public putComment(comment: Comment): Observable<StatusResponse> {
-    return this.httpClient.put<StatusResponse>(`${this.basePath}`, comment).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to update comment', this.errorResponse(StatusResponseType.Update)))
+  public putComment(comment: Comment): Observable<StatusResponse<Comment>> {
+    return this.httpClient.put<StatusResponse<Comment>>(`${this.basePath}`, comment).pipe(
+      catchError(this.handleError<StatusResponse<Comment>>('Unable to update comment', this.errorResponse(StatusResponseType.Update, new Comment())))
     );
   }
 
-  public postComment(comment: Comment): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, comment).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to create comment', this.errorResponse(StatusResponseType.Create)))
+  public postComment(comment: Comment): Observable<StatusResponse<Comment>> {
+    return this.httpClient.post<StatusResponse<Comment>>(`${this.basePath}`, comment).pipe(
+      catchError(this.handleError<StatusResponse<Comment>>('Unable to create comment', this.errorResponse(StatusResponseType.Create, new Comment())))
     );
   }
 
-  public deleteComments(): Observable<StatusResponse> {
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}`).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to delete comment', this.errorResponse(StatusResponseType.Delete)))
+  public deleteComments(): Observable<StatusResponse<Comment[]>> {
+    return this.httpClient.delete<StatusResponse<Comment[]>>(`${this.basePath}`).pipe(
+      catchError(this.handleError<StatusResponse<Comment[]>>('Unable to delete comment', this.errorResponse(StatusResponseType.Delete, [])))
     );
   }
 

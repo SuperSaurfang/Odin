@@ -1,7 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
+using Thor.DatabaseProvider.Services.Api;
+using Thor.Models.Dto.Requests;
+using Thor.Models.Dto.Responses;
 using Thor.Services.Api;
+using Thor.Extensions;
+using System.Linq;
 
 namespace Thor.Controllers
 {
@@ -9,10 +13,12 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class SearchController : ControllerBase
   {
-    private readonly ISearchService searchService;
-    public SearchController(ISearchService searchService)
+    private readonly IThorSearchService searchService;
+    private readonly IRestClientService restClient;
+    public SearchController(IThorSearchService searchService, IRestClientService restClient)
     {
       this.searchService = searchService;
+      this.restClient = restClient;
     }
 
     [HttpPost]
@@ -26,6 +32,10 @@ namespace Thor.Controllers
       var result = await searchService.Search(searchRequest);
       if(result is not null)
       {
+        if(result.Articles.Count() > 0)
+        {
+          await restClient.MapUserIdToUser(result.Articles);
+        }
         return Ok(result);
       }
 

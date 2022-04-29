@@ -1,6 +1,6 @@
-using Thor.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Thor.Models.Dto;
 
 namespace Thor.Services.Api
 {

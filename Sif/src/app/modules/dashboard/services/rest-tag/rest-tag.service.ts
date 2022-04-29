@@ -18,19 +18,19 @@ export class RestTagService extends RestBase {
     );
   }
 
-  public createTag(tag: Tag): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}`, tag).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to create new tag', this.errorResponse(StatusResponseType.Create)))
+  public createTag(tag: Tag): Observable<StatusResponse<Tag>> {
+    return this.httpClient.post<StatusResponse<Tag>>(`${this.basePath}`, tag).pipe(
+      catchError(this.handleError<StatusResponse<Tag>>('Unable to create new tag', this.errorResponse<Tag>(StatusResponseType.Create, new Tag())))
     );
   }
-  public updateTag(tag: Tag): Observable<StatusResponse>  {
-    return this.httpClient.put<StatusResponse>(`${this.basePath}`, tag).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to update tag', this.errorResponse(StatusResponseType.Update)))
+  public updateTag(tag: Tag): Observable<StatusResponse<Tag>>  {
+    return this.httpClient.put<StatusResponse<Tag>>(`${this.basePath}`, tag).pipe(
+      catchError(this.handleError<StatusResponse<Tag>>('Unable to update tag', this.errorResponse<Tag>(StatusResponseType.Update, new Tag())))
     );
   }
-  public deleteTag(id: number): Observable<StatusResponse>  {
-    return this.httpClient.delete<StatusResponse>(`${this.basePath}/${id}`).pipe(
-      catchError(this.handleError<StatusResponse>('Unable to delete tag', this.errorResponse(StatusResponseType.Delete)))
+  public deleteTag(id: number): Observable<StatusResponse<Tag[]>>  {
+    return this.httpClient.delete<StatusResponse<Tag[]>>(`${this.basePath}/${id}`).pipe(
+      catchError(this.handleError<StatusResponse<Tag[]>>('Unable to delete tag', this.errorResponse<Tag[]>(StatusResponseType.Delete, [])))
     );
   }
 }

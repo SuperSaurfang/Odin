@@ -143,12 +143,10 @@ export class DashboardPostListComponent implements OnInit {
       switch (response.change) {
         case ChangeResponse.Change:
           this.articleFilter.applyFilter();
-          console.log(response.message);
           break;
         case ChangeResponse.Error:
         case ChangeResponse.NoChange:
         default:
-          console.log(response.message);
           break;
       }
     });

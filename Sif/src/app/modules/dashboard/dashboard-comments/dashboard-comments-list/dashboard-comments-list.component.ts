@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
 import { ChangeResponse, Comment } from 'src/app/core';
 import { faCircle, faFilter, faSlash, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './dashboard-comments-list.component.html',
   styleUrls: ['./dashboard-comments-list.component.scss']
 })
-export class DashboardCommentsListComponent implements OnInit {
+export class DashboardCommentsListComponent implements OnInit, OnDestroy {
 
   public iconUser = faUser;
   public iconCircle = faCircle;
@@ -38,22 +38,26 @@ export class DashboardCommentsListComponent implements OnInit {
   constructor(private commentService: RestCommentService,
     private filterService: CommentFilterService) { }
 
-  ngOnInit() {
-    this.loadData();
+  ngOnDestroy(): void {
+    this.filterSubscription.unsubscribe();
   }
 
-  private loadData() {
+  ngOnInit() {
     this.commentService.getCommentList().subscribe(response => {
-      this.filterSubscription = this.filterService.filtered().subscribe(comments => {
-        this.comments = comments;
+      this.setData(response);
+    });
+  }
+
+  private setData(comments: Comment[]) {
+      this.filterSubscription = this.filterService.filtered().subscribe(filteredComments => {
+        this.comments = filteredComments;
 
         this.selectedComments = [];
         this.comments.forEach(comment => {
           this.selectedComments.push(false);
         });
       });
-      this.filterService.setFilterObject(response);
-    });
+      this.filterService.setFilterObject(comments);
   }
 
   public setSelectedComment(index: number) {
@@ -104,11 +108,15 @@ export class DashboardCommentsListComponent implements OnInit {
     this.statusmenuopen = -1;
   }
 
-  public updateStatus(status: string, index: number): void {
-    this.comments[index].status = status;
+  public updateStatus(index: number): void {
     this.commentService.putComment(this.comments[index]).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
+          this.comments.map(item => {
+            if (item.commentId === response.model.commentId) {
+              item.status = response.model.status;
+            }
+          });
           this.filterService.applyFilter();
           break;
         case ChangeResponse.Error:
@@ -129,7 +137,7 @@ export class DashboardCommentsListComponent implements OnInit {
 
     for (let index = 0; index < this.selectedComments.length; index++) {
       if (this.selectedComments[index]) {
-        this.updateStatus(this.selectedAction, index);
+        this.updateStatus(index);
       }
     }
   }
@@ -146,8 +154,8 @@ export class DashboardCommentsListComponent implements OnInit {
     this.commentService.deleteComments().subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.filterSubscription.unsubscribe();
-          this.loadData();
+          this.setData(response.model);
+          this.filterService.applyFilter();
           break;
         case ChangeResponse.Error:
         case ChangeResponse.NoChange:
@@ -172,7 +180,7 @@ export class DashboardCommentsListComponent implements OnInit {
   }
 
   public updateStatusFilter() {
-    this.filterService.updateStatusFilter(this.selectedStatus)
+    this.filterService.updateStatusFilter(this.selectedStatus);
   }
 
   public updateSearchTerm() {

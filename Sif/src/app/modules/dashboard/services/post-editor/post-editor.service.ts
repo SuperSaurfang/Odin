@@ -16,8 +16,7 @@ export class PostEditorService extends ArticleEditorService {
 
   public setArticleByTitle(title: string): void {
     this.restService.getArticleByTitle(title).subscribe(article => {
-      this.article = article;
-      this.articleSubject.next(this.article);
+      this.updateArticleObject(article);
       this.categoriesSubject.next(this.article.categories);
       this.tagListSubject.next(this.article.tags);
       this.setMode('edit');
@@ -45,11 +44,9 @@ export class PostEditorService extends ArticleEditorService {
 
     this.restService.createBlog(this.article).subscribe(response => {
       if (response.responseType === StatusResponseType.Create && response.change === ChangeResponse.Change) {
-        this.restService.getBlogId(this.article.title).subscribe(id => {
-          this.article.articleId = id;
-          this.setMode('edit');
-          this.createMessage(MessageType.Ok, 'Artikel gespeichert.');
-        });
+        this.updateArticleObject(response.model);
+        this.setMode('edit');
+        this.createMessage(MessageType.Ok, 'Artikel gespeichert.');
       }
     });
   }
@@ -61,12 +58,13 @@ export class PostEditorService extends ArticleEditorService {
 
     this.restService.updateBlog(this.article).subscribe(response => {
       if (response.responseType !== StatusResponseType.Update) {
-        this.createMessage(MessageType.Error, `Fehler: ${response.message}`);
+        this.createMessage(MessageType.Error, `Fehler beim aktualisieren des Artikels`);
         return;
       }
 
       switch (response.change) {
         case ChangeResponse.Change:
+          this.updateArticleObject(response.model);
           this.createMessage(MessageType.Ok, 'Artikel aktualisiert.');
           break;
         case ChangeResponse.NoChange:

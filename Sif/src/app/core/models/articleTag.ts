@@ -7,6 +7,6 @@ export class ArticleTag {
     this.tagId = tag.tagId;
   }
 
-  articleId: number;
-  tagId: number;
+  articleId?: number;
+  tagId?: number;
 }

@@ -37,7 +37,7 @@ export class TagService {
     this.restService.deleteTag(id).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.tagList = this.removeById(this.tagList, id);
+          this.tagList = response.model;
           this.next(this.tagList);
           break;
         case ChangeResponse.NoChange:
@@ -53,11 +53,9 @@ export class TagService {
     this.restService.createTag(tag).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.restService.getTagList().subscribe(tagList => {
-            this.tagList = tagList;
+            this.tagList.push(response.model);
             this.next(this.tagList);
             subject.next(true);
-          });
           break;
         case ChangeResponse.NoChange:
         case ChangeResponse.Error:
@@ -77,14 +75,6 @@ export class TagService {
         item.articleCount = tag.articleCount;
       }
     });
-    return tagList;
-  }
-
-  private removeById(tagList: Tag[], id: number): Tag[] {
-    const index = tagList.findIndex(item => item.tagId === id);
-    if (index >= 0) {
-      tagList.splice(index, 1);
-    }
     return tagList;
   }
 
