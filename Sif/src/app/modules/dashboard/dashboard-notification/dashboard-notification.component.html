@@ -1,19 +1,22 @@
-<div class="status-container" [ngClass]="statusClass">
-  <div class="left-site-status-container ">
-    <fa-icon [icon]="spinnerIcon" [spin]="isSpinning"></fa-icon>
-    <span class="ml-1">{{processingMessage}}</span>
-  </div>
-  <div class="right-site-status-container">
-    <div class="notification-container">
-      <fa-icon [icon]="statusIcon"></fa-icon>
-      <span class="mx-1">{{date | date: 'HH:mm:ss'}}:</span>
-      <span>{{notificationMessage}}</span>
+<div [ngClass]="statusClass">
+  <div class="status-container">
+    <div class="left-site-status-container ">
+      <fa-icon [icon]="spinnerIcon" [spin]="isSpinning"></fa-icon>
+      <span class="ml-1">{{processingMessage}}</span>
     </div>
-    <div class="history-button-container pos-relative tooltip-trigger">
-      <button class="btn history-button">
-        <fa-icon [icon]="historyIcon"></fa-icon>
-      </button>
-      <span class="tooltip tooltip-position">Alle Meldungen anzeigen</span>
+    <div class="right-site-status-container">
+      <div class="notification-container">
+        <fa-icon [icon]="statusIcon"></fa-icon>
+        <span class="mx-1">{{date | date: 'HH:mm:ss'}}:</span>
+        <span>{{notificationMessage}}</span>
+      </div>
+      <div class="history-button-container pos-relative tooltip-trigger">
+        <button class="btn history-button" (click)="onNotificationLogOpen()">
+          <fa-icon [icon]="historyIcon"></fa-icon>
+        </button>
+        <span class="tooltip tooltip-position">Alle Meldungen anzeigen</span>
+      </div>
     </div>
   </div>
+    <app-dashboard-notification-log *ngIf="isNotificationLogOpen"></app-dashboard-notification-log>
 </div>

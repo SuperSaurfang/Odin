@@ -23,6 +23,8 @@ export class DashboardNotificationComponent implements OnInit, OnDestroy {
 
   public historyIcon = faAngleUp;
 
+  public isNotificationLogOpen = false;
+
   private subscriptions: Subscription[] = [];
   constructor(private notificationService: NotificationService) { }
 
@@ -43,6 +45,10 @@ export class DashboardNotificationComponent implements OnInit, OnDestroy {
       this.spinnerIcon = dataProcessState.isProcessing ? faSpinner : faCheck;
       this.processingMessage = dataProcessState.message;
     }));
+  }
+
+  public onNotificationLogOpen(): void {
+    this.isNotificationLogOpen = !this.isNotificationLogOpen;
   }
 
   private mapStatus(status: Status) {

@@ -11,8 +11,10 @@ import { DashboardPagesModule } from './dashboard-pages/dashboard-pages.module';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardNavbarComponent } from './dashboard-navbar/dashboard-navbar.component';
 import { DashboardNotificationComponent } from './dashboard-notification/dashboard-notification.component';
+import { DashboardNotificationLogComponent } from './dashboard-notification/dashboard-notification-log/dashboard-notification-log.component';
 
 import { NotificationService } from './services/notification/notification.service';
+
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { NotificationService } from './services/notification/notification.servic
   declarations: [
     DashboardComponent,
     DashboardNavbarComponent,
-    DashboardNotificationComponent
+    DashboardNotificationComponent,
+    DashboardNotificationLogComponent
   ],
   providers: [
     NotificationService

@@ -4,22 +4,19 @@ import { DataProcessState, Notification, Status } from 'src/app/core';
 
 const LOCALSTORAGE_KEY = 'notifications';
 
+const DEFAULT_NOTIFICATION = {
+  date: new Date(Date.now()),
+  status: Status.Info,
+  message: 'Status in Ordung.'
+};
 @Injectable()
 export class NotificationService {
 
-  // the storage of the notifications should be improved
-  private oldNotifications: Notification[] = [];
   private notificationSubject = new Subject<Notification>();
   private processStatSubject = new Subject<DataProcessState>();
 
   constructor() {
-    const data = localStorage.getItem(LOCALSTORAGE_KEY);
-    if (data !== null) {
-      this.oldNotifications = JSON.parse(data);
-      this.oldNotifications.forEach(notification => {
-        notification.date = new Date(notification.date);
-      });
-    }
+
   }
 
   public getNotification(): Observable<Notification> {
@@ -31,14 +28,13 @@ export class NotificationService {
   }
 
   public getNotificationHistory(): Notification[] {
-    return this.oldNotifications;
+    return this.getNotifications();
   }
 
   public pushNotification(notification: Notification): void {
-    this.oldNotifications.push(notification);
     this.notificationSubject.next(notification);
 
-    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(this.oldNotifications));
+    this.updateNotifications(notification);
     this.resetNotfication();
   }
 
@@ -50,14 +46,33 @@ export class NotificationService {
     localStorage.removeItem(LOCALSTORAGE_KEY);
   }
 
+  public filterDefaultNotfication(notification: Notification) {
+    return DEFAULT_NOTIFICATION === notification;
+  }
+
+  private updateNotifications(notification: Notification) {
+    const notifications = this.getNotifications();
+    notifications.push(notification);
+
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(notifications));
+  }
+
+  private  getNotifications() {
+    const data = localStorage.getItem(LOCALSTORAGE_KEY);
+    let notifications: Notification[] = [];
+    if (data !== null) {
+      notifications = JSON.parse(data);
+      notifications.forEach(notification => {
+        notification.date = new Date(notification.date);
+      });
+    }
+    return notifications;
+  }
+
   private resetNotfication() {
     const resetTimer = timer(2500);
     resetTimer.subscribe(_ => {
-      this.notificationSubject.next({
-        date: new Date(Date.now()),
-        status: Status.Info,
-        message: 'Status in Ordung.'
-      });
+      this.notificationSubject.next(DEFAULT_NOTIFICATION);
     });
   }
 }
