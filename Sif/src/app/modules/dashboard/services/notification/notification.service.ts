@@ -13,7 +13,7 @@ const DEFAULT_NOTIFICATION = {
 export class NotificationService {
 
   private notificationSubject = new Subject<Notification>();
-  private processStatSubject = new Subject<DataProcessState>();
+  private processStateSubject = new Subject<DataProcessState>();
 
   constructor() {
 
@@ -24,7 +24,7 @@ export class NotificationService {
   }
 
   public getProcessState(): Subject<DataProcessState> {
-    return this.processStatSubject;
+    return this.processStateSubject;
   }
 
   public getNotificationHistory(): Notification[] {
@@ -38,8 +38,18 @@ export class NotificationService {
     this.resetNotfication();
   }
 
-  public pushProcessState(dataProcessState: DataProcessState) {
-    this.processStatSubject.next(dataProcessState);
+  public startProcess(message: string) {
+    this.processStateSubject.next({
+      isProcessing: true,
+      message: message
+    });
+  }
+
+  public stopProcess(message: string) {
+    this.processStateSubject.next({
+      isProcessing: false,
+      message: message
+    });
   }
 
   public clearNotifications() {
