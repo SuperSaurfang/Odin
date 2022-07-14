@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Article, ChangeResponse } from 'src/app/core';
+import { Article, ChangeResponse, Status } from 'src/app/core';
 
 import { faTrash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, RestPostsService } from '../../services';
 import { Subscription } from 'rxjs';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 import { DateFilter } from 'src/app/core/baseClass';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard-post-list',
@@ -14,7 +15,9 @@ import { DateFilter } from 'src/app/core/baseClass';
 })
 export class DashboardPostListComponent implements OnInit {
 
-  constructor(private restService: RestPostsService, private articleFilter: ArticleFilterService) { }
+  constructor(private restService: RestPostsService,
+    private articleFilter: ArticleFilterService,
+    private notificationService: NotificationService) { }
 
   public articles: Article[] = [];
   public isAllSelected = false;
@@ -33,7 +36,12 @@ export class DashboardPostListComponent implements OnInit {
   }
 
   private loadData() {
+    this.notificationService.startProcess('Artikel werden geladen');
     this.restService.getFullBlog().subscribe(articles => {
+      if (articles.length === 0) {
+        this.notificationService.startProcess('Artikel konnten nicht geladen werden');
+      }
+
       this.articleFilterSubscription = this.articleFilter.filtered().subscribe(filteredArticles => {
         this.articles = filteredArticles;
       });
@@ -42,6 +50,7 @@ export class DashboardPostListComponent implements OnInit {
       articles.forEach(() => {
         this.selectedArticles.push(false);
       });
+      this.notificationService.stopProcess('Artikel geladen');
     });
   }
 
@@ -125,11 +134,14 @@ export class DashboardPostListComponent implements OnInit {
       console.log('Nothing selected');
       return;
     }
+
+    this.notificationService.startProcess('Aktion wird ausgeführt');
     for (let index = 0; index < this.articles.length; index++) {
       if (this.selectedArticles[index]) {
         this.updateStatus(event, index);
       }
     }
+    this.notificationService.stopProcess('Aktion wurde ausgeführt');
   }
 
   public openStatusChange(index: number) {
@@ -139,20 +151,37 @@ export class DashboardPostListComponent implements OnInit {
   public updateStatus(status: string, index: number) {
     this.statusMenuOpen = -1;
     this.articles[index].status = status;
+    const notification = {
+      date: new Date(Date.now()),
+      message: `Artikelstatus erfolgreich aktualisiert`,
+      status: Status.Ok
+    };
     this.restService.updateBlog(this.articles[index]).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
           this.articleFilter.applyFilter();
           break;
         case ChangeResponse.Error:
+          notification.message = 'Fehler beim aktualisieren des Artikelstatus';
+          notification.status = Status.Error;
+          break;
         case ChangeResponse.NoChange:
+          notification.message = 'Artikelstatus wurde nicht aktualisiert';
+          notification.status = Status.Warning;
+          break;
         default:
           break;
       }
+      this.notificationService.pushNotification(notification);
     });
   }
 
   public deleteArticles() {
+    const notification = {
+      date: new Date(Date.now()),
+      message: 'Papierkorb wurde geleert',
+      status: Status.Ok
+    };
     this.restService.deleteArticles().subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
@@ -160,10 +189,17 @@ export class DashboardPostListComponent implements OnInit {
           this.loadData();
           break;
         case ChangeResponse.Error:
+          notification.message = 'Fehler beim leeren des Papierkorbes';
+          notification.status = Status.Error;
+          break;
         case ChangeResponse.NoChange:
+          notification.message = 'Papierkorb wurde nicht geleert';
+          notification.status = Status.Warning;
+          break;
         default:
           break;
       }
+      this.notificationService.pushNotification(notification);
     });
   }
 
