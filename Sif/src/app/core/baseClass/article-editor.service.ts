@@ -1,5 +1,6 @@
 import { Observable, Subject } from 'rxjs';
-import { Article, Category, Message, MessageType, Tag, User } from '../models';
+import { NotificationService } from 'src/app/modules/dashboard/services/notification/notification.service';
+import { Article, Category, Notification, Status, Tag, User } from '../models';
 
 /**  The editor has two modes, one for edit and one create articles.
  create means that the editor is creating a new article.
@@ -14,11 +15,8 @@ export abstract class ArticleEditorService {
     protected mode: Mode = 'create';
 
     protected articleSubject: Subject<Article> = new Subject<Article>();
-    protected messageSubject: Subject<Message> = new Subject<Message>();
 
-    constructor() {
-
-    }
+    constructor(private notificationService: NotificationService) { }
 
     public abstract addTag(tag: Tag): boolean;
 
@@ -82,25 +80,28 @@ export abstract class ArticleEditorService {
         return this.articleSubject;
     }
 
-    public getMessage(): Observable<Message> {
-      return this.messageSubject;
-    }
-
     protected updateArticleObject(article: Article): void {
       this.article = article;
       this.articleSubject.next(this.article);
     }
 
-    protected createMessage(type: MessageType, messageContent: string): void {
-      const message = new Message();
-      message.messageType = type;
-      message.messageContent = messageContent;
-      this.messageSubject.next(message);
+    protected createMessage(status: Status, message: string): void {
+      const notification: Notification = {
+        date: new Date(Date.now()),
+        message: message,
+        status: status
+      };
+      this.notificationService.pushNotification(notification);
     }
 
     private saveOrUpdate() {
       if (!this.article.title) {
         // No title was set.
+        this.notificationService.pushNotification({
+          date: new Date(Date.now()),
+          message: 'Es wurde noch kein Titel festgelegt.',
+          status: Status.Info
+        });
         return;
       }
 

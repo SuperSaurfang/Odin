@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ArticleCategory, ArticleTag, Category, ChangeResponse, MessageType, StatusResponseType, Tag, User } from 'src/app/core';
+import { ArticleCategory, ArticleTag, Category, ChangeResponse, Status, StatusResponseType, Tag, User } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
+import { NotificationService } from '../notification/notification.service';
 import { RestPostsService } from '../rest-posts/rest-posts.service';
 
 @Injectable()
@@ -10,8 +11,8 @@ export class PostEditorService extends ArticleEditorService {
   private categoriesSubject: Subject<Category[]> = new Subject<Category[]>();
   private tagListSubject: Subject<Tag[]> = new Subject<Tag[]>();
 
-  constructor(private restService: RestPostsService) {
-    super();
+  constructor(private restService: RestPostsService, notificationService: NotificationService) {
+    super(notificationService);
   }
 
   public setArticleByTitle(title: string): void {
@@ -43,10 +44,25 @@ export class PostEditorService extends ArticleEditorService {
     }
 
     this.restService.createBlog(this.article).subscribe(response => {
-      if (response.responseType === StatusResponseType.Create && response.change === ChangeResponse.Change) {
-        this.updateArticleObject(response.model);
-        this.setMode('edit');
-        this.createMessage(MessageType.Ok, 'Artikel gespeichert.');
+      // if the response type doesn't match the expected response type,
+      // then the response could be manipulated or something similar
+      if (response.responseType !== StatusResponseType.Create) {
+        this.createMessage(Status.Warning, 'Der Inhalt des HTTP Body könnte manipuliert sein.');
+        return;
+      }
+
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.updateArticleObject(response.model);
+          this.setMode('edit');
+          this.createMessage(Status.Ok, 'Der Artikel wurde erstellt.');
+          break;
+        case ChangeResponse.NoChange:
+          this.createMessage(Status.Ok, 'Der Artikel konnte nicht erstellt werden.');
+          break;
+        case ChangeResponse.Error:
+          this.createMessage(Status.Ok, 'Fehler beim erstellen des Artikels.');
+          break;
       }
     });
   }
@@ -58,20 +74,20 @@ export class PostEditorService extends ArticleEditorService {
 
     this.restService.updateBlog(this.article).subscribe(response => {
       if (response.responseType !== StatusResponseType.Update) {
-        this.createMessage(MessageType.Error, `Fehler beim aktualisieren des Artikels`);
+        this.createMessage(Status.Warning, 'Der Inhalt des HTTP Body könnte manipuliert sein.');
         return;
       }
 
       switch (response.change) {
         case ChangeResponse.Change:
           this.updateArticleObject(response.model);
-          this.createMessage(MessageType.Ok, 'Artikel aktualisiert.');
+          this.createMessage(Status.Ok, 'Der Artikel wurde aktualisiert.');
           break;
         case ChangeResponse.NoChange:
-          this.createMessage(MessageType.Info, 'Artikel wurde nicht aktualisiert.');
+          this.createMessage(Status.Info, 'Der Artikel wurde nicht aktualisiert.');
           break;
         case ChangeResponse.Error:
-          this.createMessage(MessageType.Error, 'Artikel konnte nicht aktualisert werden.');
+          this.createMessage(Status.Error, 'Der Artikel konnte nicht aktualisert werden.');
           break;
       }
     });
@@ -90,13 +106,13 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.categories.push(category);
             this.categoriesSubject.next(this.article.categories);
-            this.createMessage(MessageType.Ok, 'Kategorie mit Artikel verknüpft.');
+            this.createMessage(Status.Ok, 'Kategorie mit Artikel verknüpft.');
             break;
           case ChangeResponse.Error:
-            this.createMessage(MessageType.Error, 'Beim verknüpfen einer Kategorie mit dem Artikel trat ein Fehler auf.');
+            this.createMessage(Status.Error, 'Beim verknüpfen einer Kategorie mit dem Artikel trat ein Fehler auf.');
             break;
           case ChangeResponse.NoChange:
-            this.createMessage(MessageType.Info, 'Kategorie konnte nicht mit Artikel verknüpft werden.');
+            this.createMessage(Status.Info, 'Kategorie konnte nicht mit Artikel verknüpft werden.');
             break;
         }
       });
@@ -116,13 +132,13 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.categories.splice(index, 1);
             this.categoriesSubject.next(this.article.categories);
-            this.createMessage(MessageType.Ok, 'Kategorie von Artikel entfernt');
+            this.createMessage(Status.Ok, 'Kategorie von Artikel entfernt');
             break;
           case ChangeResponse.Error:
-            this.createMessage(MessageType.Error, 'Beim entfernen der Kategorie von dem Artikel trat ein Fehler auf.');
+            this.createMessage(Status.Error, 'Beim entfernen der Kategorie von dem Artikel trat ein Fehler auf.');
             break;
           case ChangeResponse.NoChange:
-            this.createMessage(MessageType.Info, 'Kategorie konnte nicht von Artikel entfernt werden.');
+            this.createMessage(Status.Info, 'Kategorie konnte nicht von Artikel entfernt werden.');
             break;
         }
       });
@@ -148,13 +164,13 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.tags.push(tag);
             this.tagListSubject.next(this.article.tags);
-            this.createMessage(MessageType.Ok, 'Tag mit Artikel verknüpft.');
+            this.createMessage(Status.Ok, 'Tag mit Artikel verknüpft.');
             break;
           case ChangeResponse.NoChange:
-            this.createMessage(MessageType.Error, 'Beim verknüpfen eines Tags mit dem Artikel trat ein Fehler auf.');
+            this.createMessage(Status.Error, 'Beim verknüpfen eines Tags mit dem Artikel trat ein Fehler auf.');
             break;
           case ChangeResponse.Error:
-            this.createMessage(MessageType.Info, 'Tag konnte nicht mit Artikel verknüpft werden.');
+            this.createMessage(Status.Info, 'Tag konnte nicht mit Artikel verknüpft werden.');
             break;
         }
       });
@@ -174,13 +190,13 @@ export class PostEditorService extends ArticleEditorService {
           case ChangeResponse.Change:
             this.article.tags.splice(index, 1);
             this.tagListSubject.next(this.article.tags);
-            this.createMessage(MessageType.Ok, 'Tag von Artikel entfernt');
+            this.createMessage(Status.Ok, 'Tag von Artikel entfernt');
             break;
           case ChangeResponse.Error:
-            this.createMessage(MessageType.Error, 'Beim entfernen des Tags von dem Artikel trat ein Fehler auf.');
+            this.createMessage(Status.Error, 'Beim entfernen des Tags von dem Artikel trat ein Fehler auf.');
             break;
           case ChangeResponse.NoChange:
-            this.createMessage(MessageType.Info, 'Tag konnte nicht von Artikel entfernt werden.');
+            this.createMessage(Status.Info, 'Tag konnte nicht von Artikel entfernt werden.');
             break;
         }
       });

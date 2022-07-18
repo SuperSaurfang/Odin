@@ -1,8 +1,5 @@
 <div class="editor-head-container">
   <h1 class="mr-2">Blogeintrag editieren</h1>
-  <app-hintbox *ngIf="isSaved" [hintType]="hintType">
-    <span>{{message?.messageContent}}</span>
-  </app-hintbox>
 </div>
 
 <input type="text" class="title-input mb-1" [(ngModel)]="title" (change)="onUpdateArticleTitle()" placeholder="Titel des Blogeintrag">
