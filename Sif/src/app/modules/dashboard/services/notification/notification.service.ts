@@ -82,6 +82,7 @@ export class NotificationService {
   private resetNotfication() {
     const resetTimer = timer(2500);
     resetTimer.subscribe(_ => {
+      DEFAULT_NOTIFICATION.date = new Date(Date.now());
       this.notificationSubject.next(DEFAULT_NOTIFICATION);
     });
   }
