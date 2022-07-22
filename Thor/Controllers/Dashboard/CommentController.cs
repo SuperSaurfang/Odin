@@ -30,6 +30,7 @@ namespace Thor.Controllers.Dashboard
     public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
     {
       var result = await commentService.GetComments();
+      await restClient.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -44,6 +45,7 @@ namespace Thor.Controllers.Dashboard
       }
 
       var result = await commentService.UpdateComment(comment);
+      await restClient.MapUserIdToUser(result.Model);
       return Ok(result);
     }
 
@@ -53,6 +55,7 @@ namespace Thor.Controllers.Dashboard
     public async Task<ActionResult<StatusResponse<IEnumerable<Comment>>>> DeleteComments()
     {
       var result = await commentService.DeleteComments();
+      await restClient.MapUserIdToUser(result.Model);
       return Ok(result);
     }
 
