@@ -56,10 +56,10 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    this.navMenuService.getChildren(this.navMenuEntry.navMenuId).subscribe(children => {
+    this.navMenuService.getNavMenuChildren(this.navMenuEntry.navMenuId).subscribe(children => {
       this.children = children;
     });
-    this.navMenuService.getParentSelectionList(this.navMenuEntry.navMenuId).subscribe(list => {
+    this.navMenuService.getNavMenuParent(this.navMenuEntry.navMenuId).subscribe(list => {
       this.parentSelectionList = list;
     });
   }

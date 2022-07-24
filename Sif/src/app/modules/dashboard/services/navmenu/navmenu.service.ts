@@ -10,7 +10,6 @@ export class NavmenuService {
   private navMenuList: NavMenu[] = [];
   private originalList: NavMenu[] = [];
   private navMenuListSubject: BehaviorSubject<NavMenu[]> = new BehaviorSubject(this.navMenuList);
-  private messageSubject: BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor(private restService: RestNavmenuService) {
     this.loadNavMenu();
@@ -43,7 +42,6 @@ export class NavmenuService {
         default:
           break;
       }
-      // this.messageSubject.next(response.message);
     });
   }
 
@@ -64,10 +62,6 @@ export class NavmenuService {
     });
   }
 
-  public getMessage(): Observable<string> {
-    return this.messageSubject;
-  }
-
   public getNextOrderValue(): number {
     let currentMax = 0;
     currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navMenuOrder));
@@ -77,7 +71,7 @@ export class NavmenuService {
   /**
    * Get an observable list of the first level nav menu entries
    */
-  public getList(): Observable<NavMenu[]> {
+  public getNavMenuList(): Observable<NavMenu[]> {
     return this.navMenuListSubject.pipe(
       map(list => list.filter(item => item.parentId === 0 || item.parentId === undefined))
     );
@@ -88,7 +82,7 @@ export class NavmenuService {
    * from the parent id
    * @param parentId the id of the nav menu entry to find the children
    */
-  public getChildren(parentId: number): Observable<NavMenu[]> {
+  public getNavMenuChildren(parentId: number): Observable<NavMenu[]> {
     return this.navMenuListSubject.pipe(
       map(list => list.filter(item => item.parentId === parentId))
     );
@@ -98,14 +92,14 @@ export class NavmenuService {
    * Get an observable list for parent selection control
    * @param navMenuId the id of the nav menu entry
    */
-  public getParentSelectionList(navMenuId: number): Observable<NavMenu[]> {
+  public getNavMenuParent(navMenuId: number): Observable<NavMenu[]> {
     return this.navMenuListSubject.pipe(
-      map(list => this.resolveParentSelectionList(navMenuId, list))
+      map(list => this.removeInvalidNavMenuEntries(navMenuId, list))
     );
   }
 
   /**
-   * Set the parent of ths nav menu entry
+   * Set the parent of this nav menu entry
    * @param navMenuId the id of the nav menu entry that become the parent
    * @param parentId the id of the children nav menu entry
    */
@@ -140,7 +134,7 @@ export class NavmenuService {
     }
   }
 
-  private resolveParentSelectionList(navMenuId: number, list: NavMenu[]): NavMenu[]  {
+  private removeInvalidNavMenuEntries(navMenuId: number, list: NavMenu[]): NavMenu[]  {
     // remove nav menu entry with the same id, cause it should not be possible to set nav menu entry as parent of itself
     let navMenuList = list.filter(item => item.navMenuId !== navMenuId);
 

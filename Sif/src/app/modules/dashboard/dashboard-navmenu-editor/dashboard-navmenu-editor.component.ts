@@ -31,19 +31,14 @@ export class DashboardNavmenuEditorComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.restNavmenuService.getArticleList().subscribe(response => {
-      this.articles = response;
+    this.restNavmenuService.getArticleList().subscribe(articles => {
+      this.articles = articles;
     });
-    this.restNavmenuService.getCategoryList().subscribe(response => {
-      this.categories = response;
+    this.restNavmenuService.getCategoryList().subscribe(categories => {
+      this.categories = categories;
     });
-    this.navMenuService.getList().subscribe(list => {
-      this.navMenuList = list;
-    });
-    this.navMenuService.getMessage().subscribe(message => {
-      if (message) {
-        console.log(message);
-      }
+    this.navMenuService.getNavMenuList().subscribe(navMenuList => {
+      this.navMenuList = navMenuList;
     });
   }
 
