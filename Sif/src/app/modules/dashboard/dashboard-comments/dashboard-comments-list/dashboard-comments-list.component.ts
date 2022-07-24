@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
-import { ChangeResponse, Comment } from 'src/app/core';
+import { ChangeResponse, Comment, Status } from 'src/app/core';
 import { faCircle, faFilter, faSlash, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { CommentFilterService } from '../../services/comment-filter/comment-filter.service';
 import { DateFilter } from 'src/app/core/baseClass';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard-comments-list',
@@ -36,7 +37,8 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
   private filterSubscription: Subscription;
 
   constructor(private commentService: RestCommentService,
-    private filterService: CommentFilterService) { }
+    private filterService: CommentFilterService,
+    private notificationService: NotificationService) { }
 
   ngOnDestroy(): void {
     this.filterSubscription.unsubscribe();
@@ -44,6 +46,7 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.commentService.getCommentList().subscribe(response => {
+      this.pushNotification('Die Kommentare wurden geladen.', Status.Info);
       this.setData(response);
     });
   }
@@ -118,10 +121,13 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
             }
           });
           this.filterService.applyFilter();
+          this.pushNotification('Der Status wurde aktualisiert.', Status.Ok);
           break;
         case ChangeResponse.Error:
+          this.pushNotification('Fehler beim aktualisieren des Status.', Status.Error);
+          break;
         case ChangeResponse.NoChange:
-        default:
+          this.pushNotification('Der Status konnte nicht aktualisiert werden.', Status.Info);
           break;
       }
     });
@@ -135,11 +141,13 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.notificationService.startProcess('Aktualisiere die Status von Kommentaren.');
     for (let index = 0; index < this.selectedComments.length; index++) {
       if (this.selectedComments[index]) {
         this.updateStatus(index);
       }
     }
+    this.notificationService.stopProcess('Aktualisierung der Status abgeschlossen.');
   }
 
   public resetFilter() {
@@ -156,10 +164,13 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
         case ChangeResponse.Change:
           this.setData(response.model);
           this.filterService.applyFilter();
+          this.pushNotification('Der Papierkorb wurde geleert.', Status.Ok);
           break;
         case ChangeResponse.Error:
+          this.pushNotification('Fehler beim leeren des Papierkorbes.', Status.Error);
+          break;
         case ChangeResponse.NoChange:
-        default:
+          this.pushNotification('Der Papierkorb wurde nicht geleert.', Status.Info);
           break;
       }
     });
@@ -185,6 +196,14 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
 
   public updateSearchTerm() {
     this.filterService.searchFilter(this.searchTerm);
+  }
+
+  private pushNotification(message: string, status: Status) {
+    this.notificationService.pushNotification({
+      date: new Date(Date.now()),
+      message: message,
+      status: status
+    });
   }
 
 }
