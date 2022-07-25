@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeResponse, NavMenu } from 'src/app/core';
+import { ChangeResponse, NavMenu, Notification, Status, StatusResponseType } from 'src/app/core';
+import { NotificationService } from '../notification/notification.service';
 import { RestNavmenuService } from '../rest-navmenu/rest-navmenu.service';
 
 @Injectable()
@@ -11,7 +12,8 @@ export class NavmenuService {
   private originalList: NavMenu[] = [];
   private navMenuListSubject: BehaviorSubject<NavMenu[]> = new BehaviorSubject(this.navMenuList);
 
-  constructor(private restService: RestNavmenuService) {
+  constructor(private restService: RestNavmenuService,
+    private notificationService: NotificationService) {
     this.loadNavMenu();
   }
 
@@ -29,36 +31,61 @@ export class NavmenuService {
    */
   public saveNavMenuEntry(navMenu: NavMenu) {
     this.restService.updateNavMenu(navMenu).subscribe(response => {
+      const notification = this.notification;
+      if (response.responseType !== StatusResponseType.Update) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Update);
+        return;
+      }
+
       switch (response.change) {
         case ChangeResponse.Change:
           const index = this.navMenuList.findIndex(item => item.navMenuId === navMenu.navMenuId);
           this.navMenuList[index] = navMenu;
           this.originalList[index] = { ...navMenu };
           this.navMenuListSubject.next(this.navMenuList);
+          notification.message = 'Das Navigationmenü Element wurde aktualisiert.';
+          notification.status = Status.Ok;
           break;
         case ChangeResponse.NoChange:
-        case ChangeResponse.Error:
+          notification.message = 'Das Navigationmenü Element wurde nicht aktualisiert.';
+          notification.status = Status.Info;
           break;
-        default:
+        case ChangeResponse.Error:
+          notification.message = 'Fehler beim aktualisieren des Navigationmenü Elementes.';
+          notification.status = Status.Error;
           break;
       }
+      this.notificationService.pushNotification(notification);
     });
   }
 
   public deleteNavMenuEnty(navMenuId: number) {
     this.restService.deleteNavMenu(navMenuId).subscribe(response => {
+      const notification = this.notification;
+      if (response.responseType !== StatusResponseType.Delete) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Delete);
+        return;
+      }
+
       switch (response.change) {
         case ChangeResponse.Change:
           const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
           this.navMenuList.splice(index, 1);
           this.originalList = this.navMenuList.map(item => Object.assign(new NavMenu(), item));
           this.navMenuListSubject.next(this.navMenuList);
+          notification.message = 'Das Navigationmenü Element wurde gelöscht.';
+          notification.status = Status.Ok;
           break;
         case ChangeResponse.NoChange:
+          notification.message = 'Das Navigationmenü Element wurde nicht gelöscht.';
+          notification.status = Status.Info;
+          break;
         case ChangeResponse.Error:
-        default:
+          notification.message = 'Fehler beim löschen des Navigationmenü Elementes.';
+          notification.status = Status.Error;
           break;
       }
+      this.notificationService.pushNotification(notification);
     });
   }
 
@@ -156,6 +183,22 @@ export class NavmenuService {
       }
     });
     return childrenTree;
+  }
+
+  private get notification(): Notification {
+    return {
+      date: new Date(Date.now()),
+      message: '',
+      status: Status.Info
+    };
+  }
+
+  private handleInvlidResponse(currentResponseType: StatusResponseType, expectedResponseType: StatusResponseType) {
+    this.notificationService.pushNotification({
+      date: new Date(Date.now()),
+      message: `Der aktuelle Status Response Type ${currentResponseType} entspricht nicht ${expectedResponseType}`,
+      status: Status.Warning
+    });
   }
 
 }

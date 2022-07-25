@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Article, Category, ChangeResponse, NavMenu, StatusResponseType } from 'src/app/core';
+import { Article, Category, ChangeResponse, NavMenu, Status, StatusResponseType } from 'src/app/core';
 import { NavmenuService, RestNavmenuService } from '../services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { createNavMenuLink, MenuType } from './navmenu-factory';
+import { NotificationService } from '../services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard-navmenu-editor',
@@ -11,7 +12,9 @@ import { createNavMenuLink, MenuType } from './navmenu-factory';
 })
 export class DashboardNavmenuEditorComponent implements OnInit {
 
-  constructor(private restNavmenuService: RestNavmenuService, private navMenuService: NavmenuService) {
+  constructor(private restNavmenuService: RestNavmenuService,
+    private navMenuService: NavmenuService,
+    private notificationService: NotificationService) {
   }
 
   public articles: Article[] = [];
@@ -48,9 +51,24 @@ export class DashboardNavmenuEditorComponent implements OnInit {
     navMenu.displayText = this.getFormValue(type);
     navMenu = createNavMenuLink(type, navMenu);
     this.restNavmenuService.createNavMenu(navMenu).subscribe(response => {
+      const notification = {
+        date: new Date(Date.now()),
+        message: 'Neues Navigationmenü Element erstellt.',
+        status: Status.Ok,
+      };
+
       if (response.change === ChangeResponse.Change && response.responseType === StatusResponseType.Create) {
         this.navMenuService.loadNavMenu();
         this.resetAll();
+        this.notificationService.pushNotification(notification);
+      } else if (response.change === ChangeResponse.NoChange) {
+        notification.message = 'Es kein neues Navigationmenü Element erstellt.';
+        notification.status = Status.Info;
+        this.notificationService.pushNotification(notification);
+      } /* ChangeResponse is Error */ else {
+        notification.message = 'Fehler beim erstellen eines neuen Navigationmenü Elementes.';
+        notification.status = Status.Error;
+        this.notificationService.pushNotification(notification);
       }
     });
   }
