@@ -98,8 +98,10 @@ export class RestService extends RestBase {
 
   private parseCommentDate(comment: Comment) {
     comment.creationDate = new Date(comment.creationDate);
-    if (comment.answers) {
-      comment.answers.forEach(item => this.parseCommentDate(item));
+    if (comment.replies) {
+      comment.replies.forEach(reply => {
+        this.parseCommentDate(reply)
+      });
     }
   }
 }

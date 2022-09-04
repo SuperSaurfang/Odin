@@ -28,7 +28,7 @@
       </button>
   </div>
 </div>
-<div *ngIf="comment?.answers && comment?.answers.length > 0 || isAnswerTo" class="comment-answer-container">
+<div *ngIf="comment?.replies && comment?.replies.length > 0 || isAnswerTo" class="comment-answer-container">
   <app-comment-form *ngIf="isAnswerTo" [articleId]="comment?.articleId" [commentId]="comment?.commentId"></app-comment-form>
-  <app-comment *ngFor="let answer of comment?.answers" [comment]="answer"></app-comment>
+  <app-comment *ngFor="let reply of comment?.replies" [comment]="reply"></app-comment>
 </div>
