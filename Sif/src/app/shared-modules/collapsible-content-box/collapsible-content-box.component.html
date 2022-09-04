@@ -1,10 +1,11 @@
 <div class="content-container">
   <div class="content-header">
     <ng-content select="content-box-header"></ng-content>
-    <div class="action-container">
+    <div class="pos-relative tooltip-trigger">
       <button class="btn btn-icon" (click)="onShowContent()">
         <fa-icon [icon]="currentAngleIcon"></fa-icon>
       </button>
+      <div class="tooltip">{{currentTooltip}}</div>
     </div>
   </div>
   
