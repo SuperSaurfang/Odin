@@ -39,4 +39,15 @@ export class CommentComponent implements OnInit {
     this.commentService.setAnswer(this.comment.commentId);
   }
 
+  public get userName() {
+    if (!this.comment.user) {
+      return "Gast"
+    }
+    return this.comment.user.nickname;
+  }
+
+  public get isUser(): boolean {
+    return this.comment.userId !== 'guest'
+  }
+
 }
