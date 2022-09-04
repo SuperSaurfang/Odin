@@ -1,19 +1,12 @@
-<div class="content-container">
-  <h1 class="icon-header">
-    <fa-icon [icon]="searchIcon"></fa-icon>
-    <span>Suchergebnisse für {{searchRequest.term}}:</span>
-  </h1>
-  <div class="flex">
-    <div class="ml-auto">
-      <div class="pos-relative tooltip-trigger">
-        <button class="btn btn-icon" (click)="onShowExtendedOptionsChange()">
-          <fa-icon [icon]="extendedSettingsIcon"></fa-icon>
-        </button>
-        <div class="tooltip">Mehr Sucheinstellungen</div>
-      </div>
-    </div>
-  </div>
-  <div [ngClass]="{ 'hide' : showExtendedOptions === false }">
+<app-collapsible-content-box [initialState]="true">
+  <content-box-header>
+    <h1 class="icon-header">
+      <fa-icon [icon]="searchIcon"></fa-icon>
+      <span>Suchergebnisse für {{searchRequest.term}}:</span>
+    </h1>
+  </content-box-header>
+  
+  <content-box-body>
     <form [formGroup]="searchForm" (submit)="onStartSearch()">
       <p>Erweiterte Sucheinstellungen</p>
       <div class="search-setting-container">
@@ -48,18 +41,18 @@
         <button class="btn btn-primary">Suche starten</button>
       </div>
     </form>
-  </div>
-</div>
+  </content-box-body>
+</app-collapsible-content-box>
 
-<div *ngIf="searchResult.articles && searchResult.articles?.length > 0" class="content-container">
+<div *ngIf="searchResult.articles && searchResult.articles?.length > 0">
   <app-article-result [articles]="searchResult.articles"></app-article-result>
 </div>
 
-<div *ngIf="searchResult.categoryList && searchResult.categoryList?.length > 0" class="content-container">
+<div *ngIf="searchResult.categoryList && searchResult.categoryList?.length > 0">
   <app-category-result [categoryList]="searchResult.categoryList"></app-category-result>
 </div>
 
-<div *ngIf="searchResult.tagList && searchResult.tagList?.length > 0" class="content-container">
+<div *ngIf="searchResult.tagList && searchResult.tagList?.length > 0">
   <app-tag-result [tagList]="searchResult.tagList"></app-tag-result>
 </div>
 

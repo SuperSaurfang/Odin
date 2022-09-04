@@ -1,30 +1,27 @@
-<div class="content-header">
-  <p>Gefundende Artikel: {{articles?.length}}</p>
-  <div class="action-container">
-    <button class="btn btn-icon" (click)="onShowResultChange()">
-      <fa-icon [icon]="showResultIcon"></fa-icon>
-    </button>
-  </div>
-</div>
+<app-collapsible-content-box>
+  <content-box-header>
+    <p>Gefundende Artikel: {{articles?.length}}</p>
+  </content-box-header>
 
-<div [ngClass]="{ 'hide' : showResult === false }">
-  <div *ngFor="let article of articles" class="article-result-container">
-    <h1>{{article.title}}</h1>
-    <div class="article-info">
-      <span class="icon-label">
-        <fa-icon [icon]="userIcon"></fa-icon>
-        <span>{{article?.user.nickname}}</span>
-      </span>
-      <span class="spacer">/</span>
-      <span class="icon-label">
-        <fa-icon [icon]="calendarIcon"></fa-icon>
-        <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
-      </span>
+  <content-box-body>
+    <div *ngFor="let article of articles" class="article-result-container">
+      <h1>{{article.title}}</h1>
+      <div class="article-info">
+        <span class="icon-label">
+          <fa-icon [icon]="userIcon"></fa-icon>
+          <span>{{article?.user.nickname}}</span>
+        </span>
+        <span class="spacer">/</span>
+        <span class="icon-label">
+          <fa-icon [icon]="calendarIcon"></fa-icon>
+          <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
+        </span>
+      </div>
+      <div [innerHTML]="article.articleText.substring(0, 149) + '...'"></div>
+      <a class="icon-label" [routerLink]="article.link">
+        <span class="text-label">Weiter lesen</span>
+        <fa-icon [icon]="externalLinkIcon"></fa-icon>
+      </a>
     </div>
-    <div [innerHTML]="article.articleText.substring(0, 149) + '...'"></div>
-    <a class="icon-label" [routerLink]="article.link">
-      <span class="text-label">Weiter lesen</span>
-      <fa-icon [icon]="externalLinkIcon"></fa-icon>
-    </a>
-  </div>
-</div>
+  </content-box-body>
+</app-collapsible-content-box>

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { faSearch, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder } from '@angular/forms';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { SearchRequest, SearchResult } from 'src/app/core';
 import { SearchService } from 'src/app/core/services/search/search.service';
@@ -12,11 +12,7 @@ import { SearchService } from 'src/app/core/services/search/search.service';
 })
 export class SearchComponent implements OnInit, OnDestroy {
   public searchIcon = faSearch;
-  public extendedSettingsIcon = faAngleDown;
   public searchRequest: SearchRequest = new SearchRequest();
-
-  public isChecked = false;
-  public showExtendedOptions = false;
 
   public searchForm = this.formBuilder.group({
     term: [''],
@@ -44,15 +40,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  public onShowExtendedOptionsChange() {
-    this.showExtendedOptions = !this.showExtendedOptions;
-    if (this.showExtendedOptions) {
-      this.extendedSettingsIcon = faAngleUp;
-    } else {
-      this.extendedSettingsIcon = faAngleDown;
-    }
   }
 
   public onStartSearch() {
