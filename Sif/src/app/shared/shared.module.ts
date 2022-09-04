@@ -12,6 +12,7 @@ import { ToggleSwitchModule } from '../shared-modules/toggle-switch/toggle-switc
 import { MenuModule } from '../shared-modules/menu/menu.module';
 import { CommentModule } from '../shared-modules/comments/comments.module';
 import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
+import { CollapsibleContentBoxModule } from '../shared-modules/collapsible-content-box/collapsible-content-box.module';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
     MenuModule,
     DragDropModule,
     CommentModule,
-    HintboxModule
+    HintboxModule,
+    CollapsibleContentBoxModule
   ]
 })
 export class SharedModule { }
