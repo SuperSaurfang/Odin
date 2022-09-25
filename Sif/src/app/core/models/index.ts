@@ -12,3 +12,4 @@ export * from './searchResult';
 export * from './fileUploadResponse';
 export * from './notification';
 export * from './dataProcessState';
+export * from './paging';

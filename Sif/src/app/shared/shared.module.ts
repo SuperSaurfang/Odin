@@ -13,6 +13,7 @@ import { MenuModule } from '../shared-modules/menu/menu.module';
 import { CommentModule } from '../shared-modules/comments/comments.module';
 import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
 import { CollapsibleContentBoxModule } from '../shared-modules/collapsible-content-box/collapsible-content-box.module';
+import { PaginatorModule } from '../shared-modules/paginator';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { CollapsibleContentBoxModule } from '../shared-modules/collapsible-conte
     DragDropModule,
     CommentModule,
     HintboxModule,
-    CollapsibleContentBoxModule
+    CollapsibleContentBoxModule,
+    PaginatorModule,
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,7 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+  display: flex;
+  justify-content: center;
+  padding: padding(2);
+}
