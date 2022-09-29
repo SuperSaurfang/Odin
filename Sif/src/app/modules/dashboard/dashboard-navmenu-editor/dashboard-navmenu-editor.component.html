@@ -59,7 +59,10 @@
   <div class="outer-container">
     <div class="content-container">
       <h2>Menu Struktur</h2>
-        <app-dashboard-navmenu-entry *ngFor="let navMenu of navMenuList" [navMenuEntry]="navMenu"></app-dashboard-navmenu-entry>
+      <div cdkDropList
+        [cdkDropListData]="navMenuList">
+        <app-dashboard-navmenu-entry *ngFor="let navMenu of navMenuList" [navMenuEntry]="navMenu" cdkDrag></app-dashboard-navmenu-entry>
+      </div>
     </div>
   </div>
 </div>

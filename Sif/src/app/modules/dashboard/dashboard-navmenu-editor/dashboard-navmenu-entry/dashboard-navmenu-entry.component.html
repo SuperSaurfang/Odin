@@ -8,18 +8,18 @@
   <div class="form-container" *ngIf="isExpanded">
     <form [formGroup]="navMenuForm" (ngSubmit)="saveChanges()" (reset)="abortEdit()">
       <div class="control-container control-group horizontal-group mb-2">
-        <label for="display-text-{{navMenuEntry.navMenuId}}">
+        <label for="display-text-{{navMenuEntry.navmenuId}}">
             Anzeige Text
         </label>
-        <input type="text" id="display-text-{{navMenuEntry.navMenuId}}" formControlName="displayText" (input)="onDisplayTextChange($event)">
+        <input type="text" id="display-text-{{navMenuEntry.navmenuId}}" formControlName="displayText" (input)="onDisplayTextChange($event)">
       </div>
 
       <div class="control-container control-group horizontal-group mb-2">
-        <label for="parent-select-{{navMenuEntry.navMenuId}}">
+        <label for="parent-select-{{navMenuEntry.navmenuId}}">
           Übergeordnetes Menuelemt
         </label>
-        <select id="parent-select-{{navMenuEntry.navMenuId}}" formControlName="selectedParent" (change)="setParent()">
-          <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navMenuId" [selected]="navMenu.navMenuId === navMenuEntry.parentId">{{navMenu.displayText}}</option>
+        <select id="parent-select-{{navMenuEntry.navmenuId}}" formControlName="selectedParent" (change)="setParent()">
+          <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navmenuId" [selected]="navMenu.navmenuId === navMenuEntry.parentId">{{navMenu.displayText}}</option>
         </select>
         <button type="button" class="btn btn-icon" (click)="removeParent()">
           <fa-icon [icon]="removeIcon"></fa-icon>
@@ -40,6 +40,10 @@
     </form>
   </div>
 </div>
-<div class="child-entry-list" *ngIf="children.length > 0">
-  <app-dashboard-navmenu-entry *ngFor="let navMenu of children" [navMenuEntry]="navMenu"></app-dashboard-navmenu-entry>
+<div 
+  class="child-entry-list" 
+  *ngIf="children.length > 0"
+  cdkDropList
+  [cdkDropListData]="children">
+  <app-dashboard-navmenu-entry *ngFor="let navMenu of children" [navMenuEntry]="navMenu" cdkDrag></app-dashboard-navmenu-entry>
 </div>

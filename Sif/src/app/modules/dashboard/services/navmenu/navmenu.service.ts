@@ -39,7 +39,7 @@ export class NavmenuService {
 
       switch (response.change) {
         case ChangeResponse.Change:
-          const index = this.navMenuList.findIndex(item => item.navMenuId === navMenu.navMenuId);
+          const index = this.navMenuList.findIndex(item => item.navmenuId === navMenu.navmenuId);
           this.navMenuList[index] = navMenu;
           this.originalList[index] = { ...navMenu };
           this.navMenuListSubject.next(this.navMenuList);
@@ -69,7 +69,7 @@ export class NavmenuService {
 
       switch (response.change) {
         case ChangeResponse.Change:
-          const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
+          const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
           this.navMenuList.splice(index, 1);
           this.originalList = this.navMenuList.map(item => Object.assign(new NavMenu(), item));
           this.navMenuListSubject.next(this.navMenuList);
@@ -91,7 +91,7 @@ export class NavmenuService {
 
   public getNextOrderValue(): number {
     let currentMax = 0;
-    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navMenuOrder));
+    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navmenuOrder));
     return ++currentMax;
   }
 
@@ -111,7 +111,11 @@ export class NavmenuService {
    */
   public getNavMenuChildren(parentId: number): Observable<NavMenu[]> {
     return this.navMenuListSubject.pipe(
-      map(list => list.filter(item => item.parentId === parentId))
+      map(list => 
+        { 
+          
+          return list.filter(item => item.parentId === parentId) 
+        })
     );
   }
 
@@ -131,7 +135,7 @@ export class NavmenuService {
    * @param parentId the id of the children nav menu entry
    */
   public setParent(navMenuId: number, parentId: number) {
-    const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
+    const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
     this.navMenuList[index].parentId = parentId;
     this.navMenuListSubject.next(this.navMenuList);
   }
@@ -141,7 +145,7 @@ export class NavmenuService {
    * @param navMenuId the of the nav menu entry where to remove the parent id
    */
   public removeParent(navMenuId: number) {
-    const index = this.navMenuList.findIndex(item => item.navMenuId === navMenuId);
+    const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
     this.navMenuList[index].parentId = undefined;
     this.navMenuListSubject.next(this.navMenuList);
   }
@@ -155,7 +159,7 @@ export class NavmenuService {
       this.navMenuList = this.originalList.map(item => Object.assign(new NavMenu(), item));
       this.navMenuListSubject.next(this.navMenuList);
     } else {
-      const index = this.originalList.findIndex(item => item.navMenuId === navMenuId);
+      const index = this.originalList.findIndex(item => item.navmenuId === navMenuId);
       this.navMenuList[index] = {...this.originalList[index]};
       this.navMenuListSubject.next(this.navMenuList);
     }
@@ -163,12 +167,12 @@ export class NavmenuService {
 
   private removeInvalidNavMenuEntries(navMenuId: number, list: NavMenu[]): NavMenu[]  {
     // remove nav menu entry with the same id, cause it should not be possible to set nav menu entry as parent of itself
-    let navMenuList = list.filter(item => item.navMenuId !== navMenuId);
+    let navMenuList = list.filter(item => item.navmenuId !== navMenuId);
 
     // get children of nav menu entry, cause it should not be possible to set a children as a parent
     const children = this.resolveChildren(navMenuId, this.navMenuList);
     children.forEach(child => {
-      navMenuList = navMenuList.filter(item => item.navMenuId !== child.navMenuId);
+      navMenuList = navMenuList.filter(item => item.navmenuId !== child.navmenuId);
     });
 
     return navMenuList;
@@ -178,8 +182,8 @@ export class NavmenuService {
     let childrenTree: NavMenu[] = [];
     list.forEach(item => {
       if (item.parentId === navMenuId) {
-        childrenTree = list.filter(f => f.navMenuId === item.navMenuId);
-        childrenTree = childrenTree.concat(this.resolveChildren(item.navMenuId, this.navMenuList));
+        childrenTree = list.filter(f => f.navmenuId === item.navmenuId);
+        childrenTree = childrenTree.concat(this.resolveChildren(item.navmenuId, this.navMenuList));
       }
     });
     return childrenTree;

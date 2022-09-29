@@ -47,7 +47,7 @@ export class DashboardNavmenuEditorComponent implements OnInit {
 
   public saveMenu(type: MenuType) {
     let navMenu = new NavMenu();
-    navMenu.navMenuOrder = this.navMenuService.getNextOrderValue();
+    navMenu.navmenuOrder = this.navMenuService.getNextOrderValue();
     navMenu.displayText = this.getFormValue(type);
     navMenu = createNavMenuLink(type, navMenu);
     this.restNavmenuService.createNavMenu(navMenu).subscribe(response => {

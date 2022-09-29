@@ -56,10 +56,10 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    this.navMenuService.getNavMenuChildren(this.navMenuEntry.navMenuId).subscribe(children => {
+    this.navMenuService.getNavMenuChildren(this.navMenuEntry.navmenuId).subscribe(children => {
       this.children = children;
     });
-    this.navMenuService.getNavMenuParent(this.navMenuEntry.navMenuId).subscribe(list => {
+    this.navMenuService.getNavMenuParent(this.navMenuEntry.navmenuId).subscribe(list => {
       this.parentSelectionList = list;
     });
   }
@@ -80,22 +80,22 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
   }
 
   public deleteEntry() {
-    this.navMenuService.deleteNavMenuEnty(this.navMenuEntry.navMenuId);
+    this.navMenuService.deleteNavMenuEnty(this.navMenuEntry.navmenuId);
     this.expand();
   }
 
   public abortEdit() {
-    this.navMenuService.abortEdit(this.navMenuEntry.navMenuId);
+    this.navMenuService.abortEdit(this.navMenuEntry.navmenuId);
     this.expand();
   }
 
   public removeParent() {
-    this.navMenuService.removeParent(this.navMenuEntry.navMenuId);
+    this.navMenuService.removeParent(this.navMenuEntry.navmenuId);
   }
 
   public setParent() {
     const parentId = this.navMenuForm.controls['selectedParent'].value;
-    this.navMenuService.setParent(this.navMenuEntry.navMenuId, parentId);
+    this.navMenuService.setParent(this.navMenuEntry.navmenuId, parentId);
   }
 
   public onDisplayTextChange(event: any) {
