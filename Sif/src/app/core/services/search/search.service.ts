@@ -6,8 +6,8 @@ import { SearchRequest, SearchResult } from '../../models';
 
 const DEFAULF_SEARCH_REQUEST: SearchRequest = {
   term: '',
-  from: null,
-  to: null,
+  start: null,
+  end: null,
   isTextSearch: true,
   isTitleSearch: false,
   isTagSearch: false,
@@ -42,6 +42,11 @@ export class SearchService {
   }
 
   public getSearchRequest(): SearchRequest {
+    // if the user reloads the search view page the search request object is set to default value
+    // in this case user will be redirected to default view
+    if (this.searchRequest.term === '') {
+      this.router.navigate(['/blog']);
+    }
     return this.searchRequest;
   }
 

@@ -91,13 +91,18 @@
       </td>
       <td>{{comment.commentId}}</td>
       <td>
-        <div class="flex user-info-container">
-          <fa-stack *ngIf="!comment?.user.picture">
-            <fa-icon class="avatar-background" [icon]="iconCircle" stackItemSize="2x" ></fa-icon>
-            <fa-icon class="avatar-foreground" [icon]="iconUser" stackItemSize="1x"></fa-icon>
-          </fa-stack>
-          <img *ngIf="comment.user.picture" [src]="comment.user.picture" alt="profile image" class="user-profile-picture-small image">
-          <span class="ml-1">{{comment.user.nickname}}</span>
+        <div>
+          <div *ngIf="comment.userId === 'guest'" class="flex user-info-container">
+            <fa-stack >
+              <fa-icon class="avatar-background" [icon]="iconCircle" stackItemSize="2x" ></fa-icon>
+              <fa-icon class="avatar-foreground" [icon]="iconUser" stackItemSize="1x"></fa-icon>
+            </fa-stack>
+            <span class="ml-1">Gast</span>
+          </div>
+          <div *ngIf="comment.userId !== 'guest'" class="flex user-info-container">
+            <img  [src]="comment.user.picture" alt="profile image" class="user-profile-picture-small image">
+            <span class="ml-1">{{comment.user.nickname}}</span>
+          </div>
         </div>
       </td>
       <td>{{comment.commentText}}</td>
@@ -117,19 +122,19 @@
         </div>
         <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (isOpenChange)="OnClose()">
           <div class="control-group vertical-group">
-            <button class="btn btn-light text-left" (click)="updateStatus('spam', i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i)">
               <fa-icon class="danger-text" [icon]="iconCircle"></fa-icon>
               Als Spam markieren
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus('new', i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i)">
               <fa-icon class="warn-text" [icon]="iconCircle"></fa-icon>
               Als neu markieren
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus('released', i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i)">
               <fa-icon class="ok-text" [icon]="iconCircle"></fa-icon>
               Veröffentlichen
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus('trash', i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i)">
               <fa-icon class="danger-text" [icon]="iconTrash"></fa-icon>
               In den Papierkorb verschieben
             </button>

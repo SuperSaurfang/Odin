@@ -1,24 +1,25 @@
-<div class="content-header">
-  <p>Gefundende Tags: {{tagList?.length}}</p>
-  <div class="action-container">
-    <button class="btn btn-icon" (click)="onShowResultChange()">
-      <fa-icon [icon]="showResultIcon"></fa-icon>
-    </button>
-  </div>
-</div>
+<app-collapsible-content-box>
+  <content-box-header>
+    <p>Gefundende Tags: {{tagList?.length}}</p>
+  </content-box-header>
 
-<div class="tag-list-container" [ngClass]="{ 'hide' : showResult === false }">
-  <div class="tag-list-item" *ngFor="let tag of tagList">
-    <div class="tag-list-icon">
-      <fa-icon [icon]="tagIcon"></fa-icon>
+  <content-box-body>
+    <div class="tag-list-container">
+      <div class="tag-list-item" *ngFor="let tag of tagList">
+        <div class="tag-list-icon">
+          <fa-icon [icon]="tagIcon"></fa-icon>
+        </div>
+        <div class="tag-list-text-container">
+          <p>Name: {{tag.name}}</p>
+          <p>Artikel mit diesem Tag: {{tag.articleCount}}</p>
+          <a [routerLink]="['/tag', tag.name]">
+            <span>Artikel ansehen</span>
+            <fa-icon [icon]="externalLinkIcon"></fa-icon>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="tag-list-text-container">
-      <p>Name: {{tag.name}}</p>
-      <p>Artikel mit diesem Tag: {{tag.articleCount}}</p>
-      <a [routerLink]="['/tag', tag.name]">
-        <span>Artikel ansehen</span>
-        <fa-icon [icon]="externalLinkIcon"></fa-icon>
-      </a>
-    </div>
-  </div>
-</div>
+  </content-box-body>
+</app-collapsible-content-box>
+
+

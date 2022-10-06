@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
-import { ChangeResponse, Comment } from 'src/app/core';
+import { ChangeResponse, Comment, Status } from 'src/app/core';
 import { faCircle, faFilter, faSlash, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { CommentFilterService } from '../../services/comment-filter/comment-filter.service';
 import { DateFilter } from 'src/app/core/baseClass';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard-comments-list',
   templateUrl: './dashboard-comments-list.component.html',
   styleUrls: ['./dashboard-comments-list.component.scss']
 })
-export class DashboardCommentsListComponent implements OnInit {
+export class DashboardCommentsListComponent implements OnInit, OnDestroy {
 
   public iconUser = faUser;
   public iconCircle = faCircle;
@@ -36,24 +37,30 @@ export class DashboardCommentsListComponent implements OnInit {
   private filterSubscription: Subscription;
 
   constructor(private commentService: RestCommentService,
-    private filterService: CommentFilterService) { }
+    private filterService: CommentFilterService,
+    private notificationService: NotificationService) { }
 
-  ngOnInit() {
-    this.loadData();
+  ngOnDestroy(): void {
+    this.filterSubscription.unsubscribe();
   }
 
-  private loadData() {
+  ngOnInit() {
     this.commentService.getCommentList().subscribe(response => {
-      this.filterSubscription = this.filterService.filtered().subscribe(comments => {
-        this.comments = comments;
+      this.pushNotification('Die Kommentare wurden geladen.', Status.Info);
+      this.setData(response);
+    });
+  }
+
+  private setData(comments: Comment[]) {
+      this.filterSubscription = this.filterService.filtered().subscribe(filteredComments => {
+        this.comments = filteredComments;
 
         this.selectedComments = [];
         this.comments.forEach(comment => {
           this.selectedComments.push(false);
         });
       });
-      this.filterService.setFilterObject(response);
-    });
+      this.filterService.setFilterObject(comments);
   }
 
   public setSelectedComment(index: number) {
@@ -104,16 +111,23 @@ export class DashboardCommentsListComponent implements OnInit {
     this.statusmenuopen = -1;
   }
 
-  public updateStatus(status: string, index: number): void {
-    this.comments[index].status = status;
+  public updateStatus(index: number): void {
     this.commentService.putComment(this.comments[index]).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
+          this.comments.map(item => {
+            if (item.commentId === response.model.commentId) {
+              item.status = response.model.status;
+            }
+          });
           this.filterService.applyFilter();
+          this.pushNotification('Der Status wurde aktualisiert.', Status.Ok);
           break;
         case ChangeResponse.Error:
+          this.pushNotification('Fehler beim aktualisieren des Status.', Status.Error);
+          break;
         case ChangeResponse.NoChange:
-        default:
+          this.pushNotification('Der Status konnte nicht aktualisiert werden.', Status.Info);
           break;
       }
     });
@@ -127,11 +141,13 @@ export class DashboardCommentsListComponent implements OnInit {
       return;
     }
 
+    this.notificationService.startProcess('Aktualisiere die Status von Kommentaren.');
     for (let index = 0; index < this.selectedComments.length; index++) {
       if (this.selectedComments[index]) {
-        this.updateStatus(this.selectedAction, index);
+        this.updateStatus(index);
       }
     }
+    this.notificationService.stopProcess('Aktualisierung der Status abgeschlossen.');
   }
 
   public resetFilter() {
@@ -146,12 +162,15 @@ export class DashboardCommentsListComponent implements OnInit {
     this.commentService.deleteComments().subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.filterSubscription.unsubscribe();
-          this.loadData();
+          this.setData(response.model);
+          this.filterService.applyFilter();
+          this.pushNotification('Der Papierkorb wurde geleert.', Status.Ok);
           break;
         case ChangeResponse.Error:
+          this.pushNotification('Fehler beim leeren des Papierkorbes.', Status.Error);
+          break;
         case ChangeResponse.NoChange:
-        default:
+          this.pushNotification('Der Papierkorb wurde nicht geleert.', Status.Info);
           break;
       }
     });
@@ -172,11 +191,19 @@ export class DashboardCommentsListComponent implements OnInit {
   }
 
   public updateStatusFilter() {
-    this.filterService.updateStatusFilter(this.selectedStatus)
+    this.filterService.updateStatusFilter(this.selectedStatus);
   }
 
   public updateSearchTerm() {
     this.filterService.searchFilter(this.searchTerm);
+  }
+
+  private pushNotification(message: string, status: Status) {
+    this.notificationService.pushNotification({
+      date: new Date(Date.now()),
+      message: message,
+      status: status
+    });
   }
 
 }

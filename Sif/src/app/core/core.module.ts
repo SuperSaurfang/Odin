@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { RestService, UserService } from './services';
+import { RestService, UserService, WindowsScrollService } from './services';
 import { AuthGuard } from './guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -37,6 +37,7 @@ import { SearchService } from './services/search/search.service';
     RestService,
     UserService,
     SearchService,
+    WindowsScrollService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
   ]

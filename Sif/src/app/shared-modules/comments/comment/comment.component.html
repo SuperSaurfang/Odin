@@ -1,12 +1,12 @@
 <div class="content-container">
   <div class="comment-header">
     <div class="comment-author">
-      <fa-stack *ngIf="!comment?.user.picture">
+      <fa-stack *ngIf="!isUser">
         <fa-icon class="avatar-background" [icon]="circle" stackItemSize="2x" ></fa-icon>
         <fa-icon class="avatar-foreground" [icon]="user" stackItemSize="1x"></fa-icon>
       </fa-stack>
-      <img *ngIf="comment?.user.picture" [src]="comment?.user.picture" class="user-profile-picture-small">
-      <span>{{comment?.user.nickname}} schreibt:</span>
+      <img *ngIf="isUser" [src]="comment?.user.picture" class="user-profile-picture-small">
+      <span>{{userName}} schreibt:</span>
     </div>
     <div>
       <fa-icon class="comment-actionline-smallspace" [icon]="calendar"></fa-icon>
@@ -28,7 +28,7 @@
       </button>
   </div>
 </div>
-<div *ngIf="comment?.answers && comment?.answers.length > 0 || isAnswerTo" class="comment-answer-container">
+<div *ngIf="comment?.replies && comment?.replies.length > 0 || isAnswerTo" class="comment-answer-container">
   <app-comment-form *ngIf="isAnswerTo" [articleId]="comment?.articleId" [commentId]="comment?.commentId"></app-comment-form>
-  <app-comment *ngFor="let answer of comment?.answers" [comment]="answer"></app-comment>
+  <app-comment *ngFor="let reply of comment?.replies" [comment]="reply"></app-comment>
 </div>

@@ -6,10 +6,10 @@ import { Article, ChangeResponse, StatusResponse, StatusResponseType } from '../
 export abstract class RestBase {
   protected basePath: string;
 
-  protected errorResponse(type: StatusResponseType): StatusResponse {
+  protected errorResponse<TModel>(type: StatusResponseType, model: TModel): StatusResponse<TModel> {
     return {
       change: ChangeResponse.Error,
-      message: 'Error Response',
+      model: model,
       responseType: type
     };
   }

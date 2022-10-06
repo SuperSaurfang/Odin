@@ -1,0 +1,67 @@
+<ng-template #listItem let-item="item">
+  <div class="node-root">
+    <div>
+      <ng-container
+        [ngTemplateOutlet]="content"
+        [ngTemplateOutletContext]="{ $implicit: item.data }"
+      ></ng-container>
+    </div>
+
+    <div
+      class="child child-root-container"
+      cdkDropList
+      [cdkDropListData]="item.children"
+      dragDropManager
+      [id]="item.id"
+      (cdkDropListDropped)="onDragDrop($event)"
+    >
+      <div *ngFor="let child of item.children" cdkDrag>
+        <ng-container
+          *ngTemplateOutlet="listItem; context: { item: child }"
+        ></ng-container>
+
+        <ng-container
+          [ngTemplateOutlet]="previewContent"
+          [ngTemplateOutletContext]="{ $implicit: item.data }"
+          *cdkDragPreview
+        ></ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div>
+  <div class="drag-drop-header-container">
+    <ng-content select="[headerContent]"></ng-content>
+    <div class="actions">
+      <button class="btn btn-icon" (click)="saveNestedList()">
+        <fa-icon [icon]="saveIcon"></fa-icon>
+      </button>
+      <button class="btn btn-icon" (click)="resetNestedList()">
+        <fa-icon [icon]="resetIcon"></fa-icon>
+      </button>
+    </div>
+  </div>
+  
+
+  <div
+    class="drag-root-container"
+    cdkDropList
+    [id]="'root'"
+    dragDropManager
+    [cdkDropListData]="dataSource"
+    (cdkDropListDropped)="onDragDrop($event)"
+  >
+    <div *ngFor="let item of dataSource" cdkDrag>
+      <ng-container
+        *ngTemplateOutlet="listItem; context: { item: item }"
+      ></ng-container>
+
+      <ng-container
+        [ngTemplateOutlet]="previewContent"
+        [ngTemplateOutletContext]="{ $implicit: item.data }"
+        *cdkDragPreview
+      ></ng-container>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,11 @@
 <app-application-bar></app-application-bar>
-<div class="main-content">
+<div class="dashboard-main-container">
   <app-dashboard-navbar></app-dashboard-navbar>
-  <router-outlet></router-outlet>
+  <div class="dashboard-content-container">
+    <router-outlet></router-outlet>
+    <div class="dashboard-notification-container">
+      <app-dashboard-notification></app-dashboard-notification>
+    </div>
+  </div>
 </div>
 

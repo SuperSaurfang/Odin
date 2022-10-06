@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Thor.Models;
-using Thor.Services.Api;
+using Thor.Models.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
+using Thor.DatabaseProvider.Services.Api;
 
 namespace Thor.Controllers
 {
@@ -11,18 +10,17 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class NavMenuController : ControllerBase
   {
+    private readonly IThorPublicService publicService;
 
-    private readonly INavMenuService navMenuService;
-
-    public NavMenuController(INavMenuService navMenuService)
+    public NavMenuController(IThorPublicService publicService)
     {
-      this.navMenuService = navMenuService;
+      this.publicService = publicService;
     }
     [Produces("application/json")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<NavMenu>>> GetNavMenu()
+    public async Task<ActionResult<IEnumerable<Navmenu>>> GetNavMenu()
     {
-      var result = await navMenuService.GetNavMenu();
+      var result = await publicService.GetNavMenu();
       return Ok(result);
     }
   }

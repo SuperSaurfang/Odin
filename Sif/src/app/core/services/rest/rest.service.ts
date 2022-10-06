@@ -6,10 +6,10 @@ import { Article,
   Comment,
   User,
   NavMenu,
-  StatusResponse,
   StatusResponseType,
   SearchRequest,
-  SearchResult } from '../../models';
+  SearchResult,
+  StatusResponse} from '../../models';
 import { RestBase } from '../../baseClass';
 
 
@@ -71,9 +71,9 @@ export class RestService extends RestBase {
     );
   }
 
-  public postComment(comment: Comment): Observable<StatusResponse> {
-    return this.httpClient.post<StatusResponse>(`${this.basePath}/comment`, comment).pipe(
-      catchError(this.handleError<StatusResponse>('Failed to save comment', this.errorResponse(StatusResponseType.Create)))
+  public postComment(comment: Comment): Observable<StatusResponse<Comment>> {
+    return this.httpClient.post<StatusResponse<Comment>>(`${this.basePath}/comment`, comment).pipe(
+      catchError(this.handleError<StatusResponse<Comment>>('Failed to save comment', this.errorResponse<Comment>(StatusResponseType.Create, new Comment())))
     );
   }
 
@@ -98,8 +98,10 @@ export class RestService extends RestBase {
 
   private parseCommentDate(comment: Comment) {
     comment.creationDate = new Date(comment.creationDate);
-    if (comment.answers) {
-      comment.answers.forEach(item => this.parseCommentDate(item));
+    if (comment.replies) {
+      comment.replies.forEach(reply => {
+        this.parseCommentDate(reply)
+      });
     }
   }
 }

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Thor.Models;
 using Thor.Services.Api;
 using Thor.Extensions;
+using Thor.Models.Dto.Requests;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers.Dashboard
 {

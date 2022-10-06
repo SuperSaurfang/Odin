@@ -1,10 +1,11 @@
+import { User } from '@auth0/auth0-angular';
 import { Category } from './category';
 import { Tag } from './tag';
 
 export class Article {
   articleId?: number;
   title?: string;
-  author?: string;
+  user?: User;
   userId?: string;
   articleText?: string;
   creationDate?: Date;

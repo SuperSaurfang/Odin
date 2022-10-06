@@ -17,7 +17,7 @@ function pageMenu(menu: NavMenu): NavMenu {
   return {
     link: `/page/${menu.displayText}`,
     displayText: menu.displayText,
-    navMenuOrder: menu.navMenuOrder
+    navmenuOrder: menu.navmenuOrder
   };
 }
 
@@ -25,7 +25,7 @@ function categoryMenu(menu: NavMenu): NavMenu {
   return {
     link: `/category/${menu.displayText}`,
     displayText: menu.displayText,
-    navMenuOrder: menu.navMenuOrder
+    navmenuOrder: menu.navmenuOrder
   };
 }
 

@@ -30,22 +30,28 @@ constructor(protected httpClient: HttpClient) {
    );
  }
 
- public createNavMenu(navMenu: NavMenu): Observable<StatusResponse> {
-   return this.httpClient.post<StatusResponse>(`${this.basePath}`, navMenu).pipe(
-     catchError(this.handleError<StatusResponse>('Unable to create navmenu', this.errorResponse(StatusResponseType.Create)))
+ public createNavMenu(navMenu: NavMenu): Observable<StatusResponse<NavMenu>> {
+   return this.httpClient.post<StatusResponse<NavMenu>>(`${this.basePath}`, navMenu).pipe(
+     catchError(this.handleError<StatusResponse<NavMenu>>('Unable to create navmenu', this.errorResponse(StatusResponseType.Create, new NavMenu())))
    );
  }
 
  public updateNavMenu(navMenu: NavMenu) {
-   return this.httpClient.put<StatusResponse>(`${this.basePath}`, navMenu).pipe(
-     catchError(this.handleError<StatusResponse>('Unable to update navmenu', this.errorResponse(StatusResponseType.Update)))
+   return this.httpClient.put<StatusResponse<NavMenu>>(`${this.basePath}`, navMenu).pipe(
+     catchError(this.handleError<StatusResponse<NavMenu>>('Unable to update navmenu', this.errorResponse(StatusResponseType.Update, new NavMenu())))
    );
  }
 
- public deleteNavMenu(id: number): Observable<StatusResponse> {
-   return this.httpClient.delete<StatusResponse>(`${this.basePath}/${id}`).pipe(
-     catchError(this.handleError<StatusResponse>('Unable to delete navmenu', this.errorResponse(StatusResponseType.Delete)))
+ public deleteNavMenu(id: number): Observable<StatusResponse<NavMenu[]>> {
+   return this.httpClient.delete<StatusResponse<NavMenu[]>>(`${this.basePath}/${id}`).pipe(
+     catchError(this.handleError<StatusResponse<NavMenu[]>>('Unable to delete navmenu', this.errorResponse(StatusResponseType.Delete, [])))
    );
+ }
+
+ public reorderNavMenu(navMenu: NavMenu[]): Observable<StatusResponse<NavMenu[]>> {
+  return this.httpClient.put<StatusResponse<NavMenu[]>>(`${this.basePath}/reorder`, navMenu).pipe(
+    catchError(this.handleError<StatusResponse<NavMenu[]>>('Unable to reorder navmenu', this.errorResponse(StatusResponseType.Update, [])))
+  )
  }
 
 }

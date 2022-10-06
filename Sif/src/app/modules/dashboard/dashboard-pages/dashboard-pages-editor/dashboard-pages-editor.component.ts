@@ -7,8 +7,7 @@ import { BlurEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { Subscription } from 'rxjs';
 
 import { UserService } from 'src/app/core/services';
-import { ArticleEditorService, Message, MessageType } from 'src/app/core';
-import { HintType } from 'src/app/shared-modules/hintbox/hintbox.component';
+import { ArticleEditorService } from 'src/app/core';
 import { ImageUploadAdapter } from 'src/app/core/adapters/upload-adapter';
 import { ImageUploadService } from 'src/app/core/services/image-upload/image-upload.service';
 
@@ -21,10 +20,6 @@ import { ImageUploadService } from 'src/app/core/services/image-upload/image-upl
 export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
   public title = '';
   public editor = ClassicEditor;
-
-
-  public message: Message;
-  public hintType: HintType = 'info';
 
   public isSaved = false;
 
@@ -51,28 +46,6 @@ export class DashboardPagesEditorComponent implements OnInit, OnDestroy {
       if (article.articleText) {
         this.pageEditor.editorInstance.setData(article.articleText);
       }
-    }));
-
-    this.subscriptions.push(this.articleEditor.getMessage().subscribe(message => {
-      setTimeout(() => {
-        this.isSaved = false;
-      }, 2500);
-      switch (message.messageType) {
-        case MessageType.Ok:
-          this.hintType = 'ok';
-          break;
-        case MessageType.Error:
-          this.hintType = 'danger';
-          break;
-        case MessageType.Info:
-          this.hintType = 'info';
-          break;
-        case MessageType.Warning:
-          this.hintType = 'warn';
-          break;
-      }
-      this.message = message;
-      this.isSaved = true;
     }));
 
     this.activatedRoute.params.subscribe(params => {

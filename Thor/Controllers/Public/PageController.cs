@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Thor.Services.Api;
 using System.Threading.Tasks;
-using Thor.Models;
-using Newtonsoft.Json.Linq;
-using Thor.Util;
+using Thor.Extensions;
+using Thor.Models.Dto;
+using Thor.DatabaseProvider.Services.Api;
 
 namespace Thor.Controllers
 {
@@ -11,11 +11,13 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class PageController : ControllerBase
   {
-    private readonly IPageService pageService;
+    private readonly IThorPublicService publicService;
+    private readonly IRestClientService restClient;
 
-    public PageController(IPageService pageService)
+    public PageController(IThorPublicService publicService, IRestClientService restClient)
     {
-      this.pageService = pageService;
+      this.publicService = publicService;
+      this.restClient = restClient;
     }
 
     [Produces("application/json")]
@@ -27,12 +29,12 @@ namespace Thor.Controllers
         return BadRequest("Unable to load page without title");
       }
 
-      var article = await pageService.GetPublicArticleByTitle(title);
+      var article = await publicService.GetPage(title);
       if (article == null)
       {
         return InternalError();
       }
-
+      article.User = await restClient.MapUserIdToUser(article);
       return Ok(article);
     }
 

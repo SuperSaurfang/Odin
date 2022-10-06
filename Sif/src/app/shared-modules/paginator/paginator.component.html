@@ -1,0 +1,7 @@
+<div class="control-group horizontal-group">
+  <button class="btn btn-primary" (click)="firstPage()">Erste Seite</button>
+  <ng-container *ngFor="let page of pageIterator">
+    <button class="btn btn-primary" (click)="goPage(page)">{{page}}</button>
+  </ng-container>
+  <button class="btn btn-primary" (click)="lastPage()">Letzte Seite</button>
+</div>

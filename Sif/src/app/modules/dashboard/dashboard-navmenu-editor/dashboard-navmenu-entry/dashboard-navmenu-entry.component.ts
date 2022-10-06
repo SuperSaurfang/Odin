@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Location } from '@angular/common';
 import { NavMenu } from 'src/app/core';
-import { faChevronDown, faChevronUp, faTrash, faSave, faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faSave, faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup} from '@angular/forms';
 import { NavmenuService } from '../../services';
 
@@ -19,26 +18,20 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
 
   public children: NavMenu[] = [];
 
-  public currentExpandIcon = faChevronDown;
   public trashIcon = faTrash;
   public saveIcon = faSave;
   public abortIcon = faUndo;
   public removeIcon = faTimes;
 
-  public isExpanded = false;
-
-  readonly baseUrl: String;
 
   public navMenuForm = new FormGroup({
     displayText: new FormControl(''),
     selectedParent: new FormControl(0)
   });
 
-  constructor(private location: Location, private navMenuService: NavmenuService) {
-    const route = this.location.path();
-    const url = window.location.href;
-    this.baseUrl = url.replace(route, '');
-   }
+  constructor( private navMenuService: NavmenuService) {
+
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['navMenuEntry'] && changes['navMenuEntry'].firstChange) {
@@ -56,46 +49,33 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-    this.navMenuService.getChildren(this.navMenuEntry.navMenuId).subscribe(children => {
+    this.navMenuService.getNavMenuChildren(this.navMenuEntry.navmenuId).subscribe(children => {
       this.children = children;
     });
-    this.navMenuService.getParentSelectionList(this.navMenuEntry.navMenuId).subscribe(list => {
+    this.navMenuService.getNavMenuParent(this.navMenuEntry.navmenuId).subscribe(list => {
       this.parentSelectionList = list;
     });
   }
 
-  public expand() {
-    if (this.currentExpandIcon === faChevronDown) {
-      this.currentExpandIcon = faChevronUp;
-      this.isExpanded = true;
-    } else {
-      this.currentExpandIcon = faChevronDown;
-      this.isExpanded = false;
-    }
-  }
-
   public saveChanges() {
     this.navMenuService.saveNavMenuEntry(this.navMenuEntry);
-    this.expand();
   }
 
   public deleteEntry() {
-    this.navMenuService.deleteNavMenuEnty(this.navMenuEntry.navMenuId);
-    this.expand();
+    this.navMenuService.deleteNavMenuEnty(this.navMenuEntry.navmenuId);
   }
 
   public abortEdit() {
-    this.navMenuService.abortEdit(this.navMenuEntry.navMenuId);
-    this.expand();
+    this.navMenuService.abortEdit(this.navMenuEntry.navmenuId);
   }
 
   public removeParent() {
-    this.navMenuService.removeParent(this.navMenuEntry.navMenuId);
+    this.navMenuService.removeParent(this.navMenuEntry.navmenuId);
   }
 
   public setParent() {
     const parentId = this.navMenuForm.controls['selectedParent'].value;
-    this.navMenuService.setParent(this.navMenuEntry.navMenuId, parentId);
+    this.navMenuService.setParent(this.navMenuEntry.navmenuId, parentId);
   }
 
   public onDisplayTextChange(event: any) {

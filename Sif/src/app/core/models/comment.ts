@@ -8,7 +8,7 @@ export class Comment {
     articleId?: number;
     creationDate?: Date;
     answerOf?: number;
-    answers?: Comment[];
+    replies?: Comment[];
     userId?: string;
     user?: User;
     status?: string;

@@ -1,0 +1,14 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+  .drag-drop-header-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .child {
+    margin-left: margin(4);
+    padding: padding(1) 0px;
+  }
+}
+
