@@ -47,19 +47,23 @@ steps:
     customCommand: 'run build-minor'
 
 - task: DockerCompose@0
-  displayName: Create Docker Container
+  displayName: Build Docker Container
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker'
+    dockerComposeFile: '**/docker-compose.yml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'build'
+
+- task: DockerCompose@0
+  displayName: Push Docker Container
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker'
     dockerComposeFile: '**/docker-compose.yaml'
-    action: 'Push services'
-    includeLatestTag: true
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'push'
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)/odin.zip'
-    artifact: 'Odin'
-    publishLocation: 'pipeline'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'Thor/bin/Release/'
