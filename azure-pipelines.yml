@@ -50,7 +50,7 @@ steps:
   displayName: Create Docker Container
   inputs:
     containerregistrytype: 'Azure Container Registry'
-    dockerComposeFile: '$(System.DefaultWorkingDirectory)/docker-compose.yml'
+    dockerComposeFile: '**/docker-compose.yml'
     action: 'Run a Docker Compose command'
 - task: PublishPipelineArtifact@1
   inputs:
