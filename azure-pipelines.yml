@@ -1,5 +1,6 @@
 # Starter pipeline
 
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -44,6 +45,11 @@ steps:
     workingDir: 'Sif'
     customCommand: 'run build-minor'
 
+- task: DockerCompose@0
+  inputs:
+    containerregistrytype: 'Azure Container Registry'
+    dockerComposeFile: '**/docker-compose.yml'
+    action: 'Run a Docker Compose command'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'Thor/bin/Release/'
