@@ -58,7 +58,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: 'docker save supersaurfangodin_sif:latest -o $(Pipeline.Workspace)/odin.zip'
-      
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)/odin.zip'
+    artifact: 'Odin'
+    publishLocation: 'pipeline'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'Thor/bin/Release/'
