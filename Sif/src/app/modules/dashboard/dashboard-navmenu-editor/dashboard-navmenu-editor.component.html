@@ -58,11 +58,22 @@
   </div>
   <div class="outer-container">
     <div class="content-container">
-      <h2>Menu Struktur</h2>
-      <div cdkDropList
-        [cdkDropListData]="navMenuList">
-        <app-dashboard-navmenu-entry *ngFor="let navMenu of navMenuList" [navMenuEntry]="navMenu" cdkDrag></app-dashboard-navmenu-entry>
-      </div>
+      <app-nested-drag-drop-list [dataSource]="dataSource" 
+                [content]="navEntry" 
+                [previewContent]="preview"
+                (onSaveNestedList)="updateNavMenu($event)">
+        <div headerContent>
+          <h1>Navigations Menu Struktur</h1>
+        </div>
+
+        <ng-template #navEntry let-node>
+          <app-dashboard-navmenu-entry [navMenuEntry]="node"></app-dashboard-navmenu-entry>
+        </ng-template>
+
+        <ng-template #preview let-node>
+          <div class="content-container">{{node.displayText}}</div>
+        </ng-template>
+      </app-nested-drag-drop-list>
     </div>
   </div>
 </div>

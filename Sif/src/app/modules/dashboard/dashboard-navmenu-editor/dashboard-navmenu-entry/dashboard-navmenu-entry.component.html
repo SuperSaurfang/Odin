@@ -1,11 +1,8 @@
-<div class="navmenu-entry">
-  <div class="header-container">
-    <span>{{navMenuEntry.displayText}}</span>
-    <button class="btn btn-icon" (click)="expand()">
-      <fa-icon [icon]="currentExpandIcon"></fa-icon>
-    </button>
-  </div>
-  <div class="form-container" *ngIf="isExpanded">
+<app-collapsible-content-box [initialState]="false">
+  <content-box-header>
+    <p>{{navMenuEntry.displayText}}</p>
+  </content-box-header>
+  <content-box-body>
     <form [formGroup]="navMenuForm" (ngSubmit)="saveChanges()" (reset)="abortEdit()">
       <div class="control-container control-group horizontal-group mb-2">
         <label for="display-text-{{navMenuEntry.navmenuId}}">
@@ -38,12 +35,5 @@
         </button>
       </div>
     </form>
-  </div>
-</div>
-<div 
-  class="child-entry-list" 
-  *ngIf="children.length > 0"
-  cdkDropList
-  [cdkDropListData]="children">
-  <app-dashboard-navmenu-entry *ngFor="let navMenu of children" [navMenuEntry]="navMenu" cdkDrag></app-dashboard-navmenu-entry>
-</div>
+  </content-box-body>
+</app-collapsible-content-box>

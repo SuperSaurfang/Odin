@@ -4,6 +4,7 @@ import { NavmenuService, RestNavmenuService } from '../services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { createNavMenuLink, MenuType } from './navmenu-factory';
 import { NotificationService } from '../services/notification/notification.service';
+import { NestedDragDropDatasource } from 'src/app/shared-modules/nested-drag-drop-list/nested-drag-drop-datasource';
 
 @Component({
   selector: 'app-dashboard-navmenu-editor',
@@ -20,6 +21,7 @@ export class DashboardNavmenuEditorComponent implements OnInit {
   public articles: Article[] = [];
   public categories: Category[] = [];
   public navMenuList: NavMenu[] = [];
+  public dataSource: NestedDragDropDatasource<NavMenu>[] = [];
 
   public addPageForm = new FormGroup({
     selectedArticle: new FormControl('', { validators: Validators.required })
@@ -41,7 +43,12 @@ export class DashboardNavmenuEditorComponent implements OnInit {
       this.categories = categories;
     });
     this.navMenuService.getNavMenuList().subscribe(navMenuList => {
+      console.log(navMenuList);
       this.navMenuList = navMenuList;
+      this.dataSource = [];
+      this.navMenuList.forEach(element => {
+        this.dataSource.push(new NestedDragDropDatasource(element));
+      });
     });
   }
 
@@ -71,6 +78,10 @@ export class DashboardNavmenuEditorComponent implements OnInit {
         this.notificationService.pushNotification(notification);
       }
     });
+  }
+
+  public updateNavMenu(menu: NavMenu[]) {
+    this.navMenuService.updateNavMenuStructure(menu);
   }
 
   private getFormValue(type: MenuType) {

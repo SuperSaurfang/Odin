@@ -48,4 +48,10 @@ constructor(protected httpClient: HttpClient) {
    );
  }
 
+ public reorderNavMenu(navMenu: NavMenu[]): Observable<StatusResponse<NavMenu[]>> {
+  return this.httpClient.put<StatusResponse<NavMenu[]>>(`${this.basePath}/reorder`, navMenu).pipe(
+    catchError(this.handleError<StatusResponse<NavMenu[]>>('Unable to reorder navmenu', this.errorResponse(StatusResponseType.Update, [])))
+  )
+ }
+
 }

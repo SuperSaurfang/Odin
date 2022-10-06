@@ -59,6 +59,17 @@ export class NavmenuService {
     });
   }
 
+  public reorderNavMenu(navMenu: NavMenu[]) {
+    this.restService.reorderNavMenu(navMenu).subscribe(response => {
+      console.log(response);
+      const notification = this.notification;
+      if (response.responseType !== StatusResponseType.Update) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Update);
+        return;
+      }
+    })
+  }
+
   public deleteNavMenuEnty(navMenuId: number) {
     this.restService.deleteNavMenu(navMenuId).subscribe(response => {
       const notification = this.notification;
@@ -134,20 +145,26 @@ export class NavmenuService {
    * @param navMenuId the id of the nav menu entry that become the parent
    * @param parentId the id of the children nav menu entry
    */
-  public setParent(navMenuId: number, parentId: number) {
+  public setParent(navMenuId: number, parentId: number, applyNext = true) {
     const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
     this.navMenuList[index].parentId = parentId;
-    this.navMenuListSubject.next(this.navMenuList);
+
+    if(applyNext) {
+      this.navMenuListSubject.next(this.navMenuList);
+    }
   }
 
   /**
    * Remove the parent id
    * @param navMenuId the of the nav menu entry where to remove the parent id
    */
-  public removeParent(navMenuId: number) {
+  public removeParent(navMenuId: number, applyNext = true) {
     const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
     this.navMenuList[index].parentId = undefined;
-    this.navMenuListSubject.next(this.navMenuList);
+
+    if(applyNext) {
+      this.navMenuListSubject.next(this.navMenuList);
+    }
   }
 
   /**
@@ -163,6 +180,32 @@ export class NavmenuService {
       this.navMenuList[index] = {...this.originalList[index]};
       this.navMenuListSubject.next(this.navMenuList);
     }
+  }
+
+  public updateNavMenuStructure(navMenu: NavMenu[], parentId = -1, order = 1) {
+    navMenu.forEach(entry => {
+      if(parentId === -1) {
+        this.removeParent(entry.navmenuId, false);
+      } else {
+        this.setParent(entry.navmenuId, parentId, false);
+      }
+
+      this.setOrder(entry.navmenuId, order);
+      order++;
+      order = this.updateNavMenuStructure(entry.children, entry.navmenuId, order);
+    });
+
+    if(parentId === -1) {
+      this.navMenuList.sort((a, b) => a.navmenuOrder - b.navmenuOrder);
+      this.reorderNavMenu(this.navMenuList);
+    }
+
+    return order;
+  }
+
+  private setOrder(navMenuId: number, order: number) {
+    const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
+    this.navMenuList[index].navmenuOrder = order;
   }
 
   private removeInvalidNavMenuEntries(navMenuId: number, list: NavMenu[]): NavMenu[]  {
