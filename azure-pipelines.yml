@@ -45,7 +45,15 @@ steps:
     workingDir: 'Sif'
     customCommand: 'run build-minor'
 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      
+      dir
 - task: DockerCompose@0
+  displayName: Create Docker Container
   inputs:
     containerregistrytype: 'Azure Container Registry'
     dockerComposeFile: '**/docker-compose.yml'
