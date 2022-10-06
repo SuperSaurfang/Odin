@@ -10,6 +10,10 @@ export class DragDropManagerService {
 
   constructor() {}
 
+  public init() {
+    this.list = new BehaviorSubject<string[]>([]);
+  }
+
   public register = (id: string) => {
     if (!id || this.list.value.includes(id)) {
       return;

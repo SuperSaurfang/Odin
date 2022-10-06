@@ -1,7 +1,7 @@
 import { CdkDropList } from '@angular/cdk/drag-drop';
 import { Directive } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DragDropManagerService } from '../services/DragDropManager.service';
+import { DragDropManagerService } from '../services/drag-drop-manager.service';
 
 @Directive({
   selector: '[dragDropManager]'

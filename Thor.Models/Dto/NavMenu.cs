@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DB = Thor.Models.Database;
 
 namespace Thor.Models.Dto;
@@ -13,8 +14,7 @@ public class Navmenu
   public bool IsDropdowm { get; set; }
   public bool IsLabel { get; set; }
 
-  public Navmenu Parent { get; set; }
-  public IEnumerable<Navmenu> ChildNavmenu { get; set; }
+  public IEnumerable<Navmenu> Children { get; set; }
 
   public Navmenu() { }
 
@@ -35,13 +35,8 @@ public class Navmenu
       {
         childnavmenu.Add(new Navmenu(item));
       }
-      ChildNavmenu = childnavmenu;
-    }
-    
-    // if we are setting the parent menu entry, we won't apply the child list, 
-    // cause the parent entry contains the list and we prevent an stackoverflow exception
-    if (navmenu.Parent is not null) {
-      Parent = new Navmenu(navmenu.Parent, false);
+      //Add ordering here to nav children
+      Children = childnavmenu.OrderBy(n => n.NavmenuOrder);
     }
   }
 }

@@ -1,6 +1,6 @@
 <ng-template #listItem let-item="item">
   <div class="node-root">
-    <div class="content-container">
+    <div>
       <ng-container
         [ngTemplateOutlet]="content"
         [ngTemplateOutletContext]="{ $implicit: item.data }"
@@ -30,8 +30,19 @@
   </div>
 </ng-template>
 
-<div class="content-container">
-  <ng-content select="[headerContent]"></ng-content>
+<div>
+  <div class="drag-drop-header-container">
+    <ng-content select="[headerContent]"></ng-content>
+    <div class="actions">
+      <button class="btn btn-icon" (click)="saveNestedList()">
+        <fa-icon [icon]="saveIcon"></fa-icon>
+      </button>
+      <button class="btn btn-icon" (click)="resetNestedList()">
+        <fa-icon [icon]="resetIcon"></fa-icon>
+      </button>
+    </div>
+  </div>
+  
 
   <div
     class="drag-root-container"

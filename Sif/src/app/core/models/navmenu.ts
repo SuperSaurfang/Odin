@@ -6,6 +6,5 @@ export class NavMenu {
   displayText?: string;
   isDropdown?: boolean;
   isLabel?: boolean;
-  parent?: NavMenu;
-  childNavmenu?: NavMenu[];
+  children?: NavMenu[]
 }

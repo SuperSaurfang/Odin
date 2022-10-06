@@ -1,8 +1,7 @@
 import * as uuid from 'uuid';
 
 export interface BaseNode<T extends BaseNode<T>> {
-  name: string;
-  children: T[];
+  children?: T[];
 }
 
 export class NestedDragDropDatasource<T extends BaseNode<T>> {
@@ -13,9 +12,11 @@ export class NestedDragDropDatasource<T extends BaseNode<T>> {
   constructor(data: T) {
     this.data = data;
     this.id = uuid.v4();
-    data.children.forEach((item) => {
-      const source = new NestedDragDropDatasource<T>(item);
-      this.children.push(source);
-    });
+    if(data.children) {
+      data.children.forEach((item) => {
+        const source = new NestedDragDropDatasource<T>(item);
+        this.children.push(source);
+      });
+    }
   }
 }

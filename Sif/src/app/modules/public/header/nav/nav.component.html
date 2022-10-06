@@ -6,7 +6,7 @@
     <a *ngIf="!menu.isLabel" [routerLink]="[menu.link]" routerLinkActive="primary-dark">{{menu.displayText}}</a>
     <a *ngIf="menu.isLabel" routerLinkActive="primary-dark">{{menu.displayText}}</a>
     <ul class="child-nav">
-      <li *ngFor="let child of menu.childNavmenu" class="child-entry">
+      <li *ngFor="let child of menu.children" class="child-entry">
         <a *ngIf="!child.isLabel" [routerLink]="[child.link]" routerLinkActive="primary-dark">{{child.displayText}}</a>
         <a *ngIf="child.isLabel" routerLinkActive="primary-dark">{{child.displayText}}</a>
       </li>
