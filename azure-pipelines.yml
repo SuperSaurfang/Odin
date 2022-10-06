@@ -52,6 +52,7 @@ steps:
     containerregistrytype: 'Azure Container Registry'
     dockerComposeFile: '**/docker-compose.yaml'
     action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'build'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'Thor/bin/Release/'
