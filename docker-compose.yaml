@@ -12,8 +12,8 @@ services:
 
   thor:
     build: 
-     context: ./Thor
-     dockerfile: Dockerfile
+     context: .
+     dockerfile: ./Thor/Dockerfile
     volumes:
       - uploads:/app/uploads
     networks: 
