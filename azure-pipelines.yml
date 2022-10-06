@@ -52,12 +52,8 @@ steps:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker'
     dockerComposeFile: '**/docker-compose.yaml'
-    action: 'Run a Docker Compose command'
-    dockerComposeCommand: 'build'
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'docker save supersaurfangodin_sif:latest -o $(Pipeline.Workspace)/odin.zip'
+    action: 'Push services'
+    includeLatestTag: true
 
 - task: PublishPipelineArtifact@1
   inputs:
