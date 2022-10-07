@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Article, Category, ChangeResponse, NavMenu, Status, StatusResponseType } from 'src/app/core';
+import { Article, Category, NavMenu } from 'src/app/core';
 import { NavmenuService, RestNavmenuService } from '../services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { createNavMenuLink, MenuType } from './navmenu-factory';
-import { NotificationService } from '../services/notification/notification.service';
 import { NestedDragDropDatasource } from 'src/app/shared-modules/nested-drag-drop-list/nested-drag-drop-datasource';
 
 @Component({
@@ -14,8 +13,7 @@ import { NestedDragDropDatasource } from 'src/app/shared-modules/nested-drag-dro
 export class DashboardNavmenuEditorComponent implements OnInit {
 
   constructor(private restNavmenuService: RestNavmenuService,
-    private navMenuService: NavmenuService,
-    private notificationService: NotificationService) {
+    private navMenuService: NavmenuService) {
   }
 
   public articles: Article[] = [];
@@ -36,6 +34,8 @@ export class DashboardNavmenuEditorComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.navMenuService.loadNavMenu();
+
     this.restNavmenuService.getArticleList().subscribe(articles => {
       this.articles = articles;
     });
@@ -43,7 +43,6 @@ export class DashboardNavmenuEditorComponent implements OnInit {
       this.categories = categories;
     });
     this.navMenuService.getNavMenuList().subscribe(navMenuList => {
-      console.log(navMenuList);
       this.navMenuList = navMenuList;
       this.dataSource = [];
       this.navMenuList.forEach(element => {
@@ -57,27 +56,8 @@ export class DashboardNavmenuEditorComponent implements OnInit {
     navMenu.navmenuOrder = this.navMenuService.getNextOrderValue();
     navMenu.displayText = this.getFormValue(type);
     navMenu = createNavMenuLink(type, navMenu);
-    this.restNavmenuService.createNavMenu(navMenu).subscribe(response => {
-      const notification = {
-        date: new Date(Date.now()),
-        message: 'Neues Navigationmenü Element erstellt.',
-        status: Status.Ok,
-      };
-
-      if (response.change === ChangeResponse.Change && response.responseType === StatusResponseType.Create) {
-        this.navMenuService.loadNavMenu();
-        this.resetAll();
-        this.notificationService.pushNotification(notification);
-      } else if (response.change === ChangeResponse.NoChange) {
-        notification.message = 'Es kein neues Navigationmenü Element erstellt.';
-        notification.status = Status.Info;
-        this.notificationService.pushNotification(notification);
-      } /* ChangeResponse is Error */ else {
-        notification.message = 'Fehler beim erstellen eines neuen Navigationmenü Elementes.';
-        notification.status = Status.Error;
-        this.notificationService.pushNotification(notification);
-      }
-    });
+    this.navMenuService.createNavMenuEntry(navMenu);
+    this.resetAll();
   }
 
   public updateNavMenu(menu: NavMenu[]) {

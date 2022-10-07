@@ -58,7 +58,7 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
   }
 
   public saveChanges() {
-    this.navMenuService.saveNavMenuEntry(this.navMenuEntry);
+    this.navMenuService.updateNavMenuEntry(this.navMenuEntry);
   }
 
   public deleteEntry() {

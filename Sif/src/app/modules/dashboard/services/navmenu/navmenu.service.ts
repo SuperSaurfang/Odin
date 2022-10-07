@@ -14,7 +14,6 @@ export class NavmenuService {
 
   constructor(private restService: RestNavmenuService,
     private notificationService: NotificationService) {
-    this.loadNavMenu();
   }
 
   public loadNavMenu() {
@@ -26,10 +25,40 @@ export class NavmenuService {
   }
 
   /**
+   * Create a new nav menu entry
+   * @param navMenu nav menu entry to create
+   */
+  public createNavMenuEntry(navMenu: NavMenu) {
+    this.restService.createNavMenu(navMenu).subscribe(response => {
+      const notification = this.notification;
+      if (response.responseType !== StatusResponseType.Create) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Create);
+        return;
+      }
+
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.loadNavMenu();
+          notification.message = 'Das Navigationmenü Element wurde erfolgreich erstellt.';
+          notification.status = Status.Ok;
+        case ChangeResponse.NoChange:
+          notification.message = 'Das Navigationmenü Element wurde nicht erstellt.';
+          notification.status = Status.Info;
+        case ChangeResponse.Error:
+          notification.message = 'Es ist ein Fehler beim erstellen des Navigationmenü Element aufgetreten.';
+          notification.status = Status.Error;
+        default:
+          break;
+      }
+      this.notificationService.pushNotification(notification);
+    });
+  }
+
+  /**
    * Save the changes of the nav menu entry
    * @param navMenu nav menu entry to save
    */
-  public saveNavMenuEntry(navMenu: NavMenu) {
+  public updateNavMenuEntry(navMenu: NavMenu) {
     this.restService.updateNavMenu(navMenu).subscribe(response => {
       const notification = this.notification;
       if (response.responseType !== StatusResponseType.Update) {
@@ -67,6 +96,25 @@ export class NavmenuService {
         this.handleInvlidResponse(response.responseType, StatusResponseType.Update);
         return;
       }
+
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.navMenuList = response.model;
+          this.originalList = response.model.map(item => Object.assign(new NavMenu(), item));
+          this.navMenuListSubject.next(response.model);
+          notification.message = 'Das Navigationmenü wurde aktualisiert.';
+          notification.status = Status.Ok;
+          break;
+        case ChangeResponse.NoChange:
+          notification.message = 'Das Navigationmenü wurde nicht aktualisiert.';
+          notification.status = Status.Info;
+          break;
+        case ChangeResponse.Error:
+          notification.message = 'Fehler beim aktualisieren des Navigationmenü.';
+          notification.status = Status.Error;
+          break;
+      }
+      this.notificationService.pushNotification(notification);
     })
   }
 
@@ -102,7 +150,9 @@ export class NavmenuService {
 
   public getNextOrderValue(): number {
     let currentMax = 0;
-    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navmenuOrder));
+    if(this.navMenuList.length > 0) {
+      currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navmenuOrder));
+    }
     return ++currentMax;
   }
 
