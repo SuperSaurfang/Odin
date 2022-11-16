@@ -1,5 +1,6 @@
 # Starter pipeline
 
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -13,7 +14,8 @@ pool:
 steps:
 - script: |
     echo '$(Build.BuildId)'
-  displayName: 'Run a multi-line script'
+  displayName: 'Show build id number'
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
@@ -43,6 +45,24 @@ steps:
     command: 'custom'
     workingDir: 'Sif'
     customCommand: 'run build-minor'
+
+- task: DockerCompose@0
+  displayName: Build Docker Container
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker'
+    dockerComposeFile: '**/docker-compose.yaml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'build'
+
+- task: DockerCompose@0
+  displayName: Push Docker Container
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker'
+    dockerComposeFile: '**/docker-compose.yaml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'push'
 
 - task: PublishPipelineArtifact@1
   inputs:
