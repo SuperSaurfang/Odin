@@ -1,7 +1,7 @@
 export class SearchRequest {
   term: string;
-  start?: Date;
-  end?: Date;
+  start: Date;
+  end: Date;
   isTextSearch: boolean;
   isTitleSearch: boolean;
   isTagSearch: boolean;

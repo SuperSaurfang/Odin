@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { faEdit, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Category } from 'src/app/core';
@@ -23,7 +23,7 @@ export class DashboardPostCategoryEditorComponent implements OnInit, OnDestroy {
   public createCategoryForm = this.formBuilder.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
-    parent: [null]
+    parent: new FormControl<Category | null>(null)
   });
 
   public currentEditing = DEFAULT_EDITING_INDEX;

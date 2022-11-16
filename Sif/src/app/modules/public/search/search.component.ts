@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { SearchRequest, SearchResult } from 'src/app/core';
@@ -16,8 +16,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   public searchForm = this.formBuilder.group({
     term: [''],
-    start: [null],
-    end: [null],
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
     isTextSearch: [false],
     isTitleSearch: [false],
     isTagSearch: [false],

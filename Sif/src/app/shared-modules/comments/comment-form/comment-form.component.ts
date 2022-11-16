@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Comment, User } from 'src/app/core';
 import { UserService } from 'src/app/core/services';
 import { CommentService } from '../services';
@@ -22,11 +22,11 @@ export class CommentFormComponent implements OnInit {
   public user: User = null;
   public infoIcon = faInfo;
 
-  public commentForm = this.formBuilder.group({
-    comment: ['', Validators.required]
-  });
+  public comment = new FormControl('', Validators.required)
 
-  constructor(private formBuilder: FormBuilder, private commentService: CommentService, private userService: UserService) { }
+  constructor(
+    private commentService: CommentService, 
+    private userService: UserService) { }
 
   ngOnInit() {
     this.userService.getUser().subscribe(user => {
@@ -38,10 +38,6 @@ export class CommentFormComponent implements OnInit {
         this.user = user;
       }
     });
-  }
-
-  get comment() {
-    return this.commentForm.get('comment');
   }
 
   public abortComment() {
@@ -57,7 +53,7 @@ export class CommentFormComponent implements OnInit {
   }
 
   public saveComment() {
-    if (this.commentForm.invalid) {
+    if (this.comment.invalid) {
       return;
     }
 
