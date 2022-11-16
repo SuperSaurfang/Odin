@@ -86,8 +86,8 @@ export class TagService {
 
     this.restService.createTag(tag).subscribe(response => {
       const notification = this.notification;
-      if (response.responseType !== StatusResponseType.Update) {
-        this.handleInvlidResponse(response.responseType, StatusResponseType.Update);
+      if (response.responseType !== StatusResponseType.Create) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Create);
         return;
       }
 

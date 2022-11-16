@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { Tag } from 'src/app/core';
 import { TagService } from '../../services';
 
+
+
 const DEFAULT_EDITING_INDEX = -1;
 @Component({
   selector: 'app-dashboard-post-tag-editor',
@@ -23,14 +25,13 @@ export class DashboardPostTagEditorComponent implements OnInit, OnDestroy {
 
   public createTagForm = this.formBuilder.group({
     name: ['', Validators.required],
-    description: ['', Validators.required],
+    description: ['', Validators.required]
   });
-
+  
   private restoreValue: string;
   private subscription: Subscription;
 
-  constructor(private tagService: TagService,
-    private formBuilder: FormBuilder) { }
+  constructor(private tagService: TagService, private formBuilder: FormBuilder) { }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

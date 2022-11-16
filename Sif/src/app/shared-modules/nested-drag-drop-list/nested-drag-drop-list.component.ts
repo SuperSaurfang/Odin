@@ -1,7 +1,6 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseNode, NestedDragDropDatasource } from './nested-drag-drop-datasource';
-import { DragDropManagerService } from './services/drag-drop-manager.service';
 import { faSave, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -28,8 +27,12 @@ export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnIni
   @Output()
   public onSaveNestedList: EventEmitter<T[]> = new EventEmitter<T[]>()
 
-  constructor(private dragDropManager: DragDropManagerService) {
-    this.dragDropManager.init();
+  public get connectedIds() {
+    return this.resolveConnectedIds(this.dataSource, 'root');
+  }
+
+  constructor() {
+
   }
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,6 +61,21 @@ export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnIni
     this.updateData(this.dataSource);
   }
 
+  
+
+  public saveNestedList() {
+    const data: T[] = [];
+    this.dataSource.forEach((element) => {
+      data.push(element.data);
+    });
+
+    this.onSaveNestedList.emit(data);
+  }
+
+  public resetNestedList() {
+    this.dataSource = JSON.parse(this.restoreValue);
+  }
+
   private updateData(dataSource: NestedDragDropDatasource<T>[]) {
     dataSource.forEach((element) => {
       if(!element.data.children) {
@@ -77,17 +95,19 @@ export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnIni
     });
   }
 
-  public saveNestedList() {
-    const data: T[] = [];
-    this.dataSource.forEach((element) => {
-      data.push(element.data);
+  private resolveConnectedIds(currentDataSource: NestedDragDropDatasource<T>[], rootId?: string) {
+    const ids: string[] = [];
+    if(rootId) {
+      ids.push(rootId);
+    }
+
+    currentDataSource.forEach(item => {
+      ids.push(item.id);
+      if(item.children && item.children.length > 0) {
+        ids.push(...this.resolveConnectedIds(item.children));
+      }
     });
-
-    this.onSaveNestedList.emit(data);
-  }
-
-  public resetNestedList() {
-    this.dataSource = JSON.parse(this.restoreValue);
+    return ids;
   }
 
 }

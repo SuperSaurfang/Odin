@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavMenu } from 'src/app/core';
 import { faTrash, faSave, faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FormControl, FormGroup} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NavmenuService } from '../../services';
 
 @Component({
@@ -58,7 +58,7 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
   }
 
   public saveChanges() {
-    this.navMenuService.saveNavMenuEntry(this.navMenuEntry);
+    this.navMenuService.updateNavMenuEntry(this.navMenuEntry);
   }
 
   public deleteEntry() {

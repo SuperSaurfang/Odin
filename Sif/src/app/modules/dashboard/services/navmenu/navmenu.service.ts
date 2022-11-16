@@ -14,14 +14,44 @@ export class NavmenuService {
 
   constructor(private restService: RestNavmenuService,
     private notificationService: NotificationService) {
-    this.loadNavMenu();
   }
 
   public loadNavMenu() {
     this.restService.getFlatList().subscribe(response => {
-      this.navMenuList = response;
-      this.originalList = response.map(item => Object.assign(new NavMenu(), item));
-      this.navMenuListSubject.next(response);
+      this.setNavMenu(response);
+    });
+  }
+
+  /**
+   * Create a new nav menu entry
+   * @param navMenu nav menu entry to create
+   */
+  public createNavMenuEntry(navMenu: NavMenu) {
+    this.restService.createNavMenu(navMenu).subscribe(response => {
+      const notification = this.notification;
+      if (response.responseType !== StatusResponseType.Create) {
+        this.handleInvlidResponse(response.responseType, StatusResponseType.Create);
+        return;
+      }
+
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.loadNavMenu();
+          notification.message = 'Das Navigationmenü Element wurde erfolgreich erstellt.';
+          notification.status = Status.Ok;
+          break;
+        case ChangeResponse.NoChange:
+          notification.message = 'Das Navigationmenü Element wurde nicht erstellt.';
+          notification.status = Status.Info;
+          break;
+        case ChangeResponse.Error:
+          notification.message = 'Es ist ein Fehler beim erstellen des Navigationmenü Element aufgetreten.';
+          notification.status = Status.Error;
+          break;
+        default:
+          break;
+      }
+      this.notificationService.pushNotification(notification);
     });
   }
 
@@ -29,7 +59,7 @@ export class NavmenuService {
    * Save the changes of the nav menu entry
    * @param navMenu nav menu entry to save
    */
-  public saveNavMenuEntry(navMenu: NavMenu) {
+  public updateNavMenuEntry(navMenu: NavMenu) {
     this.restService.updateNavMenu(navMenu).subscribe(response => {
       const notification = this.notification;
       if (response.responseType !== StatusResponseType.Update) {
@@ -39,10 +69,7 @@ export class NavmenuService {
 
       switch (response.change) {
         case ChangeResponse.Change:
-          const index = this.navMenuList.findIndex(item => item.navmenuId === navMenu.navmenuId);
-          this.navMenuList[index] = navMenu;
-          this.originalList[index] = { ...navMenu };
-          this.navMenuListSubject.next(this.navMenuList);
+          this.loadNavMenu();
           notification.message = 'Das Navigationmenü Element wurde aktualisiert.';
           notification.status = Status.Ok;
           break;
@@ -61,12 +88,28 @@ export class NavmenuService {
 
   public reorderNavMenu(navMenu: NavMenu[]) {
     this.restService.reorderNavMenu(navMenu).subscribe(response => {
-      console.log(response);
       const notification = this.notification;
       if (response.responseType !== StatusResponseType.Update) {
         this.handleInvlidResponse(response.responseType, StatusResponseType.Update);
         return;
       }
+
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.setNavMenu(response.model);
+          notification.message = 'Das Navigationmenü wurde aktualisiert.';
+          notification.status = Status.Ok;
+          break;
+        case ChangeResponse.NoChange:
+          notification.message = 'Das Navigationmenü wurde nicht aktualisiert.';
+          notification.status = Status.Info;
+          break;
+        case ChangeResponse.Error:
+          notification.message = 'Fehler beim aktualisieren des Navigationmenü.';
+          notification.status = Status.Error;
+          break;
+      }
+      this.notificationService.pushNotification(notification);
     })
   }
 
@@ -80,10 +123,7 @@ export class NavmenuService {
 
       switch (response.change) {
         case ChangeResponse.Change:
-          const index = this.navMenuList.findIndex(item => item.navmenuId === navMenuId);
-          this.navMenuList.splice(index, 1);
-          this.originalList = this.navMenuList.map(item => Object.assign(new NavMenu(), item));
-          this.navMenuListSubject.next(this.navMenuList);
+          this.setNavMenu(response.model);
           notification.message = 'Das Navigationmenü Element wurde gelöscht.';
           notification.status = Status.Ok;
           break;
@@ -102,7 +142,9 @@ export class NavmenuService {
 
   public getNextOrderValue(): number {
     let currentMax = 0;
-    currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navmenuOrder));
+    if(this.navMenuList.length > 0) {
+      currentMax = Math.max.apply(currentMax, this.navMenuList.map(value => value.navmenuOrder));
+    }
     return ++currentMax;
   }
 
@@ -124,7 +166,6 @@ export class NavmenuService {
     return this.navMenuListSubject.pipe(
       map(list => 
         { 
-          
           return list.filter(item => item.parentId === parentId) 
         })
     );
@@ -230,6 +271,12 @@ export class NavmenuService {
       }
     });
     return childrenTree;
+  }
+
+  private setNavMenu(navMenu: NavMenu[]) {
+    this.navMenuList = navMenu;
+    this.originalList = navMenu.map(item => Object.assign(new NavMenu(), item));
+    this.navMenuListSubject.next(navMenu);
   }
 
   private get notification(): Notification {
