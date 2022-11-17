@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { Article } from 'src/app/core';
 import { RestService } from 'src/app/core/services';
 
@@ -10,8 +9,6 @@ import { RestService } from 'src/app/core/services';
   styleUrls: ['./tag.component.scss']
 })
 export class TagComponent implements OnInit {
-
-  public tagIcon = faTag;
   public tag = '';
   public articles: Article[] = [];
 
