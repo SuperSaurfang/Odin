@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faCalendarAlt, faExclamation, faShare, faUser, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { Comment } from 'src/app/core/models';
 import { CommentService } from '../services';
 
@@ -15,12 +14,6 @@ export class CommentComponent implements OnInit {
   public comment: Comment;
 
   public isAnswerTo = false;
-
-  public user = faUser;
-  public calendar = faCalendarAlt;
-  public share = faShare;
-  public exclamation = faExclamation;
-  public circle = faCircle;
 
   constructor(private commentService: CommentService) { }
 

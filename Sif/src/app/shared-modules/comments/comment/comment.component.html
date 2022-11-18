@@ -2,14 +2,14 @@
   <div class="comment-header">
     <div class="comment-author">
       <fa-stack *ngIf="!isUser">
-        <fa-icon class="avatar-background" [icon]="circle" stackItemSize="2x" ></fa-icon>
-        <fa-icon class="avatar-foreground" [icon]="user" stackItemSize="1x"></fa-icon>
+        <fa-icon class="avatar-background" [icon]="['fas', 'circle']" stackItemSize="2x" ></fa-icon>
+        <fa-icon class="avatar-foreground" [icon]="['fas', 'user']" stackItemSize="1x"></fa-icon>
       </fa-stack>
       <img *ngIf="isUser" [src]="comment?.user.picture" class="user-profile-picture-small">
       <span>{{userName}} schreibt:</span>
     </div>
     <div>
-      <fa-icon class="comment-actionline-smallspace" [icon]="calendar"></fa-icon>
+      <fa-icon class="comment-actionline-smallspace" [icon]="['fas', 'calendar-day']"></fa-icon>
       <span>
         {{comment?.creationDate.toLocaleDateString()}} um {{comment?.creationDate.toLocaleTimeString()}}
       </span>
@@ -18,12 +18,12 @@
   <p>{{comment?.commentText}}</p>
   <div class="comment-footer">
       <button (click)="onShowCommentForm()" title="Antworten" class="comment-actionline-space btn btn-light">
-          <fa-icon [icon]="share"></fa-icon>
+          <fa-icon [icon]="['fas', 'share']"></fa-icon>
           Antworten
       </button>
       <!--Feature not implemented yet-->
       <button *ngIf="false" title="Melden" class="comment-actionline-space btn btn-light">
-          <fa-icon [icon]="exclamation"></fa-icon>
+          <fa-icon [icon]="['fas', 'exclamation']"></fa-icon>
           Melden
       </button>
   </div>

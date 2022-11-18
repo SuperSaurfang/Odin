@@ -1,18 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
 
   constructor() { }
-
-
-  public iconExit = faTimes;
 
   @Input()
   public menuTitle = 'Mein Menu';
@@ -21,9 +16,6 @@ export class MenuComponent implements OnInit {
   public isOpen: boolean;
   @Output()
   public isOpenChange = new EventEmitter<boolean>();
-
-  ngOnInit() {
-  }
 
   public onClose() {
     this.isOpen = false;

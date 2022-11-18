@@ -1,9 +1,9 @@
 <div class="hintbox-container"
 	[ngClass]="{'info': hintType === 'info', 'ok': hintType === 'ok', 'warn': hintType === 'warn', 'danger': hintType === 'danger'}">
-	<fa-icon *ngIf="hintType === 'ok'" [icon]="okIcon"></fa-icon>
-	<fa-icon *ngIf="hintType === 'warn'" [icon]="warnIcon"></fa-icon>
-	<fa-icon *ngIf="hintType === 'danger'" [icon]="errorIcon"></fa-icon>
-	<fa-icon *ngIf="hintType === 'info'" [icon]="infoIcon"></fa-icon>
+	<fa-icon *ngIf="hintType === 'ok'" [icon]="['fas', 'check']"></fa-icon>
+	<fa-icon *ngIf="hintType === 'warn'" [icon]="['fas', 'exclamation-triangle']"></fa-icon>
+	<fa-icon *ngIf="hintType === 'danger'" [icon]="['fas', 'exclamation-circle']"></fa-icon>
+	<fa-icon *ngIf="hintType === 'info'" [icon]="['fas', 'info']"></fa-icon>
 	<div>
 		<ng-content></ng-content>
 	</div>
