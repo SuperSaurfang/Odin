@@ -3,7 +3,7 @@
 :host {
   display: flex;
   width: 100%;
-  height: fit-content;
+  max-height: 52px;
   background-color: $dark-1;
   padding: 0px padding(1);
   box-sizing: border-box;
@@ -12,7 +12,8 @@
 .application-bar-link {
   color: $grey-2;
   text-decoration: none;
-  padding: padding(0.5) padding(1.5);
+  padding: padding(2);
+  font-size: 17px;
   display: block;
 }
 
