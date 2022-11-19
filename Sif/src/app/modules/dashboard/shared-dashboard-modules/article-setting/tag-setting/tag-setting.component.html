@@ -8,7 +8,7 @@
   <span class="badge" *ngFor="let item of connectedTagList">
     <span class="badge-content">{{item.name}}</span>
     <button class="badge-remove" (click)="remove(item)">
-      <fa-icon [icon]="removeIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </span>
 </div>

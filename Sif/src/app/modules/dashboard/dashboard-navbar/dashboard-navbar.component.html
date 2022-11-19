@@ -1,31 +1,31 @@
 <ul class="nav-list">
   <li>
     <a class="nav-entry" [routerLink]="['overview']" routerLinkActive="primary-dark">
-      <fa-icon [icon]="tachometer"></fa-icon>
+      <fa-icon [icon]="['fas', 'tachometer-alt']"></fa-icon>
       Dasboard
     </a>
   </li>
   <li>
     <a #rlaBlog="routerLinkActive" class="nav-entry" [routerLink]="['posts']" routerLinkActive="primary-dark">
-      <fa-icon [icon]="edit"></fa-icon>
+      <fa-icon [icon]="['fas', 'edit']"></fa-icon>
       Blog
     </a>
     <ul *ngIf="rlaBlog.isActive" class="nav-child-list">
       <li>
         <a class="nav-entry" [routerLink]="['posts/edit']" routerLinkActive="primary-dark">
-          <fa-icon [icon]="plus"></fa-icon>
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
           Erstellen
         </a>
       </li>
       <li>
         <a class="nav-entry" [routerLink]="['posts/tags']" routerLinkActive="primary-dark">
-          <fa-icon [icon]="tags"></fa-icon>
+          <fa-icon [icon]="['fas', 'tags']"></fa-icon>
           Tags
         </a>
       </li>
       <li>
         <a class="nav-entry" [routerLink]="['posts/categories']" routerLinkActive="primary-dark">
-          <fa-icon [icon]="list"></fa-icon>
+          <fa-icon [icon]="['fas', 'list']"></fa-icon>
           Kategorien
         </a>
       </li>
@@ -33,19 +33,19 @@
   </li>
   <li>
     <a class="nav-entry" [routerLink]="['pages']" routerLinkActive="primary-dark">
-      <fa-icon [icon]="page"></fa-icon>
+      <fa-icon [icon]="['fas', 'copy']"></fa-icon>
       Seiten
     </a>
   </li>
   <li>
     <a class="nav-entry" [routerLink]="['comments']" routerLinkActive="primary-dark">
-      <fa-icon [icon]="comments"></fa-icon>
+      <fa-icon [icon]="['fas', 'comments']"></fa-icon>
       Kommentare
     </a>
   </li>
   <li>
     <a class="nav-entry" [routerLink]="['navmenu']" routerLinkActive="primary-dark">
-      <fa-icon [icon]="menu"></fa-icon>
+      <fa-icon [icon]="['fas', 'sitemap']"></fa-icon>
       Menu
     </a>
   </li>

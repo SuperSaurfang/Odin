@@ -1,7 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
-import { faTrash, faFilter, faSlash, faCircle } from '@fortawesome/free-solid-svg-icons';
-
 export enum FilterType {
   Status,
   SearchTerm,
@@ -30,11 +28,6 @@ export class ListFilterEvent {
 export class ListActionBarComponent implements OnInit {
 
   constructor() { }
-
-  public iconTrash = faTrash;
-  public iconFilter = faFilter;
-  public iconSlash = faSlash;
-  public iconStatus = faCircle;
 
   public selectedAction = '';
   public listAction: ListFilterModel = new ListFilterModel();

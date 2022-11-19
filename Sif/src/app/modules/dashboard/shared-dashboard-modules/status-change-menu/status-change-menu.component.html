@@ -1,19 +1,19 @@
 <app-menu [isOpen]="isOpen" menuTitle="Status ändern" (isOpenChange)="onIsOpenUpdate($event)">
   <div class="control-group vertical-group">
     <button class="btn btn-light text-left" (click)="updateStatus.emit('draft')">
-      <fa-icon class="danger-text" [icon]="iconStatus"></fa-icon>
+      <fa-icon class="danger-text" [icon]="['fas', 'circle']"></fa-icon>
       Auf Entwurf setzen
     </button>
     <button class="btn btn-light text-left" (click)="updateStatus.emit('private')">
-      <fa-icon class="warn-text" [icon]="iconStatus"></fa-icon>
+      <fa-icon class="warn-text" [icon]="['fas', 'circle']"></fa-icon>
       Auf Privat setzen
     </button>
     <button class="btn btn-light text-left" (click)="updateStatus.emit('public')">
-      <fa-icon class="ok-text" [icon]="iconStatus"></fa-icon>
+      <fa-icon class="ok-text" [icon]="['fas', 'circle']"></fa-icon>
       Veröffentlichen
     </button>
     <button class="btn btn-light text-left" (click)="updateStatus.emit('trash')">
-      <fa-icon class="danger-text" [icon]="iconTrash"></fa-icon>
+      <fa-icon class="danger-text" [icon]="['fas', 'trash']"></fa-icon>
       In den Papierkorb verschieben
     </button>
   </div>

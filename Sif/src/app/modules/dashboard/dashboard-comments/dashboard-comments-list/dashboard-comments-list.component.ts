@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
 import { ChangeResponse, Comment, Status } from 'src/app/core';
-import { faCircle, faFilter, faSlash, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { CommentFilterService } from '../../services/comment-filter/comment-filter.service';
 import { DateFilter } from 'src/app/core/baseClass';
 import { Subscription } from 'rxjs';
@@ -13,12 +12,6 @@ import { NotificationService } from '../../services/notification/notification.se
   styleUrls: ['./dashboard-comments-list.component.scss']
 })
 export class DashboardCommentsListComponent implements OnInit, OnDestroy {
-
-  public iconUser = faUser;
-  public iconCircle = faCircle;
-  public iconTrash = faTrash;
-  public iconFilter = faFilter;
-  public iconSlash = faSlash;
 
   public comments: Comment[] = [];
 

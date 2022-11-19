@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faCheckCircle, faExclamationCircle, faExclamationTriangle, faInfoCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Notification } from 'src/app/core';
@@ -11,12 +10,6 @@ import { NotificationService } from '../../services/notification/notification.se
   styleUrls: ['./dashboard-notification-log.component.scss']
 })
 export class DashboardNotificationLogComponent implements OnInit, OnDestroy {
-  public dangerIcon = faExclamationTriangle;
-  public infoIcon = faInfoCircle;
-  public okIcon = faCheckCircle;
-  public warnIcon = faExclamationCircle;
-
-  public trashIcon = faTrash;
 
   public history: Notification[] = [];
 
