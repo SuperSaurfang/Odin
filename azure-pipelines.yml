@@ -46,24 +46,6 @@ steps:
     workingDir: 'Sif'
     customCommand: 'run build-minor'
 
-- task: DockerCompose@0
-  displayName: Build Docker Container
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker'
-    dockerComposeFile: '**/docker-compose.yaml'
-    action: 'Run a Docker Compose command'
-    dockerComposeCommand: 'build'
-
-- task: DockerCompose@0
-  displayName: Push Docker Container
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker'
-    dockerComposeFile: '**/docker-compose.yaml'
-    action: 'Run a Docker Compose command'
-    dockerComposeCommand: 'push'
-
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'Thor/bin/Release/'
