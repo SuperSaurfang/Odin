@@ -5,6 +5,8 @@ using Thor.Models.Dto;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.Services.Api;
 using Thor.Extensions;
+using Thor.Models.Dto.Responses;
+using Thor.Models.Dto.Requests;
 
 namespace Thor.Controllers
 {
@@ -27,17 +29,17 @@ namespace Thor.Controllers
     /// </summary>
     /// <returns></returns>
     [Produces("application/json")]
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> GetAllPublicBlog()
+    [HttpPost]
+    public async Task<ActionResult<ArticleResponse>> GetAllPublicBlog(Paging paging)
     {
       // var result = await blogService.GetAllPublicArticles();
-      var result = await blogService.GetBlog();
+      var result = await blogService.GetBlog(paging);
       if (result == null)
       {
         return InternalError();
       }
 
-      await restClient.MapUserIdToUser(result);
+      await restClient.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
 
@@ -66,8 +68,8 @@ namespace Thor.Controllers
     }
 
     [Produces("application/json")]
-    [HttpGet("category/{category}")]
-    public async Task<ActionResult<IEnumerable<Article>>> GetCategoryBlog(string category)
+    [HttpPost("category")]
+    public async Task<ActionResult<ArticleResponse>> GetCategoryBlog(ArticleRequest category)
     {
       if(category == null)
       {
@@ -79,13 +81,13 @@ namespace Thor.Controllers
       {
         return InternalError();
       }
-      await restClient.MapUserIdToUser(result);
+      await restClient.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
 
     [Produces("application/json")]
-    [HttpGet("tag/{tag}")]
-    public async Task<ActionResult<IEnumerable<Article>>> GetBlogByTag(string tag)
+    [HttpPost("tag")]
+    public async Task<ActionResult<ArticleResponse>> GetBlogByTag(ArticleRequest tag)
     {
       if(tag is null)
       {
@@ -96,9 +98,10 @@ namespace Thor.Controllers
       {
         return InternalError();
       }
-      await restClient.MapUserIdToUser(result);
+      await restClient.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
+    
     private ObjectResult InternalError(string message = "Internal Server Error")
     {
       return StatusCode(500, message);

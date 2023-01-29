@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faUser, faCalendar, faComments, faEdit, faFolder, faTags } from '@fortawesome/free-solid-svg-icons';
 import { Article } from 'src/app/core';
 import { UserService } from 'src/app/core/services';
 
@@ -11,14 +10,6 @@ type ArticleType = 'blog' | 'page';
   styleUrls: ['./article-content-renderer.component.scss']
 })
 export class ArticleContentRendererComponent implements OnInit {
-
-  public calendarIcon = faCalendar;
-  public commentsIcon = faComments;
-  public editIcon = faEdit;
-  public userIcon = faUser;
-  public categoryIcon = faFolder;
-  public tagsIcon = faTags;
-
   @Input()
   public article: Article;
 

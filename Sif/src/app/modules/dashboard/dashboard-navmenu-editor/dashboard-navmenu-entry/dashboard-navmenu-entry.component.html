@@ -19,19 +19,19 @@
           <option *ngFor="let navMenu of parentSelectionList" [ngValue]="navMenu.navmenuId" [selected]="navMenu.navmenuId === navMenuEntry.parentId">{{navMenu.displayText}}</option>
         </select>
         <button type="button" class="btn btn-icon" (click)="removeParent()">
-          <fa-icon [icon]="removeIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'times']"></fa-icon>
         </button>
       </div>
 
       <div class="action-container">
         <button type="submit" class="btn btn-icon">
-          <fa-icon [icon]="saveIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'save']"></fa-icon>
         </button>
         <button type="button" class="btn btn-icon" (click)="deleteEntry()">
-          <fa-icon [icon]="trashIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'trash']"></fa-icon>
         </button>
         <button type="reset" class="btn btn-icon">
-          <fa-icon [icon]="abortIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'undo']"></fa-icon>
         </button>
       </div>
     </form>

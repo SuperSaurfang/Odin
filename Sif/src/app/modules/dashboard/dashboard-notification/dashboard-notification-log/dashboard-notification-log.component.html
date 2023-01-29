@@ -1,17 +1,17 @@
 <div class="notification-action-bar">
   <div class="pos-relative tooltip-trigger">
     <button class="btn delete-button" (click)="onDeleteNotifications()">
-      <fa-icon [icon]="trashIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'trash']"></fa-icon>
     </button>
     <span class="tooltip tooltip-position">Einträge löschen</span>
   </div>
 </div>
 <div class="notification-log-container">
   <div *ngFor="let entry of history" class="notification-log-entry">
-    <fa-icon [icon]="dangerIcon" class="danger-text" *ngIf="entry.status === 0"></fa-icon>
-    <fa-icon [icon]="warnIcon" class="warn-text" *ngIf="entry.status === 1"></fa-icon>
-    <fa-icon [icon]="infoIcon" class="info-text" *ngIf="entry.status === 2"></fa-icon>
-    <fa-icon [icon]="okIcon" class="ok-text" *ngIf="entry.status === 3"></fa-icon>
+    <fa-icon [icon]="['fas', 'exclamation-triangle']" class="danger-text" *ngIf="entry.status === 0"></fa-icon>
+    <fa-icon [icon]="['fas', 'exclamation-circle']" class="warn-text" *ngIf="entry.status === 1"></fa-icon>
+    <fa-icon [icon]="['fas', 'info-circle']" class="info-text" *ngIf="entry.status === 2"></fa-icon>
+    <fa-icon [icon]="['fas', 'check-circle']" class="ok-text" *ngIf="entry.status === 3"></fa-icon>
     <span class="mx-1">{{entry.date | date: 'dd.MM.yy HH:mm:ss'}}: </span>
     <span>{{entry.message}}</span>
   </div>

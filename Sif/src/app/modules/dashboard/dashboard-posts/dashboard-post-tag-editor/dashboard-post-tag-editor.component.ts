@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { faEdit, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Tag } from 'src/app/core';
 import { TagService } from '../../services';
@@ -14,11 +13,6 @@ const DEFAULT_EDITING_INDEX = -1;
   styleUrls: ['./dashboard-post-tag-editor.component.scss']
 })
 export class DashboardPostTagEditorComponent implements OnInit, OnDestroy {
-
-  public editIcon = faEdit;
-  public trashIcon = faTrash;
-  public saveIcon = faSave;
-  public abortIcon = faTimes;
 
   public tagList: Tag[] = [];
   public currentEditing = DEFAULT_EDITING_INDEX;

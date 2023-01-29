@@ -3,7 +3,7 @@
     <ng-content select="content-box-header"></ng-content>
     <div class="pos-relative tooltip-trigger">
       <button class="btn btn-icon" (click)="onShowContent()">
-        <fa-icon [icon]="currentAngleIcon"></fa-icon>
+        <fa-icon [icon]="['fas', currentAngleIcon]"></fa-icon>
       </button>
       <div class="tooltip">{{currentTooltip}}</div>
     </div>

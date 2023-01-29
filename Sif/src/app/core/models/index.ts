@@ -13,3 +13,5 @@ export * from './fileUploadResponse';
 export * from './notification';
 export * from './dataProcessState';
 export * from './paging';
+export * from './articleResponse';
+export * from './articleRequest';

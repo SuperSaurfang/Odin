@@ -62,16 +62,16 @@
           <td>
             <div class="flex">
               <button *ngIf="currentEditing !== i" class="btn btn-icon" (click)="setCurrentEditing(i)">
-                <fa-icon [icon]="editIcon"></fa-icon>
+                <fa-icon [icon]="['fas', 'edit']"></fa-icon>
               </button>
               <button *ngIf="currentEditing !== i" class="btn btn-icon danger-text" (click)="deleteTag(i)">
-                <fa-icon [icon]="trashIcon"></fa-icon>
+                <fa-icon [icon]="['fas', 'trash']"></fa-icon>
               </button>
               <button *ngIf="currentEditing === i" class="btn btn-icon" (click)="updateTag(i)">
-                <fa-icon [icon]="saveIcon"></fa-icon>
+                <fa-icon [icon]="['fas', 'save']"></fa-icon>
               </button>
               <button *ngIf="currentEditing === i" class="btn btn-icon danger-text" (click)="clearCurrentEditing()">
-                <fa-icon [icon]="abortIcon"></fa-icon>
+                <fa-icon [icon]="['fas', 'times']"></fa-icon>
               </button>
             </div>
           </td>

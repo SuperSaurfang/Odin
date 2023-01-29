@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { faCheck, faExclamationCircle, faExclamationTriangle, faInfo } from '@fortawesome/free-solid-svg-icons';
+import { Component, Input } from '@angular/core';
 
 export type HintType = 'ok' | 'warn' | 'danger' | 'info';
 
@@ -8,18 +7,11 @@ export type HintType = 'ok' | 'warn' | 'danger' | 'info';
   templateUrl: './hintbox.component.html',
   styleUrls: ['./hintbox.component.scss']
 })
-export class HintboxComponent implements OnInit {
-  public okIcon = faCheck;
-  public warnIcon = faExclamationTriangle;
-  public errorIcon = faExclamationCircle;
-  public infoIcon = faInfo;
+export class HintboxComponent {
 
   @Input()
   public hintType: HintType = 'info';
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

@@ -1,7 +1,7 @@
 <div class="flex-grow">
   <div class="content-container">
     <h1 class="header-icon">
-      <fa-icon [icon]="tagIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'tag']"></fa-icon>
       <span>Beiträge mit Tag {{tag}}:</span>
     </h1>
   </div>
@@ -9,6 +9,10 @@
   <div *ngFor="let article of articles" class="content-container">
     <app-article-content-renderer [article]="article" articleType="blog"></app-article-content-renderer>
   </div>
+
+  <ng-container *ngIf="paging.totalPages > 1">
+    <app-paginator [paging]="paging" (pageChange)="onPageChange($event)"></app-paginator>
+  </ng-container>
 </div>
 
 <app-side-bar></app-side-bar>

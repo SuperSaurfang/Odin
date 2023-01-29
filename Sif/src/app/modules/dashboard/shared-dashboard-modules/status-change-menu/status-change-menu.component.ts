@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { faCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-status-change-menu',
@@ -10,10 +9,6 @@ import { faCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
 export class StatusChangeMenuComponent implements OnInit {
 
   constructor() { }
-
-
-  public iconStatus = faCircle;
-  public iconTrash = faTrash;
 
   @Input()
   public isOpen = true;

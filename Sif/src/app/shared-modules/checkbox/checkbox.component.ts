@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faSquare, faMinusSquare } from '@fortawesome/free-regular-svg-icons';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -16,9 +14,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class CheckboxComponent implements OnInit, ControlValueAccessor {
-  public checked = faCheckSquare;
-  public unchecked = faSquare;
-  public indeterminate = faMinusSquare;
 
   @Input()
   public isIndeterminate = false;

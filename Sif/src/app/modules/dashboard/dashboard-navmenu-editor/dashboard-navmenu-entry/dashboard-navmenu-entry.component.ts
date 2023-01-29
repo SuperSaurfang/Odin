@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavMenu } from 'src/app/core';
-import { faTrash, faSave, faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NavmenuService } from '../../services';
 
@@ -17,11 +16,6 @@ export class DashboardNavmenuEntryComponent implements OnInit, OnChanges {
   public parentSelectionList: NavMenu[] = [];
 
   public children: NavMenu[] = [];
-
-  public trashIcon = faTrash;
-  public saveIcon = faSave;
-  public abortIcon = faUndo;
-  public removeIcon = faTimes;
 
 
   public navMenuForm = new FormGroup({

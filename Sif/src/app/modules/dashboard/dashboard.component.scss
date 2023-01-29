@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   height: 100vh;
 
   .dashboard-main-container {
@@ -10,14 +11,7 @@
 
   .dashboard-content-container {
     flex: 1 1 auto;
-    position: relative
-  }
-
-  .dashboard-notification-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 27px;
+    overflow: auto;
+    height: calc(100vh - 79px);
   }
 }

@@ -4,7 +4,6 @@ import { ArticleFilterService } from '../../services/article-filter/article-filt
 import { Article, ChangeResponse } from 'src/app/core';
 import { RestPageService } from '../../services';
 import { Subscription } from 'rxjs';
-import { faCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { DateFilter } from 'src/app/core/baseClass';
 
 @Component({
@@ -21,9 +20,6 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
   public isAllSelected = false;
   public articles: Article[] = [];
   public selectedArticles: boolean[] = [];
-
-  public iconStatus = faCircle;
-  public iconTrash = faTrash;
 
   public statusMenuOpen = -1;
 
