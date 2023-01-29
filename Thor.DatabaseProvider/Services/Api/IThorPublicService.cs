@@ -13,6 +13,6 @@ public interface IThorPublicService {
   Task<Article> GetBlogByTitle(string title);
   Task<Article> GetPage(string title);
   Task<IEnumerable<Navmenu>> GetNavMenu();
-  Task CreateComment(Comment comment);
+  Task<StatusResponse<Comment>> CreateComment(Comment comment);
   Task<IEnumerable<Comment>> GetCommentsForArticle(int articleId);
 }

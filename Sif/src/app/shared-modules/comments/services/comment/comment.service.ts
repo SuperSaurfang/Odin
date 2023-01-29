@@ -25,6 +25,7 @@ export class CommentService {
           case StatusResponseType.Create:
             this.restService.getComment(comment.articleId).subscribe(response => {
               this.commentsSubject.next(response);
+              this.commentIdSubject.next(null);
             });
             break;
           default:

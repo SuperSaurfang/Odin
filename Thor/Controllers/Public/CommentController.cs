@@ -5,6 +5,7 @@ using Thor.DatabaseProvider.Services.Api;
 using Thor.Models.Dto;
 using Thor.Services.Api;
 using Thor.Extensions;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Controllers
 {
@@ -22,14 +23,14 @@ namespace Thor.Controllers
 
     [Produces("application/json")]
     [HttpPost]
-    public async Task<ActionResult> PostComment(Comment comment)
+    public async Task<ActionResult<StatusResponse<Comment>>> PostComment(Comment comment)
     {
       if (comment.ArticleId == 0)
       {
         return BadRequest("The article id cannot be 0");
       }
-      await publicService.CreateComment(comment);
-      return Ok();
+      var result = await publicService.CreateComment(comment);
+      return Ok(result);
     }
 
     [Produces("application/json")]
@@ -38,7 +39,7 @@ namespace Thor.Controllers
     {
       if (articleId == 0)
       {
-        return BadRequest("Article id cannot be zero");
+        return BadRequest("Article id cannot be 0");
       }
       var result = await publicService.GetCommentsForArticle(articleId);
       if (result == null)

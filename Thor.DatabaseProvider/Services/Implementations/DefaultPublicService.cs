@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Thor.DatabaseProvider.Context;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Thor.DatabaseProvider.Services.Api;
 using DB = Thor.Models.Database;
 using DTO = Thor.Models.Dto;
@@ -10,17 +11,20 @@ using Thor.DatabaseProvider.Extensions;
 using Thor.Models.Dto.Responses;
 using Thor.Models.Dto.Requests;
 using Thor.Models.Dto;
+using System;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
 internal class DefaultPublicService : IThorPublicService
 {
   private const string ARTICLE_STATUS = "public";
-  private ThorContext context;
+  private readonly ThorContext context;
+  private readonly ILogger<DefaultPublicService> logger;
 
-  public DefaultPublicService(ThorContext context)
+  public DefaultPublicService(ThorContext context, ILogger<DefaultPublicService> logger)
   {
     this.context = context;
+    this.logger = logger;
   }
 
   public async Task<ArticleResponse> GetBlog(DTO.Paging paging)
@@ -105,12 +109,27 @@ internal class DefaultPublicService : IThorPublicService
     return navmenus.ConvertList<DB.Navmenu, DTO.Navmenu>(navmenu => new DTO.Navmenu(navmenu));
   }
 
-  public async Task CreateComment(DTO.Comment comment)
+  public async Task<StatusResponse<DTO.Comment>> CreateComment(DTO.Comment comment)
   {
-    // ToDo This need improvement e.q spam detection and much more
-    comment.Status = comment.UserId.Equals("guest") ? "new" : "released";
-    var result = await context.Comments.AddAsync(new DB.Comment(comment));
-    context.SaveChanges();
+    var response = new StatusResponse<DTO.Comment> 
+    {
+      ResponseType = StatusResponseType.Create
+    };
+    try
+    {
+      // ToDo This need improvement e.q spam detection and much more
+      comment.Status = comment.UserId.Equals("guest") ? "new" : "released";
+      var result = await context.Comments.AddAsync(new DB.Comment(comment));
+      await context.SaveChangesAsync();
+      response.Change = Change.Change;
+    }
+    catch (Exception ex)
+    {
+      logger.LogError("Exception on creating new user comment: ", ex);
+      response.Change = Change.Error;
+    }
+    
+    return response;
   }
 
   public async Task<IEnumerable<DTO.Comment>> GetCommentsForArticle(int articleId)
