@@ -7,14 +7,14 @@
     <div class="category-list-container">
       <div class="category-list-item" *ngFor="let category of categoryList">
         <div class="category-list-icon">
-          <fa-icon [icon]="categoryIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'folder']"></fa-icon>
         </div>
         <div class="category-list-text-container">
           <p>Name: {{category.name}}</p>
           <p>Artikel in dieser Kategorie: {{category.articleCount}}</p>
           <a [routerLink]="['/category', category.name]">
             <span>Artikel ansehen</span>
-            <fa-icon [icon]="externalLinkIcon"></fa-icon>
+            <fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>
           </a>
         </div>
       </div>

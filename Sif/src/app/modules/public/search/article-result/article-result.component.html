@@ -8,19 +8,19 @@
       <h1>{{article.title}}</h1>
       <div class="article-info">
         <span class="icon-label">
-          <fa-icon [icon]="userIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'user']"></fa-icon>
           <span>{{article?.user.nickname}}</span>
         </span>
         <span class="spacer">/</span>
         <span class="icon-label">
-          <fa-icon [icon]="calendarIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
           <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
         </span>
       </div>
       <div [innerHTML]="article.articleText.substring(0, 149) + '...'"></div>
       <a class="icon-label" [routerLink]="article.link">
         <span class="text-label">Weiter lesen</span>
-        <fa-icon [icon]="externalLinkIcon"></fa-icon>
+        <fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>
       </a>
     </div>
   </content-box-body>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { faAngleUp, faAngleDown, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Article } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
@@ -14,8 +14,7 @@ type SettingType = 'status' | 'allowComments' | 'showDateAuthor' | 'createDate' 
 export class ArticleSettingComponent implements OnInit, OnDestroy {
 
   public isSettingOpen = true;
-  public iconStatus = faAngleUp;
-  public iconCircle = faCircle;
+  public iconStatus = faAngleUp.iconName;
   public article: Article = new Article();
   public displayedDate: string;
 
@@ -50,9 +49,9 @@ export class ArticleSettingComponent implements OnInit, OnDestroy {
   public openStatusSettings() {
     this.isSettingOpen = !this.isSettingOpen;
     if (this.isSettingOpen) {
-      this.iconStatus = faAngleUp;
+      this.iconStatus = faAngleUp.iconName;
     } else {
-      this.iconStatus = faAngleDown;
+      this.iconStatus = faAngleDown.iconName;
     }
   }
 

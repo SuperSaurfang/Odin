@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import { Article } from 'src/app/core';
+import { TouchSequence } from 'selenium-webdriver';
+import { Article, ArticleRequest, Paging } from 'src/app/core';
 import { RestService } from 'src/app/core/services';
+import { PageChangeEvent } from 'src/app/shared-modules/paginator';
 
 @Component({
   selector: 'app-category',
@@ -10,9 +11,13 @@ import { RestService } from 'src/app/core/services';
   styleUrls: ['./category.component.scss']
 })
 export class CategoryComponent implements OnInit {
-  public folderIcon = faFolder;
   public category = '';
   public articles: Article[] = [];
+  public paging: Paging = {
+    currentPage: 1,
+    itemsPerPage: 5,
+    totalPages: 1,
+  }
 
   constructor(private route: ActivatedRoute, private restService: RestService) { }
 
@@ -20,10 +25,23 @@ export class CategoryComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.category = params['category'];
 
-      this.restService.getCategoryByName(this.category).subscribe(articles => {
-        console.log(articles);
-        this.articles = articles;
-      });
+      this.loadArticles(this.paging);
+    });
+  }
+
+  public onPageChange(event: PageChangeEvent) {
+    this.paging.currentPage = event.page;
+    this.loadArticles(this.paging);
+  }
+
+  private loadArticles(paging: Paging) {
+    const request: ArticleRequest = {
+      name: this.category,
+      paging: paging
+    };
+    this.restService.getCategoryByName(request).subscribe(response => {
+      this.articles = response.articles
+      this.paging = response.paging;
     });
   }
 

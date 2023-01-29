@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Article, ChangeResponse, Status } from 'src/app/core';
 
-import { faTrash, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ArticleFilterService, RestPostsService } from '../../services';
 import { Subscription } from 'rxjs';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
@@ -23,9 +22,6 @@ export class DashboardPostListComponent implements OnInit {
   public isAllSelected = false;
   public isIndeterminate = false;
   public selectedArticles: boolean[] = [];
-
-  public iconTrash = faTrash;
-  public iconStatus = faCircle;
 
   public statusMenuOpen = -1;
 

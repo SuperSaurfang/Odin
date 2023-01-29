@@ -33,13 +33,13 @@
       <td>
         <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger cursor-pointer">
           <fa-icon *ngIf="article.status !== 'trash'"
-          [icon]="iconStatus"
+          [icon]="['fas', 'circle']"
           [ngClass]="{
             'danger-text': article.status === 'draft',
             'warn-text': article.status === 'private',
             'ok-text': article.status === 'public'
           }"></fa-icon>
-          <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
           <div class="tooltip" [ngClass]="{'hide': statusMenuOpen === i}">
             {{getStatusTooltip(article.status)}}
           </div>

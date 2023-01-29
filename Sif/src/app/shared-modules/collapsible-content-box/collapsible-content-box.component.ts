@@ -22,7 +22,7 @@ export class CollapsibleContentBoxComponent implements OnInit {
   }
 
   public isOpen = false;
-  public currentAngleIcon = faAngleDown;
+  public currentAngleIcon = faAngleDown.iconName;
   public currentTooltip = SHOW;
   constructor() { }
 
@@ -35,13 +35,13 @@ export class CollapsibleContentBoxComponent implements OnInit {
     if (this.isOpen) {
       this.updateValuesBoxOpen();
     } else {
-      this.currentAngleIcon = faAngleDown;
+      this.currentAngleIcon = faAngleDown.iconName;
       this.currentTooltip = SHOW;
     }
   }
 
   private updateValuesBoxOpen() {
-    this.currentAngleIcon = faAngleUp;
+    this.currentAngleIcon = faAngleUp.iconName;
     this.currentTooltip = COLLAPSE;
   }
 

@@ -1,19 +1,15 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
 import { BaseNode, NestedDragDropDatasource } from './nested-drag-drop-datasource';
-import { faSave, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-nested-drag-drop-list',
   templateUrl: './nested-drag-drop-list.component.html',
   styleUrls: ['./nested-drag-drop-list.component.scss']
 })
-export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnInit, OnChanges {
+export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnChanges {
 
   private restoreValue: string = '';
-
-  public saveIcon = faSave;
-  public resetIcon = faRotateBack
 
   @Input()
   public dataSource: NestedDragDropDatasource<T>[] = [];
@@ -39,9 +35,6 @@ export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnIni
     this.restoreValue = JSON.stringify(changes.dataSource.currentValue);
   }
 
-  ngOnInit() {
-  }
-
   public onDragDrop(event: CdkDragDrop<NestedDragDropDatasource<T>[]>) {
     if (event.container === event.previousContainer) {
       moveItemInArray(
@@ -60,8 +53,6 @@ export class NestedDragDropListComponent<T extends BaseNode<T>> implements OnIni
 
     this.updateData(this.dataSource);
   }
-
-  
 
   public saveNestedList() {
     const data: T[] = [];

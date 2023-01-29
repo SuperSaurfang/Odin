@@ -1,12 +1,12 @@
 <div *ngIf="showStartpageLink">
   <a class="application-bar-link" [routerLink]="['/blog']">
-    <fa-icon [icon]="home"></fa-icon>
+    <fa-icon [icon]="['fas', 'home']"></fa-icon>
     Startseite
   </a>
 </div>
 <div *ngIf="showAdminpageLink">
   <a class="application-bar-link" *ngIf="isAdmin" [routerLink]="['/dashboard']">
-    <fa-icon [icon]="dashboard"></fa-icon>
+    <fa-icon [icon]="['fas', 'tachometer-alt']"></fa-icon>
     Website Administration
   </a>
 </div>

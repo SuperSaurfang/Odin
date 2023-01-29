@@ -7,18 +7,18 @@
 
 <div class="article-info" *ngIf="article?.hasDateAuthorEnabled">
   <span class="icon-label">
-    <fa-icon [icon]="userIcon"></fa-icon>
+    <fa-icon [icon]="['fas', 'user']"></fa-icon>
     <span>{{article?.user?.nickname}}</span>
   </span>
   <span class="spacer">/</span>
   <span class="icon-label">
-    <fa-icon [icon]="calendarIcon"></fa-icon>
+    <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
     <span>verfasst am {{article.creationDate.toLocaleDateString()}}</span>
   </span>
   <div class="inline" *ngIf="articleType ==='blog' && article?.categories?.length > 0">
     <span class="spacer">/</span>
     <span class="icon-label">
-      <fa-icon [icon]="categoryIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'folder']"></fa-icon>
       <span>Kategorien: </span>
       <span *ngFor="let category of article?.categories; let last = last">
         <a [routerLink]="['/category', category.name]">{{category.name}}</a>
@@ -29,12 +29,11 @@
 </div>
 
 <div class="article-content ck-content" [innerHTML]="article?.articleText | keepHtml"></div>
-<!-- <app-ckeditor-readonly [content]="article?.articleText"></app-ckeditor-readonly> -->
 
 <div class="article-footer">
   <div class="inline" *ngIf="articleType === 'blog' && article?.tags?.length > 0">
     <span class="icon-label">
-      <fa-icon [icon]="tagsIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'tag']"></fa-icon>
       <span>Tags: </span>
       <span *ngFor="let tag of article?.tags; let last = last">
         <a [routerLink]="['/tag', tag.name]">{{tag.name}}</a>
@@ -45,7 +44,7 @@
   </div>
   <div class="inline" *ngIf="hasPermisson()">
     <span class="icon-label">
-      <fa-icon [icon]="editIcon"></fa-icon>
+      <fa-icon [icon]="['fas', 'edit']"></fa-icon>
       <a [routerLink]="['/dashboard/posts/edit', article?.title]" *ngIf="articleType === 'blog'">Bearbeiten</a>
       <a [routerLink]="['/dashboard/pages/edit', article?.title]" *ngIf="articleType === 'page'">Bearbeiten</a>
     </span>

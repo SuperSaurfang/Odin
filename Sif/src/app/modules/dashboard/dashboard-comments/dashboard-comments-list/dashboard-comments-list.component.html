@@ -52,8 +52,8 @@
   <div class="reset-filter pos-relative tooltip-trigger">
     <button class="btn btn-icon" (click)="resetFilter()">
       <fa-layers size="2x">
-        <fa-icon [icon]="iconSlash" [mask]="iconFilter"></fa-icon>
-        <fa-icon [icon]="iconSlash" transform="up-2 left-2" class="danger-text"></fa-icon>
+        <fa-icon [icon]="['fas', 'slash']" [mask]="['fas', 'filter']"></fa-icon>
+        <fa-icon [icon]="['fas', 'slash']" transform="up-2 left-2" class="danger-text"></fa-icon>
       </fa-layers>
     </button>
     <div class="tooltip">
@@ -63,7 +63,7 @@
 
   <div class="clear-trash pos-relative tooltip-trigger">
     <button class="btn btn-icon danger-text" (click)="clearTrash()">
-      <fa-icon [icon]="iconTrash" size="2x"></fa-icon>
+      <fa-icon [icon]="['fas', 'trash']" size="2x"></fa-icon>
     </button>
     <div class="tooltip">
       Papierkorb leeren
@@ -93,9 +93,9 @@
       <td>
         <div>
           <div *ngIf="comment.userId === 'guest'" class="flex user-info-container">
-            <fa-stack >
-              <fa-icon class="avatar-background" [icon]="iconCircle" stackItemSize="2x" ></fa-icon>
-              <fa-icon class="avatar-foreground" [icon]="iconUser" stackItemSize="1x"></fa-icon>
+            <fa-stack>
+              <fa-icon class="avatar-background" [icon]="['fas', 'circle']" stackItemSize="2x" ></fa-icon>
+              <fa-icon class="avatar-foreground" [icon]="['fas', 'user']" stackItemSize="1x"></fa-icon>
             </fa-stack>
             <span class="ml-1">Gast</span>
           </div>
@@ -109,13 +109,13 @@
       <td>
         <div (click)="openMenu(i)" class="pos-relative tooltip-trigger cursor-pointer">
           <fa-icon *ngIf="comment.status !== 'trash'"
-            [icon]="iconCircle"
+            [icon]="['fas', 'circle']"
             [ngClass]="{
               'danger-text': comment.status === 'spam',
               'warn-text': comment.status === 'new',
               'ok-text': comment.status === 'released'
             }"></fa-icon>
-          <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="iconTrash"></fa-icon>
+          <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
           <div class="tooltip" [ngClass]="{'hide': statusmenuopen === i}">
             {{getTooltipText(comment.status)}}
           </div>
@@ -123,19 +123,19 @@
         <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (isOpenChange)="OnClose()">
           <div class="control-group vertical-group">
             <button class="btn btn-light text-left" (click)="updateStatus(i)">
-              <fa-icon class="danger-text" [icon]="iconCircle"></fa-icon>
+              <fa-icon class="danger-text" [icon]="['fas', 'circle']"></fa-icon>
               Als Spam markieren
             </button>
             <button class="btn btn-light text-left" (click)="updateStatus(i)">
-              <fa-icon class="warn-text" [icon]="iconCircle"></fa-icon>
+              <fa-icon class="warn-text" [icon]="['fas', 'circle']"></fa-icon>
               Als neu markieren
             </button>
             <button class="btn btn-light text-left" (click)="updateStatus(i)">
-              <fa-icon class="ok-text" [icon]="iconCircle"></fa-icon>
+              <fa-icon class="ok-text" [icon]="['fas', 'circle']"></fa-icon>
               Veröffentlichen
             </button>
             <button class="btn btn-light text-left" (click)="updateStatus(i)">
-              <fa-icon class="danger-text" [icon]="iconTrash"></fa-icon>
+              <fa-icon class="danger-text" [icon]="['fas', 'trash']"></fa-icon>
               In den Papierkorb verschieben
             </button>
           </div>

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SearchRequest, SearchResult } from 'src/app/core';
 import { SearchService } from 'src/app/core/services/search/search.service';
@@ -11,7 +10,6 @@ import { SearchService } from 'src/app/core/services/search/search.service';
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  public searchIcon = faSearch;
   public searchRequest: SearchRequest = new SearchRequest();
 
   public searchForm = this.formBuilder.group({

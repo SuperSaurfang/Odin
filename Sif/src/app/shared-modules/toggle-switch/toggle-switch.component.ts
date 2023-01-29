@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -7,12 +6,11 @@ import { faToggleOff, faToggleOn } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './toggle-switch.component.html',
   styleUrls: ['./toggle-switch.component.scss']
 })
-export class ToggleSwitchComponent implements OnInit {
+export class ToggleSwitchComponent implements OnInit, OnChanges {
 
   constructor() { }
-
-  public iconToggleOff = faToggleOff;
-  public iconToggleOn = faToggleOn;
+  
+  public currentIcon = faToggleOff.iconName;
 
   @Input()
   public isToggleOn = false;
@@ -26,7 +24,20 @@ export class ToggleSwitchComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.isToggleOn) {
+      this.currentIcon = faToggleOn.iconName;
+    }
+  }
+
   public toggle(event: MouseEvent) {
+    const value = event.target['checked']
+    if(value) {
+      this.currentIcon = faToggleOn.iconName;
+    } else {
+      this.currentIcon = faToggleOff.iconName;
+    }
+
     this.isToggleOnChange.emit(event.target['checked']);
   }
 }

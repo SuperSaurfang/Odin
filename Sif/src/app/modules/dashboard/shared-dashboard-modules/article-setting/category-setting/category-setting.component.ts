@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { Category } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 import { CategoryService } from '../../../services/category/category.service';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-category-setting',
@@ -12,7 +11,6 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 })
 export class CategorySettingComponent implements OnInit, OnDestroy {
 
-  public removeIcon = faTimes;
   public categories: Category[] = [];
   public selectedCategory: string;
 

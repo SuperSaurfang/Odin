@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faExternalLinkAlt, faTag } from '@fortawesome/free-solid-svg-icons';
 import { Tag } from 'src/app/core';
 
 @Component({
@@ -8,9 +7,6 @@ import { Tag } from 'src/app/core';
   styleUrls: ['./tag-result.component.scss']
 })
 export class TagResultComponent implements OnInit {
-  public tagIcon = faTag;
-  public externalLinkIcon = faExternalLinkAlt;
-
 
   @Input()
   public tagList: Tag[] = [];

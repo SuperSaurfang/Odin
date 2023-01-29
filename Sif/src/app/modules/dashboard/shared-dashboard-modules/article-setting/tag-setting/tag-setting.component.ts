@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { ArticleEditorService, Tag } from 'src/app/core';
 import { TagService } from '../../../services';
@@ -10,8 +9,6 @@ import { TagService } from '../../../services';
   styleUrls: ['./tag-setting.component.scss']
 })
 export class TagSettingComponent implements OnInit, OnDestroy {
-
-  public removeIcon = faTimes;
   public selectedTag: string;
   public tagList: Tag[] = [];
   public connectedTagList: Tag[] = [];

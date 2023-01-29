@@ -9,7 +9,10 @@ import { Article,
   StatusResponseType,
   SearchRequest,
   SearchResult,
-  StatusResponse} from '../../models';
+  StatusResponse,
+  Paging,
+  ArticleResponse,
+  ArticleRequest} from '../../models';
 import { RestBase } from '../../baseClass';
 
 
@@ -20,10 +23,13 @@ export class RestService extends RestBase {
     super('public');
   }
 
-  public getBlog(): Observable<Article[]> {
-    return this.httpClient.get<Article[]>(`${this.basePath}/blog`).pipe(
-      map(article => this.parseDates(article)),
-      catchError(this.handleError<Article[]>('Failed to load blog', []))
+  public getBlog(paging: Paging): Observable<ArticleResponse> {
+    return this.httpClient.post<ArticleResponse>(`${this.basePath}/blog`, paging).pipe(
+      map(response => {
+        response.articles = this.parseDates(response.articles)
+        return response;
+      }),
+      catchError(this.handleError<ArticleResponse>('Failed to load blog', new ArticleResponse()))
     );
   }
 
@@ -34,17 +40,23 @@ export class RestService extends RestBase {
     );
   }
 
-  public getCategoryByName(name: string): Observable<Article[]> {
-    return this.httpClient.get<Article[]>(`${this.basePath}/blog/category/${name}`).pipe(
-      map(article => this.parseDates(article)),
-      catchError(this.handleError<Article[]>('Failed to blog by category', []))
+  public getCategoryByName(request: ArticleRequest): Observable<ArticleResponse> {
+    return this.httpClient.post<ArticleResponse>(`${this.basePath}/blog/category/`, request).pipe(
+      map(response => {
+        response.articles = this.parseDates(response.articles)
+        return response;
+      }),
+      catchError(this.handleError<ArticleResponse>('Failed to blog by category', new ArticleResponse))
     );
   }
 
-  public getBlogByTagName(name: string): Observable<Article[]> {
-    return this.httpClient.get<Article[]>(`${this.basePath}/blog/tag/${name}`).pipe(
-      map(articles => this.parseDates(articles)),
-      catchError(this.handleError<Article[]>('Failed to load blog by tag', []))
+  public getBlogByTagName(request: ArticleRequest): Observable<ArticleResponse> {
+    return this.httpClient.post<ArticleResponse>(`${this.basePath}/blog/tag/`, request).pipe(
+      map(response => {
+        response.articles =this.parseDates(response.articles);
+        return response;
+      }),
+      catchError(this.handleError<ArticleResponse>('Failed to load blog by tag', new ArticleResponse))
     );
   }
 

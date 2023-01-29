@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/core/services';
-
-import { faHome, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
-import { Rank } from 'src/app/core/enums/rank';
-import { RouterState, ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-application-bar',
@@ -13,9 +10,6 @@ import { RouterState, ActivatedRoute, Router } from '@angular/router';
 export class ApplicationBarComponent implements OnInit {
 
   constructor(private userService: UserService, private route: Router) { }
-
-  public home = faHome;
-  public dashboard = faTachometerAlt;
 
   public isAdmin = false;
   public showStartpageLink = false;

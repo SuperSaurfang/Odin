@@ -7,14 +7,14 @@
     <div class="tag-list-container">
       <div class="tag-list-item" *ngFor="let tag of tagList">
         <div class="tag-list-icon">
-          <fa-icon [icon]="tagIcon"></fa-icon>
+          <fa-icon [icon]="['fas', 'tag']"></fa-icon>
         </div>
         <div class="tag-list-text-container">
           <p>Name: {{tag.name}}</p>
           <p>Artikel mit diesem Tag: {{tag.articleCount}}</p>
           <a [routerLink]="['/tag', tag.name]">
             <span>Artikel ansehen</span>
-            <fa-icon [icon]="externalLinkIcon"></fa-icon>
+            <fa-icon [icon]="['fas', 'external-link-alt']"></fa-icon>
           </a>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <div class="setting-header" (click)="openStatusSettings()">
     <span>{{name}}</span>
     <span>
-      <fa-icon [icon]="iconStatus"></fa-icon>
+      <fa-icon [icon]="['fas', iconStatus]"></fa-icon>
     </span>
   </div>
   <div class="setting-body" [ngClass]="{'open': isSettingOpen === true}">
@@ -14,7 +14,7 @@
       </select>
       <fa-icon [ngClass]="{'danger-text': article.status === 'draft',
                 'warn-text': article.status  === 'private',
-                'ok-text': article.status  === 'public'}" [icon]="iconCircle"></fa-icon>
+                'ok-text': article.status  === 'public'}" [icon]="['fas', 'circle']"></fa-icon>
     </div>
 
     <app-toggle-switch *ngIf="type === 'allowComments'" [(isToggleOn)]="article.hasCommentsEnabled" (isToggleOnChange)="updateToggle()" [label]="label"></app-toggle-switch>
