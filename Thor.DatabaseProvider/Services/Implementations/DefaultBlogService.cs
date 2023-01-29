@@ -13,7 +13,7 @@ using System;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
-internal class DefaultBlogService : IThorBlogService
+public class DefaultBlogService : IThorBlogService
 {
   private readonly ThorContext context;
   private readonly ILogger<DefaultBlogService> logger;
@@ -42,7 +42,7 @@ internal class DefaultBlogService : IThorBlogService
     }
     catch (Exception ex)
     {
-      logger.LogError("Error on creatinf new blog article:", ex);
+      logger.LogError("Error on creating new blog article:", ex);
       response.Change = Change.Error;
       return response;
     }

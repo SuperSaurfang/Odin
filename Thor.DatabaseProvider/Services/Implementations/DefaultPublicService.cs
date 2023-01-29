@@ -7,6 +7,9 @@ using Thor.DatabaseProvider.Services.Api;
 using DB = Thor.Models.Database;
 using DTO = Thor.Models.Dto;
 using Thor.DatabaseProvider.Extensions;
+using Thor.Models.Dto.Responses;
+using Thor.Models.Dto.Requests;
+using Thor.Models.Dto;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
@@ -19,56 +22,55 @@ internal class DefaultPublicService : IThorPublicService
   {
     this.context = context;
   }
-  public async Task<IEnumerable<DTO.Article>> GetBlog()
+
+  public async Task<ArticleResponse> GetBlog(DTO.Paging paging)
   {
-    IEnumerable<DB.Article> articles = await context.Articles
+    var articles = await context.Articles
       .Include(s => s.Categories)
       .Include(s => s.Tags)
       .Where(a => a.Status.Equals(ARTICLE_STATUS) && a.IsBlog == true)
       .OrderByDescending(x => x.CreationDate)
       .ToListAsync();
-    // return Utils.ConvertToDto<DB.Article, DTO.Article>(articles, article => new DTO.Article(article));
-    return articles.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
+
+    return CreateResponse(paging, articles);
   }
 
-
-
-  public async Task<IEnumerable<DTO.Article>> GetBlogByCategory(string category)
+  public async Task<ArticleResponse> GetBlogByCategory(ArticleRequest request)
   {
     var articles = await context.Categories
       .Include(s => s.Articles)
         .ThenInclude(s => s.Tags)
       .Include(s => s.Articles)
         .ThenInclude(s => s.Categories)
-      .Where(c => c.Name.Equals(category))
+      .Where(c => c.Name.Equals(request.Name))
       .Select(c => c.Articles)
       .FirstOrDefaultAsync();
 
     var filtered = articles
       .Where(a => IsPublicBlog(a))
-      .OrderByDescending(x => x.CreationDate);
+      .OrderByDescending(x => x.CreationDate)
+      .ToList();
 
-    return filtered.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
+    return CreateResponse(request.Paging, filtered);
   }
 
-
-
-  public async Task<IEnumerable<DTO.Article>> GetBlogByTag(string tag)
+  public async Task<ArticleResponse> GetBlogByTag(ArticleRequest request)
   {
     var articles = await context.Tags
       .Include(s => s.Articles)
         .ThenInclude(s => s.Tags)
       .Include(s => s.Articles)
         .ThenInclude(s => s.Categories)
-      .Where(c => c.Name.Equals(tag))
+      .Where(c => c.Name.Equals(request.Name))
       .Select(c => c.Articles)
       .FirstOrDefaultAsync();
 
     var filtered = articles
       .Where(a => IsPublicBlog(a))
-      .OrderByDescending(x => x.CreationDate);
+      .OrderByDescending(x => x.CreationDate)
+      .ToList();
 
-    return filtered.ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
+    return CreateResponse(request.Paging, filtered);
   }
 
   public async Task<DTO.Article> GetBlogByTitle(string title)
@@ -91,8 +93,6 @@ internal class DefaultPublicService : IThorPublicService
 
     return new DTO.Article(article);
   }
-
-
 
   public async Task<IEnumerable<DTO.Navmenu>> GetNavMenu()
   {
@@ -128,5 +128,29 @@ internal class DefaultPublicService : IThorPublicService
   private static bool IsPublicBlog(DB.Article article)
   {
     return article.Status.Equals(ARTICLE_STATUS) && article.IsBlog == true;
+  }
+
+  private static ArticleResponse CreateResponse(Paging paging, List<DB.Article> articles)
+  {
+    var response = new ArticleResponse();
+
+    var moduloResult = articles.Count % paging.ItemsPerPage;
+    if (moduloResult == 0)
+    {
+      paging.TotalPages = articles.Count / paging.ItemsPerPage;
+    }
+    else
+    {
+      var maxItemsForCount = articles.Count - moduloResult + paging.ItemsPerPage;
+      paging.TotalPages = maxItemsForCount / paging.ItemsPerPage;
+    }
+
+    response.Articles = articles
+      .Skip((paging.CurrentPage - 1) * paging.ItemsPerPage)
+      .Take(paging.ItemsPerPage)
+      .ConvertList<DB.Article, DTO.Article>(article => new DTO.Article(article));
+
+    response.Paging = paging;
+    return response;
   }
 }
