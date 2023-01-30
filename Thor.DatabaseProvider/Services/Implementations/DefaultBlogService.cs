@@ -101,7 +101,7 @@ public class DefaultBlogService : IThorBlogService
     var dbSet = context.Set<DB.ArticleCategory>(nameof(DB.ArticleCategory));
     try
     {
-      var result = dbSet.Remove(new DB.ArticleCategory(articleCategory));
+      dbSet.Remove(new DB.ArticleCategory(articleCategory));
       await context.SaveChangesAsync();
       var entities = await dbSet
         .Where(c => c.ArticleId == articleCategory.ArticleId)

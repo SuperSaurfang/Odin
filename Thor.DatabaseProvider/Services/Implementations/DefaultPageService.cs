@@ -32,10 +32,10 @@ internal class DefaultPageService : IThorPageService
     try
     {
       DB.Article dbPage = ConvertArticle(page);
-      var tracking = await context.Articles.AddAsync(dbPage);
+      await context.Articles.AddAsync(dbPage);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Article(tracking.Entity);
+      response.Model = new DTO.Article(dbPage);
     }
     catch (Exception ex)
     {
@@ -93,10 +93,10 @@ internal class DefaultPageService : IThorPageService
     try
     {
       var dbPage = ConvertArticle(page);
-      var tracking = context.Articles.Update(dbPage);
+      context.Articles.Update(dbPage);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Article(tracking.Entity);
+      response.Model = new DTO.Article(dbPage);
     }
     catch (Exception ex)
     {

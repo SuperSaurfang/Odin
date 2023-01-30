@@ -35,6 +35,12 @@ namespace Thor.Extensions
       var listOfSearchQuery = new List<string>() { "user_id:" };
       var uniqueUserIds = SelectUserId(comments).Distinct().ToList();
       uniqueUserIds.Remove("guest");
+      //if list is empty after removing the guest id, we don't have to any items to map, so we return here
+      if(!uniqueUserIds.Any()) 
+      {
+        return;
+      }
+
       listOfSearchQuery.AddRange(uniqueUserIds);
       IEnumerable<User> users = await restClient.GetUsers(listOfSearchQuery);
       var query = users.AsQueryable();
@@ -44,7 +50,7 @@ namespace Thor.Extensions
 
     public static async Task MapUserIdToUser(this IRestClientService restClient, Comment comment)
     {
-      await MapUserIdToUser(restClient, new List<Comment>() {comment});
+      await MapUserIdToUser(restClient, new List<Comment>() { comment });
     }
 
 
