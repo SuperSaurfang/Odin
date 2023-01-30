@@ -31,10 +31,11 @@ internal class DefaultNavmenuService : IThorNavmenuService
     };
     try
     {
-      var tracking = await context.Navmenus.AddAsync(new DB.Navmenu(navmenu));
+      var dbNavmenu = new DB.Navmenu(navmenu);
+      await context.Navmenus.AddAsync(dbNavmenu);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Navmenu(tracking.Entity);
+      response.Model = new DTO.Navmenu(dbNavmenu);
     }
     catch (Exception ex)
     {
@@ -117,10 +118,10 @@ internal class DefaultNavmenuService : IThorNavmenuService
     try
     {
       var dbnavmneu = new DB.Navmenu(navmenu);
-      var tracking = context.Navmenus.Update(dbnavmneu);
+      context.Navmenus.Update(dbnavmneu);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Navmenu(tracking.Entity);
+      response.Model = new DTO.Navmenu(dbnavmneu);
     }
     catch (Exception ex)
     {

@@ -31,10 +31,11 @@ internal class DefaultTagService : IThorTagService
     };
     try
     {
-      var tracking = await context.Tags.AddAsync(new DB.Tag(tag));
+      var dbTag = new DB.Tag(tag);
+      await context.Tags.AddAsync(dbTag);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Tag(tracking.Entity);
+      response.Model = new DTO.Tag(dbTag);
     }
     catch (Exception ex)
     {
@@ -80,10 +81,11 @@ internal class DefaultTagService : IThorTagService
     };
     try
     {
-      var tracking = context.Tags.Update(new DB.Tag(tag));
+      var dbTag = new DB.Tag(tag);
+      context.Tags.Update(dbTag);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Tag(tracking.Entity);
+      response.Model = new DTO.Tag(dbTag);
     }
     catch (Exception ex)
     {
