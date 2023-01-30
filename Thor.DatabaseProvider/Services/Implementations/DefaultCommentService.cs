@@ -32,10 +32,10 @@ internal class DefaultCommentService : IThorCommentService
     try
     {
       var dbComment = new DB.Comment(comment);
-      var tracking = await context.Comments.AddAsync(dbComment);
+      await context.Comments.AddAsync(dbComment);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Comment(tracking.Entity);
+      response.Model = new DTO.Comment(dbComment);
     }
     catch (Exception ex)
     {
@@ -85,10 +85,11 @@ internal class DefaultCommentService : IThorCommentService
     };
     try
     {
-      var tracking = context.Comments.Update(new DB.Comment(comment));
+      var dbComment = new DB.Comment(comment);
+      context.Comments.Update(dbComment);
       await context.SaveChangesAsync();
       response.Change = Change.Change;
-      response.Model = new DTO.Comment(tracking.Entity);
+      response.Model = new DTO.Comment(dbComment);
     }
     catch (Exception ex)
     {

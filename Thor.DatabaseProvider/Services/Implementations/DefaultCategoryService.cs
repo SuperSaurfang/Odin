@@ -32,9 +32,9 @@ internal class DefaultCategoryService : IThorCategoryService
     try
     {
       var dbCategory = new DB.Category(category);
-      var tracking = await context.Categories.AddAsync(dbCategory);
+      await context.Categories.AddAsync(dbCategory);
       await context.SaveChangesAsync();
-      response.Model = new DTO.Category(tracking.Entity);
+      response.Model = new DTO.Category(dbCategory);
       response.Change = Change.Change;
     }
     catch (Exception ex)
@@ -82,9 +82,9 @@ internal class DefaultCategoryService : IThorCategoryService
     try
     {
       var dbCategory = new DB.Category(category);
-      var tracking = context.Categories.Update(dbCategory);
+      context.Categories.Update(dbCategory);
       await context.SaveChangesAsync();
-      response.Model = new DTO.Category(tracking.Entity);
+      response.Model = new DTO.Category(dbCategory);
       response.Change = Change.Change;
     }
     catch (Exception ex)
