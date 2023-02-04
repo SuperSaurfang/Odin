@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TouchSequence } from 'selenium-webdriver';
 import { Article, ArticleRequest, Paging } from 'src/app/core';
 import { RestService } from 'src/app/core/services';
 import { PageChangeEvent } from 'src/app/shared-modules/paginator';
