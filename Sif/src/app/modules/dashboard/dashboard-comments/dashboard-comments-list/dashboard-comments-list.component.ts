@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
-import { ChangeResponse, Comment, Status } from 'src/app/core';
+import { ChangeResponse, Comment, CommentStatus, Status } from 'src/app/core';
 import { CommentFilterService } from '../../services/comment-filter/comment-filter.service';
 import { DateFilter } from 'src/app/core/baseClass';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
   public selectedComments: boolean[] = [];
 
   public statusmenuopen = -1;
-  public selectedAction = '';
+  public selectedAction: CommentStatus = undefined;
 
   public startDate: Date;
   public endDate: Date;
@@ -100,19 +100,16 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
     this.statusmenuopen = index;
   }
 
-  public OnClose(): void {
+  public onClose(): void {
     this.statusmenuopen = -1;
   }
 
-  public updateStatus(index: number): void {
-    this.commentService.putComment(this.comments[index]).subscribe(response => {
+  public updateStatus(index: number, status: CommentStatus): void {
+    const comment = this.comments[index];
+    comment.status = status;
+    this.commentService.putComment(comment).subscribe(response => {
       switch (response.change) {
         case ChangeResponse.Change:
-          this.comments.map(item => {
-            if (item.commentId === response.model.commentId) {
-              item.status = response.model.status;
-            }
-          });
           this.filterService.applyFilter();
           this.pushNotification('Der Status wurde aktualisiert.', Status.Ok);
           break;
@@ -125,19 +122,19 @@ export class DashboardCommentsListComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.OnClose();
+    this.onClose();
   }
 
   public executeAction() {
     // do nothing if nothing is selected or no action selected
-    if (this.selectedAction === '' || this.selectedComments.filter(a => a === true).length === 0) {
+    if (this.selectedAction === undefined || this.selectedComments.filter(a => a === true).length === 0) {
       return;
     }
 
     this.notificationService.startProcess('Aktualisiere die Status von Kommentaren.');
     for (let index = 0; index < this.selectedComments.length; index++) {
       if (this.selectedComments[index]) {
-        this.updateStatus(index);
+        this.updateStatus(index, this.selectedAction);
       }
     }
     this.notificationService.stopProcess('Aktualisierung der Status abgeschlossen.');

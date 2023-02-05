@@ -22,7 +22,7 @@ export class StatusChangeMenuComponent implements OnInit {
 
   }
 
-  public onIsOpenUpdate(event: boolean) {
+  public onClose(event: boolean) {
     this.isOpen = event;
     this.isOpenChange.emit(this.isOpen);
   }

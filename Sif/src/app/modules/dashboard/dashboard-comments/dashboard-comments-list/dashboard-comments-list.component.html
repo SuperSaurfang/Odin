@@ -107,34 +107,36 @@
       </td>
       <td>{{comment.commentText}}</td>
       <td>
-        <div (click)="openMenu(i)" class="pos-relative tooltip-trigger cursor-pointer">
-          <fa-icon *ngIf="comment.status !== 'trash'"
+        <div class="pos-relative tooltip-trigger">
+          <button class="btn btn-icon " (click)="openMenu(i)">
+            <fa-icon *ngIf="comment.status !== 'trash'"
             [icon]="['fas', 'circle']"
             [ngClass]="{
               'danger-text': comment.status === 'spam',
               'warn-text': comment.status === 'new',
               'ok-text': comment.status === 'released'
             }"></fa-icon>
+          </button>
           <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
           <div class="tooltip" [ngClass]="{'hide': statusmenuopen === i}">
             {{getTooltipText(comment.status)}}
           </div>
         </div>
-        <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (isOpenChange)="OnClose()">
-          <div class="control-group vertical-group">
-            <button class="btn btn-light text-left" (click)="updateStatus(i)">
+        <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (close)="onClose()">
+          <div appMenuContent class="control-group vertical-group">
+            <button class="btn btn-light text-left" (click)="updateStatus(i, 'spam')">
               <fa-icon class="danger-text" [icon]="['fas', 'circle']"></fa-icon>
               Als Spam markieren
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus(i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i, 'new')">
               <fa-icon class="warn-text" [icon]="['fas', 'circle']"></fa-icon>
               Als neu markieren
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus(i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i, 'released')">
               <fa-icon class="ok-text" [icon]="['fas', 'circle']"></fa-icon>
               Veröffentlichen
             </button>
-            <button class="btn btn-light text-left" (click)="updateStatus(i)">
+            <button class="btn btn-light text-left" (click)="updateStatus(i, 'trash')">
               <fa-icon class="danger-text" [icon]="['fas', 'trash']"></fa-icon>
               In den Papierkorb verschieben
             </button>

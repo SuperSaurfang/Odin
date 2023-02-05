@@ -7,19 +7,18 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class MenuComponent {
 
-  constructor() { }
-
   @Input()
   public menuTitle = 'Mein Menu';
 
   @Input()
   public isOpen: boolean;
+  
   @Output()
-  public isOpenChange = new EventEmitter<boolean>();
+  public close = new EventEmitter<boolean>();
 
   public onClose() {
     this.isOpen = false;
-    this.isOpenChange.emit(this.isOpen);
+    this.close.emit(this.isOpen);
   }
 
 }
