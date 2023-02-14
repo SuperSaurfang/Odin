@@ -26,7 +26,7 @@
     "@auth0/angular-jwt": "^5.0.2",
     "@auth0/auth0-angular": "^1.9.0",
     "@ckeditor/ckeditor5-angular": "^2.0.2",
-    "@ckeditor/ckeditor5-build-classic": "^32.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
     "@fortawesome/angular-fontawesome": "^0.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.0",
     "@fortawesome/free-brands-svg-icons": "^6.0.0",
