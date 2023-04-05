@@ -1,11 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardOverviewComponent } from './dashboard-overview.component';
+import { GridsterModule } from 'angular-gridster2';
+import { DashboardItemDirective } from 'src/app/core/directive/dashboard-item.directive';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    GridsterModule
   ],
-  declarations: [DashboardOverviewComponent]
+  declarations: [
+    DashboardItemDirective,
+    DashboardOverviewComponent
+  ]
 })
 export class DashboardOverviewModule { }

@@ -9,6 +9,7 @@ import { AuthModule, AuthHttpInterceptor } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 import { tokenGetter } from './const';
 import { SearchService } from './services/search/search.service';
+import { DashboardItemDirective } from './directive/dashboard-item.directive';
 
 
 @NgModule({
@@ -40,6 +41,8 @@ import { SearchService } from './services/search/search.service';
     WindowsScrollService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
+  ],
+  exports: [
   ]
 })
 export class CoreModule { }

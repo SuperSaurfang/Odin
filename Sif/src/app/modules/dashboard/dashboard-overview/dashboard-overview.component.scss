@@ -1,0 +1,28 @@
+@import '../../../core/scss/variables.scss#';
+:host {
+  display: flex;
+  padding: padding(1);
+  height: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .grid-container {
+    display: flex;
+    height: 100%;
+  }
+
+  .grid-item-container {
+    width: 250px;
+    height: 250px;
+  }
+
+  .grid-inner-container {
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .gridster {
+    background: $background
+  }
+}

@@ -1,3 +1,10 @@
-<p>
-  dashboard-overview works!
-</p>
+<h1>Dashboard</h1>
+
+<div class="grid-container">
+  <gridster class="gridster" [options]="config">
+    <gridster-item [item]="item" *ngFor="let item of items">
+      <ng-template *dashboardItem="item.component"></ng-template>
+    </gridster-item>
+  </gridster>
+</div>
+
