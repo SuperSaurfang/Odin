@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { KeepHtmlPipe, NewlinePipe } from 'src/app/core/pipes';
+import { KeepHtmlPipe } from 'src/app/core/pipes';
 
 import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
 import { ApplicationBarModule} from '../shared-modules/application-bar/application-bar.module';
@@ -19,13 +19,11 @@ import { NestedDragDropListModule } from '../shared-modules/nested-drag-drop-lis
 
 @NgModule({
   declarations: [
-    NewlinePipe,
     KeepHtmlPipe
   ],
   imports: [
     CommonModule,
   ], exports: [
-    NewlinePipe,
     KeepHtmlPipe,
     ReactiveFormsModule,
     SideBarModule,

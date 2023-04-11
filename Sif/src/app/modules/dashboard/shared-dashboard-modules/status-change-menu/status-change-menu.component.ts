@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ArticleStatus } from 'src/app/core';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class StatusChangeMenuComponent implements OnInit {
   public isOpenChange = new EventEmitter<boolean>();
 
   @Output()
-  public updateStatus = new EventEmitter<string>();
+  public updateStatus = new EventEmitter<ArticleStatus>();
 
   ngOnInit() {
 

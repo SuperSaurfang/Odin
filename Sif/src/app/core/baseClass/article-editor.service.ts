@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { NotificationService } from 'src/app/modules/dashboard/services/notification/notification.service';
-import { Article, Category, Notification, Status, Tag, User } from '../models';
+import { Article, ArticleStatus, Category, Notification, Status, Tag, User } from '../models';
 
 /**  The editor has two modes, one for edit and one create articles.
  create means that the editor is creating a new article.
@@ -56,7 +56,7 @@ export abstract class ArticleEditorService {
         this.saveOrUpdate();
     }
 
-    public updateStatus(status: string): void {
+    public updateStatus(status: ArticleStatus): void {
         this.article.status = status;
         this.saveOrUpdate();
     }
@@ -74,6 +74,13 @@ export abstract class ArticleEditorService {
     public updateDateAuthorEnabled(value: boolean): void {
         this.article.hasDateAuthorEnabled = value;
         this.saveOrUpdate();
+    }
+
+    public quickDraftCreate(data: Partial<{title: string, text: string}>) {
+      this.article.title = data.title;
+      this.article.articleText = data.text;
+      this.article.status = 'draft';
+      this.saveOrUpdate();
     }
 
     public getArticle(): Observable<Article> {
