@@ -7,6 +7,8 @@
   .dashboard-main-container {
     display: flex;
     flex: 1 1 auto;
+    min-height: min-content;
+    overflow: auto;
   }
 
   .dashboard-content-container {
