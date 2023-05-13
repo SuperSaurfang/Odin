@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 24. Feb 2022 um 09:59
--- Server-Version: 10.4.13-MariaDB
--- PHP-Version: 7.4.7
+-- Erstellungszeit: 13. Mai 2023 um 22:38
+-- Server-Version: 10.4.27-MariaDB
+-- PHP-Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,17 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `Thor`
+-- Datenbank: `thor`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Article`
+-- Tabellenstruktur für Tabelle `article`
 --
 
-DROP TABLE IF EXISTS `Article`;
-CREATE TABLE `Article` (
+CREATE TABLE `article` (
   `ArticleId` int(11) NOT NULL,
   `UserId` varchar(255) NOT NULL,
   `Title` varchar(255) NOT NULL,
@@ -40,54 +39,50 @@ CREATE TABLE `Article` (
   `Status` enum('draft','private','public','trash') NOT NULL DEFAULT 'draft',
   `IsBlog` tinyint(1) NOT NULL DEFAULT 0,
   `IsPage` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `ArticleCategory`
+-- Tabellenstruktur für Tabelle `articlecategory`
 --
 
-DROP TABLE IF EXISTS `ArticleCategory`;
-CREATE TABLE `ArticleCategory` (
+CREATE TABLE `articlecategory` (
   `ArticleId` int(11) NOT NULL,
   `CategoryId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `ArticleTag`
+-- Tabellenstruktur für Tabelle `articletag`
 --
 
-DROP TABLE IF EXISTS `ArticleTag`;
-CREATE TABLE `ArticleTag` (
+CREATE TABLE `articletag` (
   `ArticleId` int(11) NOT NULL,
   `TagId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Category`
+-- Tabellenstruktur für Tabelle `category`
 --
 
-DROP TABLE IF EXISTS `Category`;
-CREATE TABLE `Category` (
+CREATE TABLE `category` (
   `CategoryId` int(11) NOT NULL,
   `ParentId` int(11) DEFAULT NULL,
   `Name` varchar(255) NOT NULL,
   `Description` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Comment`
+-- Tabellenstruktur für Tabelle `comment`
 --
 
-DROP TABLE IF EXISTS `Comment`;
-CREATE TABLE `Comment` (
+CREATE TABLE `comment` (
   `CommentId` int(11) NOT NULL,
   `ArticleId` int(11) NOT NULL,
   `UserId` varchar(255) NOT NULL,
@@ -95,91 +90,88 @@ CREATE TABLE `Comment` (
   `CommentText` varchar(255) NOT NULL,
   `CreationDate` datetime NOT NULL DEFAULT current_timestamp(),
   `Status` enum('new','released','trash','spam') NOT NULL DEFAULT 'new'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Navmenu`
+-- Tabellenstruktur für Tabelle `navmenu`
 --
 
-DROP TABLE IF EXISTS `Navmenu`;
-CREATE TABLE `Navmenu` (
+CREATE TABLE `navmenu` (
   `NavmenuId` int(11) NOT NULL,
   `ParentId` int(11) DEFAULT NULL,
   `Link` varchar(255) DEFAULT NULL,
   `NavmenuOrder` int(11) NOT NULL,
   `DisplayText` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Tag`
+-- Tabellenstruktur für Tabelle `tag`
 --
 
-DROP TABLE IF EXISTS `Tag`;
-CREATE TABLE `Tag` (
+CREATE TABLE `tag` (
   `TagId` int(11) NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Description` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indizes der exportierten Tabellen
 --
 
 --
--- Indizes für die Tabelle `Article`
+-- Indizes für die Tabelle `article`
 --
-ALTER TABLE `Article`
+ALTER TABLE `article`
   ADD PRIMARY KEY (`ArticleId`),
   ADD UNIQUE KEY `title` (`Title`);
 
 --
--- Indizes für die Tabelle `ArticleCategory`
+-- Indizes für die Tabelle `articlecategory`
 --
-ALTER TABLE `ArticleCategory`
+ALTER TABLE `articlecategory`
   ADD PRIMARY KEY (`ArticleId`,`CategoryId`),
   ADD KEY `categoryId_category_const` (`CategoryId`),
   ADD KEY `articleId_category_const` (`ArticleId`);
 
 --
--- Indizes für die Tabelle `ArticleTag`
+-- Indizes für die Tabelle `articletag`
 --
-ALTER TABLE `ArticleTag`
+ALTER TABLE `articletag`
   ADD PRIMARY KEY (`ArticleId`,`TagId`),
   ADD KEY `tagid_tag_const` (`TagId`),
   ADD KEY `articleId_article_const` (`ArticleId`);
 
 --
--- Indizes für die Tabelle `Category`
+-- Indizes für die Tabelle `category`
 --
-ALTER TABLE `Category`
+ALTER TABLE `category`
   ADD PRIMARY KEY (`CategoryId`),
   ADD UNIQUE KEY `Name` (`Name`),
   ADD KEY `parentId_const` (`ParentId`);
 
 --
--- Indizes für die Tabelle `Comment`
+-- Indizes für die Tabelle `comment`
 --
-ALTER TABLE `Comment`
+ALTER TABLE `comment`
   ADD PRIMARY KEY (`CommentId`),
   ADD KEY `articleId_comment_const` (`ArticleId`),
   ADD KEY `answerOf_comment_const` (`AnswerOf`);
 
 --
--- Indizes für die Tabelle `Navmenu`
+-- Indizes für die Tabelle `navmenu`
 --
-ALTER TABLE `Navmenu`
+ALTER TABLE `navmenu`
   ADD PRIMARY KEY (`NavmenuId`),
-  ADD UNIQUE KEY `NavMenuOrder` (`NavmenuOrder`),
   ADD KEY `parentId_navmenu_const` (`ParentId`);
 
 --
--- Indizes für die Tabelle `Tag`
+-- Indizes für die Tabelle `tag`
 --
-ALTER TABLE `Tag`
+ALTER TABLE `tag`
   ADD PRIMARY KEY (`TagId`),
   ADD UNIQUE KEY `Name` (`Name`);
 
@@ -188,33 +180,33 @@ ALTER TABLE `Tag`
 --
 
 --
--- AUTO_INCREMENT für Tabelle `Article`
+-- AUTO_INCREMENT für Tabelle `article`
 --
-ALTER TABLE `Article`
+ALTER TABLE `article`
   MODIFY `ArticleId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Category`
+-- AUTO_INCREMENT für Tabelle `category`
 --
-ALTER TABLE `Category`
+ALTER TABLE `category`
   MODIFY `CategoryId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Comment`
+-- AUTO_INCREMENT für Tabelle `comment`
 --
-ALTER TABLE `Comment`
+ALTER TABLE `comment`
   MODIFY `CommentId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Navmenu`
+-- AUTO_INCREMENT für Tabelle `navmenu`
 --
-ALTER TABLE `Navmenu`
+ALTER TABLE `navmenu`
   MODIFY `NavmenuId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Tag`
+-- AUTO_INCREMENT für Tabelle `tag`
 --
-ALTER TABLE `Tag`
+ALTER TABLE `tag`
   MODIFY `TagId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -222,37 +214,37 @@ ALTER TABLE `Tag`
 --
 
 --
--- Constraints der Tabelle `ArticleCategory`
+-- Constraints der Tabelle `articlecategory`
 --
-ALTER TABLE `ArticleCategory`
-  ADD CONSTRAINT `articleId_category_const` FOREIGN KEY (`ArticleId`) REFERENCES `Article` (`ArticleId`),
-  ADD CONSTRAINT `categoryId_category_const` FOREIGN KEY (`CategoryId`) REFERENCES `Category` (`CategoryId`);
+ALTER TABLE `articlecategory`
+  ADD CONSTRAINT `articleId_category_const` FOREIGN KEY (`ArticleId`) REFERENCES `article` (`ArticleId`),
+  ADD CONSTRAINT `categoryId_category_const` FOREIGN KEY (`CategoryId`) REFERENCES `category` (`CategoryId`);
 
 --
--- Constraints der Tabelle `ArticleTag`
+-- Constraints der Tabelle `articletag`
 --
-ALTER TABLE `ArticleTag`
-  ADD CONSTRAINT `articleId_article_const` FOREIGN KEY (`ArticleId`) REFERENCES `Article` (`ArticleId`),
-  ADD CONSTRAINT `tagid_tag_const` FOREIGN KEY (`TagId`) REFERENCES `Tag` (`TagId`);
+ALTER TABLE `articletag`
+  ADD CONSTRAINT `articleId_article_const` FOREIGN KEY (`ArticleId`) REFERENCES `article` (`ArticleId`),
+  ADD CONSTRAINT `tagid_tag_const` FOREIGN KEY (`TagId`) REFERENCES `tag` (`TagId`);
 
 --
--- Constraints der Tabelle `Category`
+-- Constraints der Tabelle `category`
 --
-ALTER TABLE `Category`
-  ADD CONSTRAINT `parentId_const` FOREIGN KEY (`ParentId`) REFERENCES `Category` (`CategoryId`);
+ALTER TABLE `category`
+  ADD CONSTRAINT `parentId_const` FOREIGN KEY (`ParentId`) REFERENCES `category` (`CategoryId`);
 
 --
--- Constraints der Tabelle `Comment`
+-- Constraints der Tabelle `comment`
 --
-ALTER TABLE `Comment`
-  ADD CONSTRAINT `answerOf_comment_const` FOREIGN KEY (`AnswerOf`) REFERENCES `Comment` (`CommentId`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `articleId_comment_const` FOREIGN KEY (`ArticleId`) REFERENCES `Article` (`ArticleId`);
+ALTER TABLE `comment`
+  ADD CONSTRAINT `answerOf_comment_const` FOREIGN KEY (`AnswerOf`) REFERENCES `comment` (`CommentId`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `articleId_comment_const` FOREIGN KEY (`ArticleId`) REFERENCES `article` (`ArticleId`);
 
 --
--- Constraints der Tabelle `Navmenu`
+-- Constraints der Tabelle `navmenu`
 --
-ALTER TABLE `Navmenu`
-  ADD CONSTRAINT `parentId_navmenu_const` FOREIGN KEY (`ParentId`) REFERENCES `Navmenu` (`NavMenuId`);
+ALTER TABLE `navmenu`
+  ADD CONSTRAINT `parentId_navmenu_const` FOREIGN KEY (`ParentId`) REFERENCES `navmenu` (`NavmenuId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
