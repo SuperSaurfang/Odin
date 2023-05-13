@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { GridsterItem, GridsterConfig, GridsterComponentInterface } from 'angular-gridster2';
 import { GridsterItemComponentInterface } from 'angular-gridster2/public_api';
-import { GridsterItemWithComponent } from 'src/app/core';
+import { ArticleEditorService, GridsterItemWithComponent } from 'src/app/core';
 import { DashboardQuickCreateComponent } from './dashboard-quick-create/dashboard-quick-create.component';
+import { DashboardNewestCommentsComponent } from './dashboard-newest-comments/dashboard-newest-comments.component';
+import { DashboardNoticesComponent } from './dashboard-notices/dashboard-notices.component';
+import { PostEditorService } from '../services';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -37,15 +40,26 @@ export class DashboardOverviewComponent implements OnInit {
 
     this.items = [
       {
-        cols: 2, 
+        cols: 1, 
         rows: 3, 
         y: 0, 
         x: 0,
         component: DashboardQuickCreateComponent,
       },
-      {cols: 1, rows: 3, y: 0, x: 2},
-      {cols: 3, rows: 3, y: 3, x: 0},
-      {cols: 2, rows: 6, y: 0, x: 3},
+      {
+        cols: 1, 
+        rows: 3, 
+        y: 0, 
+        x: 1,
+        component: DashboardNewestCommentsComponent
+      },
+      {
+        cols: 1,
+        rows: 6, 
+        y: 0, 
+        x: 2,
+        component: DashboardNoticesComponent
+      },
     ];
   }
 

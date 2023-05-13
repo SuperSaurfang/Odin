@@ -16,6 +16,8 @@ export abstract class ArticleEditorService {
 
     protected articleSubject: Subject<Article> = new Subject<Article>();
 
+    private articleCreatedSubject: Subject<boolean> = new Subject();
+
     constructor(private notificationService: NotificationService) { }
 
     public abstract addTag(tag: Tag): boolean;
@@ -76,11 +78,12 @@ export abstract class ArticleEditorService {
         this.saveOrUpdate();
     }
 
-    public quickDraftCreate(data: Partial<{title: string, text: string}>) {
+    public quickDraftCreate(data: Partial<{title: string, text: string}>): Observable<boolean> {
       this.article.title = data.title;
       this.article.articleText = data.text;
       this.article.status = 'draft';
       this.saveOrUpdate();
+      return this.articleCreatedSubject;
     }
 
     public getArticle(): Observable<Article> {
@@ -90,6 +93,7 @@ export abstract class ArticleEditorService {
     protected updateArticleObject(article: Article): void {
       this.article = article;
       this.articleSubject.next(this.article);
+      this.articleCreatedSubject.next(true);
     }
 
     protected createMessage(status: Status, message: string): void {
@@ -101,7 +105,7 @@ export abstract class ArticleEditorService {
       this.notificationService.pushNotification(notification);
     }
 
-    private saveOrUpdate() {
+    private saveOrUpdate()  {
       if (!this.article.title) {
         // No title was set.
         this.notificationService.pushNotification({

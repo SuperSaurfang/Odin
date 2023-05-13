@@ -1,3 +1,13 @@
 <div class="content-container">
-  <p>Hello</p>
+  <h3>Schneller Entwurf</h3>
+
+  <form [formGroup]="quickCreateForm" (submit)="submit()">
+    <input placeholder="Titel" type="text" formControlName="title">
+    <textarea placeholder="Text" type="text" formControlName="text">
+      
+    </textarea>
+
+    <button type="submit" class="btn btn-dark ml-auto" [disabled]="quickCreateForm.invalid">Speichern</button>
+  </form>
+    
 </div>

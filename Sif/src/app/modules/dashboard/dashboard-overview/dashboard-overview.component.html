@@ -3,7 +3,9 @@
 <div class="grid-container">
   <gridster class="gridster" [options]="config">
     <gridster-item [item]="item" *ngFor="let item of items">
-      <ng-template *dashboardItem="item.component"></ng-template>
+      <div class="gridster-item-content">
+        <ng-template *dashboardItem="item.component"></ng-template>
+      </div>
     </gridster-item>
   </gridster>
 </div>
