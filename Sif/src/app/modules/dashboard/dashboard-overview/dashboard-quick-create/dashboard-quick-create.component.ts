@@ -26,7 +26,6 @@ export class DashboardQuickCreateComponent extends DashboardItemComponent implem
    }
 
   public ngOnInit() {
-    console.log(this.postEditor);
     this.initArticle();
   }
 
