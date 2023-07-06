@@ -36,6 +36,13 @@
         margin-left: calc($width / -2);
     }
 
+    .tooltip-top-left {
+        width: $width;
+        bottom: 100%;
+        left: 30%;
+        margin-left: calc($width * -1);
+    }
+
     .tooltip-bottom {
         width: $width;
         top: 100%;

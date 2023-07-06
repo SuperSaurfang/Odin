@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-export type Position = 'left' | 'right' | 'top' | 'bottom';
+export type Position = 'left' | 'right' | 'top' | 'bottom' | 'topLeft';
 
 @Component({
   selector: 'app-tooltip',
