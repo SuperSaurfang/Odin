@@ -1,3 +1,61 @@
 <div class="content-container">
   <h3>Neuste Kommentare</h3>
+  <div>
+    <div class="comment-container" *ngFor="let comment of comments; let i = index">
+      <div class="commen-article-info">
+        <span>Neuer Kommentar zu {{comment.articleTitle}}</span>
+      </div>
+      <div class="comment-info-container">
+        <div class="comment-user">
+          <img class="user-profile-picture-small" [src]="comment.user.picture">
+          <span class="ml-1">{{comment.user.nickname}}</span>
+        </div>
+        <div class="comment-date">
+          <fa-icon [icon]="['fas', 'calendar-day']"></fa-icon>
+          <span class="ml-1">{{comment.creationDate | date : 'dd.MM.YYYY'}}</span>
+        </div>
+      </div>
+      <div class="comment-text">
+        {{comment.commentText}}
+      </div>
+      <div class="action-bar">
+        <span *ngIf="comment.answerOf">Antwort auf Kommentar von {{comment.answerOf}}</span>
+        <div class="actions">
+          <div #tooltipTrigger class="pos-relative">
+            <button class="btn btn-icon " (click)="openMenu(i)">
+              <fa-icon *ngIf="comment.status !== 'trash'" [icon]="['fas', 'circle']" [ngClass]="{
+              'danger-text': comment.status === 'spam',
+              'warn-text': comment.status === 'new',
+              'ok-text': comment.status === 'released'
+            }"></fa-icon>
+            </button>
+            <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
+            <app-tooltip [triggerElement]="tooltipTrigger" position="left">
+              {{comment.status | commentstatus}}
+            </app-tooltip>
+          </div>
+          <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (close)="onClose()">
+            <div appMenuContent class="control-group vertical-group">
+              <button class="btn btn-light text-left" (click)="updateStatus(i, 'spam')">
+                <fa-icon class="danger-text" [icon]="['fas', 'circle']"></fa-icon>
+                Als Spam markieren
+              </button>
+              <button class="btn btn-light text-left" (click)="updateStatus(i, 'new')">
+                <fa-icon class="warn-text" [icon]="['fas', 'circle']"></fa-icon>
+                Als neu markieren
+              </button>
+              <button class="btn btn-light text-left" (click)="updateStatus(i, 'released')">
+                <fa-icon class="ok-text" [icon]="['fas', 'circle']"></fa-icon>
+                Veröffentlichen
+              </button>
+              <button class="btn btn-light text-left" (click)="updateStatus(i, 'trash')">
+                <fa-icon class="danger-text" [icon]="['fas', 'trash']"></fa-icon>
+                In den Papierkorb verschieben
+              </button>
+            </div>
+          </app-menu>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

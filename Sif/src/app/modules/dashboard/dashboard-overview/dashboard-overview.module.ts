@@ -8,11 +8,15 @@ import { DashboardNewestCommentsComponent } from './dashboard-newest-comments/da
 import { DashboardNoticesComponent } from './dashboard-notices/dashboard-notices.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { RestCommentService } from '../services';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CommentStatusPipe } from 'src/app/core/pipes/comment-status/comment-status.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    FontAwesomeModule,
     SharedModule,
     GridsterModule
   ],
@@ -21,7 +25,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DashboardOverviewComponent,
     DashboardQuickCreateComponent,
     DashboardNewestCommentsComponent,
-    DashboardNoticesComponent
+    DashboardNoticesComponent,
+    CommentStatusPipe
   ],
+  providers: [
+    RestCommentService,
+  ]
 })
 export class DashboardOverviewModule { }
