@@ -1,9 +1,11 @@
 <div class="notification-action-bar">
-  <div class="pos-relative tooltip-trigger">
+  <div #deleteTooltip class="pos-relative">
     <button class="btn delete-button" (click)="onDeleteNotifications()">
       <fa-icon [icon]="['fas', 'trash']"></fa-icon>
     </button>
-    <span class="tooltip tooltip-position">Einträge löschen</span>
+    <app-tooltip [triggerElement]="deleteTooltip" position="top">
+      Einträge löschen
+    </app-tooltip>
   </div>
 </div>
 <div class="notification-log-container">

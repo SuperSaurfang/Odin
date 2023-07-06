@@ -49,25 +49,25 @@
     <input type="text" [(ngModel)]="searchTerm" (input)="updateSearchTerm()"/>
   </div>
 
-  <div class="reset-filter pos-relative tooltip-trigger">
+  <div #resetTooltip class="reset-filter pos-relative">
     <button class="btn btn-icon" (click)="resetFilter()">
       <fa-layers size="2x">
         <fa-icon [icon]="['fas', 'slash']" [mask]="['fas', 'filter']"></fa-icon>
         <fa-icon [icon]="['fas', 'slash']" transform="up-2 left-2" class="danger-text"></fa-icon>
       </fa-layers>
     </button>
-    <div class="tooltip">
+    <app-tooltip [triggerElement]="resetTooltip" position="bottom">
       Filter zurücksetzen
-    </div>
+    </app-tooltip>
   </div>
 
-  <div class="clear-trash pos-relative tooltip-trigger">
+  <div #trashTooltip class="clear-trash pos-relative">
     <button class="btn btn-icon danger-text" (click)="clearTrash()">
       <fa-icon [icon]="['fas', 'trash']" size="2x"></fa-icon>
     </button>
-    <div class="tooltip">
+    <app-tooltip [triggerElement]="trashTooltip" position="bottom">
       Papierkorb leeren
-    </div>
+    </app-tooltip>
   </div>
 </div>
 <table>
@@ -107,7 +107,7 @@
       </td>
       <td>{{comment.commentText}}</td>
       <td>
-        <div class="pos-relative tooltip-trigger">
+        <div #commentStatusTooltip class="pos-relative">
           <button class="btn btn-icon " (click)="openMenu(i)">
             <fa-icon *ngIf="comment.status !== 'trash'"
             [icon]="['fas', 'circle']"
@@ -118,9 +118,9 @@
             }"></fa-icon>
           </button>
           <fa-icon class="danger-text" *ngIf="comment.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
-          <div class="tooltip" [ngClass]="{'hide': statusmenuopen === i}">
+          <app-tooltip [triggerElement]="commentStatusTooltip" position="top">
             {{getTooltipText(comment.status)}}
-          </div>
+          </app-tooltip>
         </div>
         <app-menu [isOpen]="statusmenuopen === i" menuTitle="Status ändern" (close)="onClose()">
           <div appMenuContent class="control-group vertical-group">

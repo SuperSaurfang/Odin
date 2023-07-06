@@ -126,25 +126,6 @@ a {
   position: relative;
 }
 
-.tooltip {
-  background-color: #1a1a1acc;
-  color: white;
-  border-radius: $radius;
-  padding: padding(1);
-  position: absolute;
-  display: none;
-  width: 160px;
-  text-align: center;
-  left: -45px;
-  z-index: 99;
-}
-
-.tooltip-trigger:hover {
-  > .tooltip  {
-    display: block;
-  }
-}
-
 .hide {
   display: none !important;
 }
