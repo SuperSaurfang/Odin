@@ -15,6 +15,7 @@ import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
 import { CollapsibleContentBoxModule } from '../shared-modules/collapsible-content-box/collapsible-content-box.module';
 import { PaginatorModule } from '../shared-modules/paginator';
 import { NestedDragDropListModule } from '../shared-modules/nested-drag-drop-list/nested-drag-drop-list.module';
+import { TooltipModule } from '../shared-modules/tooltip/tooltip.module';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { NestedDragDropListModule } from '../shared-modules/nested-drag-drop-lis
     HintboxModule,
     CollapsibleContentBoxModule,
     PaginatorModule,
-    NestedDragDropListModule
+    NestedDragDropListModule,
+    TooltipModule
   ]
 })
 export class SharedModule { }

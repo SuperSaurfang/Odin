@@ -1,0 +1,10 @@
+<div class="tooltip" [ngClass]="{
+  'tooltip-left': position === 'left',
+  'tooltip-right': position === 'right',
+  'tooltip-bottom': position === 'bottom',
+  'tooltip-top': position === 'top',
+  'tooltip-show': isShown === true
+}">
+  <ng-content></ng-content>
+</div>
+

@@ -1,0 +1,45 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+    $width: 160px;
+    
+    .tooltip {
+        background-color: #1a1a1acc;
+        color: white;
+        border-radius: $radius;
+        padding: padding(1);
+        position: absolute;
+        display: none;
+        width: $width;
+        text-align: center;
+        z-index: 99;
+    }
+
+    .tooltip-show {
+        display: block;
+    }
+
+    .tooltip-left {
+        top: -5px;
+        right: 105%;
+    }
+
+    .tooltip-right {
+        top: -5px;
+        left: 105%;
+    }
+
+    .tooltip-top {
+        width: $width;
+        bottom: 100%;
+        left: 50%;
+        margin-left: calc($width / -2);
+    }
+
+    .tooltip-bottom {
+        width: $width;
+        top: 100%;
+        left: 50%;
+        margin-left: calc($width / -2);
+    }
+}
