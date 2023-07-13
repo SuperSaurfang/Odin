@@ -14,6 +14,7 @@ import { DashboardNotificationComponent } from './dashboard-notification/dashboa
 import { DashboardNotificationLogComponent } from './dashboard-notification/dashboard-notification-log/dashboard-notification-log.component';
 
 import { NotificationService } from './services/notification/notification.service';
+import { DashboardOverviewModule } from './dashboard-overview/dashboard-overview.module';
 
 
 
@@ -21,6 +22,7 @@ import { NotificationService } from './services/notification/notification.servic
   imports: [
     CommonModule,
     DashboardPostsModule,
+    DashboardOverviewModule,
     DashboardPagesModule,
     FontAwesomeModule,
     SharedModule,

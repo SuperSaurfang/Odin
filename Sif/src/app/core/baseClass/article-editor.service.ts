@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { NotificationService } from 'src/app/modules/dashboard/services/notification/notification.service';
-import { Article, Category, Notification, Status, Tag, User } from '../models';
+import { Article, ArticleStatus, Category, Notification, Status, Tag, User } from '../models';
 
 /**  The editor has two modes, one for edit and one create articles.
  create means that the editor is creating a new article.
@@ -15,6 +15,8 @@ export abstract class ArticleEditorService {
     protected mode: Mode = 'create';
 
     protected articleSubject: Subject<Article> = new Subject<Article>();
+
+    private articleCreatedSubject: Subject<boolean> = new Subject();
 
     constructor(private notificationService: NotificationService) { }
 
@@ -56,7 +58,7 @@ export abstract class ArticleEditorService {
         this.saveOrUpdate();
     }
 
-    public updateStatus(status: string): void {
+    public updateStatus(status: ArticleStatus): void {
         this.article.status = status;
         this.saveOrUpdate();
     }
@@ -76,6 +78,14 @@ export abstract class ArticleEditorService {
         this.saveOrUpdate();
     }
 
+    public quickDraftCreate(data: Partial<{title: string, text: string}>): Observable<boolean> {
+      this.article.title = data.title;
+      this.article.articleText = data.text;
+      this.article.status = 'draft';
+      this.saveOrUpdate();
+      return this.articleCreatedSubject;
+    }
+
     public getArticle(): Observable<Article> {
         return this.articleSubject;
     }
@@ -83,6 +93,7 @@ export abstract class ArticleEditorService {
     protected updateArticleObject(article: Article): void {
       this.article = article;
       this.articleSubject.next(this.article);
+      this.articleCreatedSubject.next(true);
     }
 
     protected createMessage(status: Status, message: string): void {
@@ -94,7 +105,7 @@ export abstract class ArticleEditorService {
       this.notificationService.pushNotification(notification);
     }
 
-    private saveOrUpdate() {
+    private saveOrUpdate()  {
       if (!this.article.title) {
         // No title was set.
         this.notificationService.pushNotification({

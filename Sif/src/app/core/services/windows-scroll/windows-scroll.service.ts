@@ -19,7 +19,7 @@ export class WindowsScrollService {
 
   public scrolled(tick = 10): Observable<Position> {
     return this.scrollEventSubject.pipe(
-      throttle(() => interval(tick)),
+      throttle(event => interval(tick)),
       map(event => this.getPosition(event))
     );
   }

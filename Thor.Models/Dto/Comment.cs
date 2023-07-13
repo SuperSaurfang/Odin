@@ -8,6 +8,7 @@ public class Comment
 {
   public int CommentId { get; set; }
   public int ArticleId { get; set; }
+  public string ArticleTitle { get; set; }
   public string UserId { get; set; }
   public User User { get; set; }
   public int? AnswerOf { get; set; }
@@ -27,7 +28,13 @@ public class Comment
     CreationDate = comment.CreationDate;
     Status = comment.Status;
 
-    if(comment.Replies.Count > 0) {
+    if (comment.Article is not null)
+    {
+      ArticleTitle = comment.Article.Title;
+    }
+
+    if (comment.Replies.Count > 0)
+    {
       var replies = new List<Comment>();
       foreach (var item in comment.Replies)
       {

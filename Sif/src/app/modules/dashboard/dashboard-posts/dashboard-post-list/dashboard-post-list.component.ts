@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Article, ChangeResponse, Status } from 'src/app/core';
+import { Article, ArticleStatus, ChangeResponse, Status } from 'src/app/core';
 
 import { ArticleFilterService, RestPostsService } from '../../services';
 import { Subscription } from 'rxjs';
@@ -125,8 +125,8 @@ export class DashboardPostListComponent implements OnInit {
     this.articleFilter.resetFilter();
   }
 
-  public executeAction(event: string) {
-    if (event === '' || this.selectedArticles.filter(a => a === true).length === 0)  {
+  public executeAction(event?: ArticleStatus) {
+    if (!event || this.selectedArticles.filter(a => a === true).length === 0)  {
       console.log('Nothing selected');
       return;
     }
@@ -144,7 +144,7 @@ export class DashboardPostListComponent implements OnInit {
     this.statusMenuOpen = index;
   }
 
-  public updateStatus(status: string, index: number) {
+  public updateStatus(status: ArticleStatus, index: number) {
     this.statusMenuOpen = -1;
     this.articles[index].status = status;
     const notification = {

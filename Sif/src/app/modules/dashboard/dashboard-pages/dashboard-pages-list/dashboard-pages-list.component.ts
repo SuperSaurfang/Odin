@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ListFilterEvent, FilterType } from '../../shared-dashboard-modules/list-action-bar/list-action-bar.component';
 import { ArticleFilterService } from '../../services/article-filter/article-filter.service';
-import { Article, ChangeResponse } from 'src/app/core';
+import { Article, ArticleStatus, ChangeResponse } from 'src/app/core';
 import { RestPageService } from '../../services';
 import { Subscription } from 'rxjs';
 import { DateFilter } from 'src/app/core/baseClass';
@@ -59,7 +59,7 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
     this.articleFilter.updateDateFilter(dateFilter);
   }
 
-  public updateStatus(status: string, index: number) {
+  public updateStatus(status: ArticleStatus, index: number) {
     this.articles[index].status = status;
     this.restService.updatePage(this.articles[index]).subscribe(response => {
       switch (response.change) {
@@ -96,8 +96,8 @@ export class DashboardPagesListComponent implements OnInit, OnChanges {
     }
   }
 
-  public executeAction(event: string) {
-    if (event === '' || this.selectedArticles.filter(a => a === true).length === 0) {
+  public executeAction(event?: ArticleStatus) {
+    if (!event || this.selectedArticles.filter(a => a === true).length === 0) {
       console.log('Nothing selected');
       return;
     }

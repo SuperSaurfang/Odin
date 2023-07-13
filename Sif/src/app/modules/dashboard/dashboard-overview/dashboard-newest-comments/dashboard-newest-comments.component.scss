@@ -1,0 +1,44 @@
+@import '../../../../core/scss/variables.scss';
+
+:host {
+    display: grid;
+    width: 100%;
+    height: 100%;
+
+    .content-container {
+        margin: 0;
+        overflow: auto;
+    }
+
+    .comment-container:not(:last-child) {
+        border-bottom: 1px solid #cccccc;
+        margin-bottom: margin(2);
+        padding-bottom: padding(1);
+    }
+
+    .commen-article-info {
+        padding: padding(1);
+        font-size: larger;
+        font-weight: 500;
+    }
+
+    .comment-info-container, .action-bar {
+        display: flex;
+        justify-items: center;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .comment-user, .comment-date {
+        display: flex;
+        align-items: center;
+    }
+
+    .comment-text {
+        padding: padding(2) 0;
+    }
+
+    .actions {
+        margin-left: auto;
+    }
+}

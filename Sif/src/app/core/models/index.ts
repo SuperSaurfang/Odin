@@ -15,3 +15,4 @@ export * from './dataProcessState';
 export * from './paging';
 export * from './articleResponse';
 export * from './articleRequest';
+export * from './gridsterItemWithComponent';

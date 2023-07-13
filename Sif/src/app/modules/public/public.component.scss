@@ -1,0 +1,10 @@
+@import '../../core/scss/variables.scss';
+
+:host {
+    .site-wrapper {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: padding(8);
+      }
+}

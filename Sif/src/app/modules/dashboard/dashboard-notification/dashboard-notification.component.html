@@ -10,11 +10,13 @@
         <span class="mx-1">{{date | date: 'HH:mm:ss'}}:</span>
         <span>{{notificationMessage}}</span>
       </div>
-      <div class="history-button-container pos-relative tooltip-trigger">
+      <div #historyTooltip class="history-button-container pos-relative">
         <button class="btn history-button" (click)="onNotificationLogOpen()">
           <fa-icon [icon]="['fas', 'angle-up']"></fa-icon>
         </button>
-        <span class="tooltip tooltip-position">Alle Meldungen anzeigen</span>
+        <app-tooltip [triggerElement]="historyTooltip" position="topLeft">
+          Alle Meldungen anzeigen
+        </app-tooltip>
       </div>
     </div>
   </div>
