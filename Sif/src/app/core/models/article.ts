@@ -2,6 +2,8 @@ import { User } from '@auth0/auth0-angular';
 import { Category } from './category';
 import { Tag } from './tag';
 
+export type ArticleStatus =  'trash' | 'draft' | 'private' | 'public';
+
 export class Article {
   articleId?: number;
   title?: string;
@@ -12,7 +14,7 @@ export class Article {
   modificationDate?: Date;
   hasCommentsEnabled?: boolean;
   hasDateAuthorEnabled?: boolean;
-  status?: string;
+  status?: ArticleStatus;
   categories?: Category[];
   tags?: Tag[];
   link?: string;

@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ArticleStatus } from 'src/app/core';
 
 export enum FilterType {
   Status,
@@ -29,14 +30,14 @@ export class ListActionBarComponent implements OnInit {
 
   constructor() { }
 
-  public selectedAction = '';
+  public selectedAction: ArticleStatus;
   public listAction: ListFilterModel = new ListFilterModel();
 
   @Output()
   public ListFilterUpdate = new EventEmitter<ListFilterEvent>();
 
   @Output()
-  public ExecuteAction = new EventEmitter<string>();
+  public ExecuteAction = new EventEmitter<ArticleStatus>();
 
   @Output()
   public ClearTrash = new EventEmitter();

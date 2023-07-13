@@ -31,7 +31,7 @@
       </td>
       <td>{{article.user.nickname}}</td>
       <td>
-        <div (click)="openStatusChange(i)" class="pos-relative tooltip-trigger cursor-pointer">
+        <div #articleStatusTooltip (click)="openStatusChange(i)" class="pos-relative cursor-pointer">
           <fa-icon *ngIf="article.status !== 'trash'"
           [icon]="['fas', 'circle']"
           [ngClass]="{
@@ -40,9 +40,9 @@
             'ok-text': article.status === 'public'
           }"></fa-icon>
           <fa-icon class="danger-text"  *ngIf="article.status === 'trash'" [icon]="['fas', 'trash']"></fa-icon>
-          <div class="tooltip" [ngClass]="{'hide': statusMenuOpen === i}">
+          <app-tooltip [triggerElement]="articleStatusTooltip" position="top">
             {{getStatusTooltip(article.status)}}
-          </div>
+          </app-tooltip>
         </div>
         <app-status-change-menu [isOpen]="statusMenuOpen === i" (isOpenChange)="onMenuClose($event)" (updateStatus)="updateStatus($event, i)"></app-status-change-menu>
       </td>

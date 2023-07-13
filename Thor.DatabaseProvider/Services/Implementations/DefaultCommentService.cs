@@ -74,7 +74,9 @@ internal class DefaultCommentService : IThorCommentService
 
   public async Task<IEnumerable<DTO.Comment>> GetComments()
   {
-    var comments = await context.Comments.ToListAsync();
+    var comments = await context.Comments
+      .Include(a => a.Article)
+      .ToListAsync();
     return comments.ConvertList<DB.Comment, DTO.Comment>(comment => new DTO.Comment(comment));
   }
 

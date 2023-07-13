@@ -1,5 +1,5 @@
-<app-menu [isOpen]="isOpen" menuTitle="Status ändern" (isOpenChange)="onIsOpenUpdate($event)">
-  <div class="control-group vertical-group">
+<app-menu [isOpen]="isOpen" menuTitle="Status ändern" (close)="onClose($event)">
+  <div appMenuContent class="control-group vertical-group">
     <button class="btn btn-light text-left" (click)="updateStatus.emit('draft')">
       <fa-icon class="danger-text" [icon]="['fas', 'circle']"></fa-icon>
       Auf Entwurf setzen

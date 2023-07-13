@@ -33,6 +33,10 @@ export class RestCommentService extends RestBase {
 
   public deleteComments(): Observable<StatusResponse<Comment[]>> {
     return this.httpClient.delete<StatusResponse<Comment[]>>(`${this.basePath}`).pipe(
+      map(response => {
+        response.model = this.restoreDate(response.model);
+        return response;
+      }),
       catchError(this.handleError<StatusResponse<Comment[]>>('Unable to delete comment', this.errorResponse(StatusResponseType.Delete, [])))
     );
   }

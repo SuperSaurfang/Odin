@@ -1,5 +1,9 @@
 @import '../../core/scss/variables.scss';
 :host {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
 
   .menu {
     display: none;
@@ -8,13 +12,17 @@
     z-index: 99;
     background-color: $white;
     border-radius: $radius;
+    width: max-content;
   }
 
   .menu-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: padding(1);
+  }
+
+  .menu-title {
+    padding-left: padding(1);
   }
 
   .menu-display {

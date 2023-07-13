@@ -40,6 +40,8 @@ import { SearchService } from './services/search/search.service';
     WindowsScrollService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true }
+  ],
+  exports: [
   ]
 })
 export class CoreModule { }

@@ -21,9 +21,6 @@ export class UserService {
     });
   }
 
-  private currentUser: BehaviorSubject<User>;
-  private isUserLoggedIn: BehaviorSubject<boolean>;
-
   public loginWithRedirect() {
     this.authService.loginWithRedirect();
   }
@@ -42,17 +39,6 @@ export class UserService {
 
   public isLoading() {
     return this.authService.isLoading$;
-  }
-
-  public CurrentUser(): Observable<User> {
-    return this.currentUser;
-  }
-  public CurrentUserValue(): User {
-    return this.currentUser.value;
-  }
-
-  public IsUserLoggedInValue(): boolean {
-    return this.isUserLoggedIn.value;
   }
 
   public hasUserPermission(permission: string | string[]): boolean {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule} from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { KeepHtmlPipe, NewlinePipe } from 'src/app/core/pipes';
+import { KeepHtmlPipe } from 'src/app/core/pipes';
 
 import { SideBarModule } from '../shared-modules/side-bar/side-bar.module';
 import { ApplicationBarModule} from '../shared-modules/application-bar/application-bar.module';
@@ -15,17 +15,16 @@ import { HintboxModule } from '../shared-modules/hintbox/hintbox.module';
 import { CollapsibleContentBoxModule } from '../shared-modules/collapsible-content-box/collapsible-content-box.module';
 import { PaginatorModule } from '../shared-modules/paginator';
 import { NestedDragDropListModule } from '../shared-modules/nested-drag-drop-list/nested-drag-drop-list.module';
+import { TooltipModule } from '../shared-modules/tooltip/tooltip.module';
 
 
 @NgModule({
   declarations: [
-    NewlinePipe,
     KeepHtmlPipe
   ],
   imports: [
     CommonModule,
   ], exports: [
-    NewlinePipe,
     KeepHtmlPipe,
     ReactiveFormsModule,
     SideBarModule,
@@ -38,7 +37,8 @@ import { NestedDragDropListModule } from '../shared-modules/nested-drag-drop-lis
     HintboxModule,
     CollapsibleContentBoxModule,
     PaginatorModule,
-    NestedDragDropListModule
+    NestedDragDropListModule,
+    TooltipModule
   ]
 })
 export class SharedModule { }

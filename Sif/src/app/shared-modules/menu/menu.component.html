@@ -1,11 +1,11 @@
 <div class="menu" [ngClass]="{'menu-display': isOpen}">
   <div class="menu-header">
-    <div>{{menuTitle}}</div>
+    <div class="menu-title">{{menuTitle}}</div>
     <button class="btn btn-light" (click)="onClose()">
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>
   <div class="menu-body">
-    <ng-content></ng-content>
+    <ng-content select="[appMenuContent]"></ng-content>
   </div>
 </div>
