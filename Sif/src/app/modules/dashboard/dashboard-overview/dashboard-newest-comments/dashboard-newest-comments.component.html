@@ -6,7 +6,14 @@
         <span>Neuer Kommentar zu {{comment.articleTitle}}</span>
       </div>
       <div class="comment-info-container">
-        <div class="comment-user">
+        <div *ngIf="comment.userId === 'guest'" class="comment-user">
+          <fa-stack>
+            <fa-icon class="avatar-background" [icon]="['fas', 'circle']" stackItemSize="2x"></fa-icon>
+            <fa-icon class="avatar-foreground" [icon]="['fas', 'user']" stackItemSize="1x"></fa-icon>
+          </fa-stack>
+          <span class="ml-1">Gast</span>
+        </div>
+        <div *ngIf="comment.userId !== 'guest'" class="comment-user">
           <img class="user-profile-picture-small" [src]="comment.user.picture">
           <span class="ml-1">{{comment.user.nickname}}</span>
         </div>

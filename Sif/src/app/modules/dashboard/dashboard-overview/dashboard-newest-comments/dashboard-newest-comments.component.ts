@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RestCommentService } from '../../services';
-import { Comment, CommentStatus } from '../../../../core/models';
+import { ChangeResponse, Comment, CommentStatus, Status } from '../../../../core/models';
 import { map, take } from 'rxjs';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-dashboard-newest-comments',
@@ -12,7 +13,7 @@ export class DashboardNewestCommentsComponent implements OnInit {
 
   public comments: Comment[] = [];
   public statusmenuopen = -1;
-  constructor(private commentService: RestCommentService) { }
+  constructor(private commentService: RestCommentService, private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.commentService.getCommentList().pipe(
@@ -42,10 +43,31 @@ export class DashboardNewestCommentsComponent implements OnInit {
   updateStatus(index: number, status: CommentStatus): void {
     this.comments[index].status = status;
     this.onClose();
+    this.commentService.putComment(this.comments[index]).subscribe(response => {
+      switch (response.change) {
+        case ChangeResponse.Change:
+          this.pushNotification('Der Status wurde aktualisiert.', Status.Ok);
+          break;
+        case ChangeResponse.Error:
+          this.pushNotification('Fehler beim aktualisieren des Status.', Status.Error);
+          break;
+        case ChangeResponse.NoChange:
+          this.pushNotification('Der Status konnte nicht aktualisiert werden.', Status.Info);
+          break;
+      }
+    });
   }
 
   private sortByDate(a: Comment, b: Comment) {
     return b.creationDate.getTime() - a.creationDate.getTime();
+  }
+
+  private pushNotification(message: string, status: Status) {
+    this.notificationService.pushNotification({
+      date: new Date(Date.now()),
+      message: message,
+      status: status
+    });
   }
 
 }
