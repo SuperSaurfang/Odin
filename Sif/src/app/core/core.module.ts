@@ -23,9 +23,11 @@ import { SearchService } from './services/search/search.service';
     }),
     AuthModule.forRoot({
       clientId: environment.auth0.clientId,
-      audience: environment.auth0.audience,
       domain: environment.auth0.domain,
-      redirectUri: environment.auth0.redirectUri,
+      authorizationParams: {
+        audience: environment.auth0.audience,
+        redirect_uri: environment.auth0.redirectUri
+      },
       httpInterceptor: {
         allowedList: [
           `${environment.restApi}/dashboard/*`
