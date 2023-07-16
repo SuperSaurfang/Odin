@@ -21,16 +21,27 @@ services:
         ipv4_address: 172.30.0.6
       backend:
         ipv4_address: 172.40.0.4
+  
   sif:
     build:
       context: ./Sif
       dockerfile: Dockerfile
     environment: 
       BACKEND: http://172.30.0.6
+    #volumes:
+    #  - ./certbot/www:/var/www/certbot/:ro
+    #  - ./certbot/conf/:/etc/nginx/ssl/:ro
     ports: 
-      - "127.0.0.1:80:80"
+      - "80:80"
+      - "443:443"
     networks: 
       - frontend
+
+  #certbot:
+  #  image: certbot/certbot:latest
+  #  volumes:
+  #    - ./certbot/www/:/var/www/certbot/:rw
+  #    - ./certbot/conf/:/etc/letsencrypt/:rw'
 
 volumes:
     database:

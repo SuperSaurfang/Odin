@@ -43,3 +43,4 @@ Thor/uploads/*
 dist
 Sif/auth_config.json
 Sif/.angular
+/**/cert/*
