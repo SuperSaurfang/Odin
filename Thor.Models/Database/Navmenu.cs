@@ -1,40 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 
-namespace Thor.Models.Database
+namespace Thor.Models.Database;
+
+public class Navmenu : IEntity<int>
 {
-    public class Navmenu : IEntity<int>
+    public Navmenu()
     {
-        public Navmenu()
-        {
-            ChildNavmenu = new HashSet<Navmenu>();
-        }
 
-        public Navmenu(Dto.Navmenu navmenu)
-          : this()
-        {
-          NavmenuId = navmenu.NavmenuId;
-          ParentId = navmenu.ParentId;
-          NavmenuOrder = navmenu.NavmenuOrder;
-          DisplayText = navmenu.DisplayText;
-
-          if(!navmenu.IsLabel)
-          {
-            Link = navmenu.Link;
-          }
-        }
-
-
-        [NotMapped]
-        public int Id { get; set; }
-        public int NavmenuId { get; set; }
-        public int? ParentId { get; set; }
-        public string Link { get; set; }
-        public int NavmenuOrder { get; set; }
-        public string DisplayText { get; set; }
-
-        public Navmenu Parent { get; set; }
-        public ICollection<Navmenu> ChildNavmenu { get; set; }
     }
+    public Navmenu(Dto.Navmenu navmenu)
+    {
+
+    }
+
+    public int Id { get; set; }
+    public string Link { get; set; }
+    public int NavmenuOrder { get; set; }
+    public string DisplayText { get; set; }
+    public virtual Navmenu Parent { get; set; }
+    public virtual ICollection<Navmenu> ChildNavmenu { get; set; }
 }

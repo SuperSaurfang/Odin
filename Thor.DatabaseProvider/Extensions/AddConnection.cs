@@ -5,6 +5,7 @@ using Thor.DatabaseProvider.Context;
 using Thor.DatabaseProvider.Services.Api;
 using Thor.DatabaseProvider.Services.Implementations;
 using Thor.Models.Config;
+using Microsoft.EntityFrameworkCore;
 
 namespace Thor.DatabaseProvider.Extensions
 {
@@ -21,7 +22,11 @@ namespace Thor.DatabaseProvider.Extensions
       {
         case "mariadb":
         case "maria":
-          services.AddDbContext<ThorContext>();
+          services.AddDbContext<ThorContext>(options => 
+          {
+            var connectionString = config.ConnectionSettings.GetMariaConnectionString();
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+          });
 
           services.AddTransient<IThorBlogService, DefaultBlogService>();
           services.AddTransient<IThorCategoryService, DefaultCategoryService>();
