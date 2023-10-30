@@ -5,11 +5,6 @@ namespace Thor.Models.Database;
 
 public class Category : IEntity<int>
 {
-    public Category() { }
-    public Category(DTO.Category category)
-    {
-    }
-
     public int Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }

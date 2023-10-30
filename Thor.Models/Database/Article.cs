@@ -5,11 +5,6 @@ namespace Thor.Models.Database;
 
 public class Article : IEntity<int>
 {
-    public Article() { }
-    public Article(Dto.Article article)
-    {
-    }
-
     public int Id { get; set; }
     public string UserId { get; set; }
     public string Title { get; set; }

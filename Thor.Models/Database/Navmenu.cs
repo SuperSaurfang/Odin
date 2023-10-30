@@ -4,15 +4,6 @@ namespace Thor.Models.Database;
 
 public class Navmenu : IEntity<int>
 {
-    public Navmenu()
-    {
-
-    }
-    public Navmenu(Dto.Navmenu navmenu)
-    {
-
-    }
-
     public int Id { get; set; }
     public string Link { get; set; }
     public int NavmenuOrder { get; set; }

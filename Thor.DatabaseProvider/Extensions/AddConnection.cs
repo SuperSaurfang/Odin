@@ -28,14 +28,11 @@ namespace Thor.DatabaseProvider.Extensions
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
           });
 
-          services.AddTransient<IThorBlogService, DefaultBlogService>();
-          services.AddTransient<IThorCategoryService, DefaultCategoryService>();
-          services.AddTransient<IThorCommentService, DefaultCommentService>();
-          services.AddTransient<IThorNavmenuService, DefaultNavmenuService>();
-          services.AddTransient<IThorPageService, DefaultPageService>();
-          services.AddTransient<IThorPublicService, DefaultPublicService>();
-          services.AddTransient<IThorTagService, DefaultTagService>();
-          services.AddTransient<IThorSearchService, DefaultSearchService>();
+          services.AddTransient<IThorArticleRepository, DefaultArticleRepository>();
+          services.AddTransient<IThorCategoryRepository, DefaultCategoryRepository>();
+          services.AddTransient<IThorCommentRepository, DefaultCommentRepository>();
+          services.AddTransient<IThorNavmenuRepository, DefaultNavmenuRepository>();
+          services.AddTransient<IThorTagRepository, DefaultTagRepository>();
           break;
         case "mongo":
         case "mongodb":

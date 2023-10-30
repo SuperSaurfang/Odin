@@ -38,6 +38,8 @@ namespace Thor
 
       services.AddSingleton<IRestClientService, RestClientService>();
       services.AddTransient<IFileStoreService, FileStoreService>();
+      services.AddTransient<IThorPublicService, DefaultPublicService>();
+      services.AddTransient<IThorSearchService, DefaultSearchService>();
 
       var databaseConfig = Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>();
       services.AddDBConnection(databaseConfig);

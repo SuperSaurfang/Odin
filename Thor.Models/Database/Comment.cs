@@ -6,15 +6,6 @@ namespace Thor.Models.Database;
 
 public class Comment : IEntity<int>
 {
-    public Comment()
-    {
-
-    }
-    public Comment(DTO.Comment comment)
-    {
-
-    }
-
     public int Id { get; set; }
     public string UserId { get; set; }
     public string CommentText { get; set; }

@@ -25,7 +25,7 @@ namespace Thor.Controllers
     [HttpPost]
     public async Task<ActionResult<StatusResponse<Comment>>> PostComment(Comment comment)
     {
-      if (comment.ArticleId == 0)
+      if (comment.Article is null || comment.Article.ArticleId == 0)
       {
         return BadRequest("The article id cannot be 0");
       }
