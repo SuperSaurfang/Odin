@@ -35,14 +35,14 @@ namespace Thor.Controllers.Dashboard
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetArticle(title);
+      var result = await blogService.GetArticle(title, x => x.IsBlog);
       if (result == null)
       {
         return InternalError();
       }
       var article = result.ToArticleDto();
       article.User = await restClient.MapUserIdToUser(article);
-      return Ok(result);
+      return Ok(article);
     }
 
     /// <summary>
@@ -54,12 +54,13 @@ namespace Thor.Controllers.Dashboard
     [Authorize("author")]
     public async Task<ActionResult<IEnumerable<Article>>> GetAllArticles()
     {
-      var result = blogService.GetArticles();
-      if (result == null)
+      var query = blogService.GetArticles();
+      if (query == null)
       {
         return InternalError();
       }
-      var articles = result.ToArticleDtos();
+      var filtered = query.Where(x => x.IsBlog);
+      var articles = filtered.ToArticleDto();
       await restClient.MapUserIdToUser(articles);
       return Ok(articles);
     }
@@ -79,8 +80,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("the article id cannot be zero.");
       }
 
-      await blogService.UpdateArticle(article.ToBlogArticleDb());
-      return Ok();
+      var status = await blogService.UpdateArticle(article.ToBlogArticleDb());
+      return Ok(status.ToStatusResponseDto());
     }
 
     /// <summary>
@@ -90,7 +91,7 @@ namespace Thor.Controllers.Dashboard
     /// <returns></returns>
     [Produces("application/json")]
     [HttpPost]
-    //[Authorize("author")]
+    [Authorize("author")]
     public async Task<ActionResult<StatusResponse<Article>>> CreateArticle(Article article)
     {
       if (article.UserId == string.Empty)
@@ -98,19 +99,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("UserId cannot be zero");
       }
 
-      var createdArticle = await blogService.CreateArticle(article.ToBlogArticleDb());
-      
-      if(createdArticle is null) {
-        return InternalError();
-      }
-      
-      var response = new StatusResponse<Article> 
-      {
-        Change = Change.Change,
-        Model = createdArticle.ToArticleDto(),
-        ResponseType = StatusResponseType.Create,
-      };
-      return Ok(response);
+      var statusResponse = await blogService.CreateArticle(article.ToBlogArticleDb());    
+      return Ok(statusResponse.ToStatusResponseDto());
     }
 
     /// <summary>
@@ -123,8 +113,8 @@ namespace Thor.Controllers.Dashboard
     public async Task<ActionResult<StatusResponse<IEnumerable<Article>>>> DeleteBlogArticle()
     {
         var trash = blogService.GetArticles().Where(a => a.Status == Models.Database.ArticleStatus.Trash);
-        await blogService.DeleteArticles(trash);
-        return Ok();
+        var status = await blogService.DeleteArticles(trash, x => x.IsBlog);
+        return Ok(status.ToStatusResponseDto());
     }
 
     [Produces("application/json")]
@@ -137,8 +127,8 @@ namespace Thor.Controllers.Dashboard
       {
         return BadRequest("Cannot be null.");
       }
-      await blogService.AddCategory(category.ToCategoryDb(), id);
-      return Ok();
+      var response = await blogService.AddCategory(category.ToCategoryDb(), id);
+      return Ok(response.ToStatusResponseDto());
     }
 
     [Produces("application/json")]
@@ -152,8 +142,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("Cannot be null.");
       }
 
-      await blogService.RemoveCategory(category.ToCategoryDb(), id);
-      return Ok();
+      var response = await blogService.RemoveCategory(category.ToCategoryDb(), id);
+      return Ok(response.ToStatusResponseDto());
     }
 
     [Produces("application/json")]
@@ -167,8 +157,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("Cannot be null");
       }
 
-      await blogService.AddTag(tag.ToTagDb(), id);
-      return Ok();
+      var response = await blogService.AddTag(tag.ToTagDb(), id);
+      return Ok(response.ToStatusResponseDto());
     }
 
     [Produces("application/json")]
@@ -182,8 +172,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("Cannot be null");
       }
 
-      await blogService.RemoveTag(tag.ToTagDb(), id);
-      return Ok();
+      var response = await blogService.RemoveTag(tag.ToTagDb(), id);
+      return Ok(response.ToStatusResponseDto());
     }
 
     private ObjectResult InternalError(string message = "Internal Server Error")

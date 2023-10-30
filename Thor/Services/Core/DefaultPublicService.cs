@@ -47,7 +47,7 @@ internal class DefaultPublicService : IThorPublicService
         .OrderByDescending(a => a.CreationDate)
         .ToListAsync();
 
-        return CreateResponse(paging, articles.ToArticleDtos().ToList());
+        return CreateResponse(paging, articles.ToArticleDto().ToList());
     }
 
     public async Task<ArticleResponse> GetBlogByCategory(ArticleRequest request)
@@ -64,7 +64,7 @@ internal class DefaultPublicService : IThorPublicService
         var filtered = articles
           .Where(a => a.Status == Models.Database.ArticleStatus.Public && a.IsBlog == true)
           .OrderByDescending(x => x.CreationDate)
-          .ToArticleDtos()
+          .ToArticleDto()
           .ToList();
 
         return CreateResponse(request.Paging, filtered);
@@ -84,7 +84,7 @@ internal class DefaultPublicService : IThorPublicService
         var filtered = articles
           .Where(a => a.Status == Models.Database.ArticleStatus.Public && a.IsBlog == true)
           .OrderByDescending(x => x.CreationDate)
-          .ToArticleDtos()
+          .ToArticleDto()
           .ToList();
 
         return CreateResponse(request.Paging, filtered);

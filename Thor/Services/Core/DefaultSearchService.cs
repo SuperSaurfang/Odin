@@ -58,7 +58,7 @@ namespace Thor.Services
                     articleQuery = articleQuery.Where(a => a.ArticleText.Contains(searchRequest.Term) || a.Title.Contains(searchRequest.Term));
                 }
                 var articles = await articleQuery.ToListAsync();
-                result.Articles = articles.ToArticleDtos();
+                result.Articles = articles.ToArticleDto();
             }
 
             if (searchRequest.IsTagSearch)

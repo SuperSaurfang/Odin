@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Thor.Models.Database;
 
 public enum ArticleStatus
@@ -7,3 +9,4 @@ public enum ArticleStatus
     Private,
     Public
 }
+
