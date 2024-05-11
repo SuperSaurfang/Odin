@@ -13,12 +13,12 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class CommentController : ControllerBase
   {
-    private readonly IThorPublicService publicService;
-    private readonly IRestClientService restClient;
-    public CommentController(IThorPublicService publicService, IRestClientService restClient)
+    private readonly IThorPublicService _publicService;
+    private readonly IOAuthService _oAuthService;
+    public CommentController(IThorPublicService publicService, IOAuthService restClient)
     {
-      this.publicService = publicService;
-      this.restClient = restClient;
+      _publicService = publicService;
+      _oAuthService = restClient;
     }
 
     [Produces("application/json")]
@@ -29,7 +29,7 @@ namespace Thor.Controllers
       {
         return BadRequest("The article id cannot be 0");
       }
-      var result = await publicService.CreateComment(comment);
+      var result = await _publicService.CreateComment(comment);
       return Ok(result);
     }
 
@@ -41,13 +41,13 @@ namespace Thor.Controllers
       {
         return BadRequest("Article id cannot be 0");
       }
-      var result = await publicService.GetCommentsForArticle(articleId);
+      var result = await _publicService.GetCommentsForArticle(articleId);
       if (result == null)
       {
         return InternalError();
       }
 
-      await restClient.MapUserIdToUser(result);
+      await _oAuthService.MapUserIdToUser(result);
       return Ok(result);
     }
 

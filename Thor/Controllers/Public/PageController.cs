@@ -11,13 +11,13 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class PageController : ControllerBase
   {
-    private readonly IThorPublicService publicService;
-    private readonly IRestClientService restClient;
+    private readonly IThorPublicService _publicService;
+    private readonly IOAuthService _oAuthService;
 
-    public PageController(IThorPublicService publicService, IRestClientService restClient)
+    public PageController(IThorPublicService publicService, IOAuthService restClient)
     {
-      this.publicService = publicService;
-      this.restClient = restClient;
+      _publicService = publicService;
+      _oAuthService = restClient;
     }
 
     [Produces("application/json")]
@@ -29,12 +29,12 @@ namespace Thor.Controllers
         return BadRequest("Unable to load page without title");
       }
 
-      var article = await publicService.GetPage(title);
+      var article = await _publicService.GetPage(title);
       if (article == null)
       {
         return InternalError();
       }
-      article.User = await restClient.MapUserIdToUser(article);
+      article.User = await _oAuthService.MapUserIdToUser(article);
       return Ok(article);
     }
 

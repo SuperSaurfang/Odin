@@ -11,7 +11,8 @@ namespace Thor
   {
     public static void Main(string[] args)
     {
-      var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            
+      var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
       try
       {
         logger.Info("Initialize Thor Rest API Application");

@@ -15,13 +15,13 @@ namespace Thor.Controllers
   public class BlogController : ControllerBase
   {
 
-    private readonly IThorPublicService blogService;
-    private readonly IRestClientService restClient;
+    private readonly IThorPublicService _blogService;
+    private readonly IOAuthService _oAuthService;
 
-    public BlogController(IThorPublicService blogService, IRestClientService restClient)
+    public BlogController(IThorPublicService blogService, IOAuthService restClient)
     {
-      this.blogService = blogService;
-      this.restClient = restClient;
+      _blogService = blogService;
+      _oAuthService = restClient;
     }
 
     /// <summary>
@@ -33,13 +33,13 @@ namespace Thor.Controllers
     public async Task<ActionResult<ArticleResponse>> GetAllPublicBlog(Paging paging)
     {
       // var result = await blogService.GetAllPublicArticles();
-      var result = await blogService.GetBlog(paging);
+      var result = await _blogService.GetBlog(paging);
       if (result == null)
       {
         return InternalError();
       }
 
-      await restClient.MapUserIdToUser(result.Articles);
+      await _oAuthService.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
 
@@ -57,13 +57,13 @@ namespace Thor.Controllers
         return BadRequest("Title cannot be null");
       }
       // var result = await blogService.GetPublicArticleByTitle(title);
-      var result = await blogService.GetBlogByTitle(title);
+      var result = await _blogService.GetBlogByTitle(title);
       if (result == null)
       {
         return InternalError();
       }
 
-      result.User = await restClient.MapUserIdToUser(result);
+      result.User = await _oAuthService.MapUserIdToUser(result);
       return Ok(result);
     }
 
@@ -76,12 +76,12 @@ namespace Thor.Controllers
         return BadRequest("Category cannot be null");
       }
       // var result = await blogService.GetCategoryBlog(category);
-      var result = await blogService.GetBlogByCategory(category);
+      var result = await _blogService.GetBlogByCategory(category);
       if(result == null)
       {
         return InternalError();
       }
-      await restClient.MapUserIdToUser(result.Articles);
+      await _oAuthService.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
 
@@ -93,12 +93,12 @@ namespace Thor.Controllers
       {
         return BadRequest("Tag cannot be null");
       }
-      var result = await blogService.GetBlogByTag(tag);
+      var result = await _blogService.GetBlogByTag(tag);
       if(result == null)
       {
         return InternalError();
       }
-      await restClient.MapUserIdToUser(result.Articles);
+      await _oAuthService.MapUserIdToUser(result.Articles);
       return Ok(result);
     }
     

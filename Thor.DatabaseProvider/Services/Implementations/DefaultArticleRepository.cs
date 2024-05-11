@@ -8,6 +8,7 @@ using Thor.Models.Database;
 using Microsoft.Extensions.Logging;
 using System;
 using Thor.Models.Dto.Responses;
+using Org.BouncyCastle.Crypto.Engines;
 
 namespace Thor.DatabaseProvider.Services.Implementations;
 
@@ -35,39 +36,69 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on creating new blog article:", ex);
+            logger.LogError(ex, "Error on creating new blog article:");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
     }
 
-    public async Task<StatusResponse<IEnumerable<Article>>> DeleteArticles(IEnumerable<Article> articles, Func<Article, bool> predicate)
+    public async Task<StatusResponse<IEnumerable<Article>>> DeleteBlogArticles(IEnumerable<Article> articles)
     {
         var statusResponse = StatusResponse<IEnumerable<Article>>.DeleteResponse();
         try
         {
-            var trash = articles.Where(a => a.Status == ArticleStatus.Trash && predicate(a));
+            var trash = articles.Where(a => a.Status == ArticleStatus.Trash && a.IsBlog);
             context.Articles.RemoveRange(trash);
             await context.SaveChangesAsync();
             articles = GetArticles();
             statusResponse.Change = Change.Change;
-            statusResponse.Model = articles.Where(predicate);
+            statusResponse.Model = articles.Where(a => a.IsBlog);
             return statusResponse;
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on deleting trash: ", ex);
+            logger.LogError(ex, "Error on deleting trash: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
     }
 
-    public async Task<Article> GetArticle(string title, Func<Article, bool> predicate)
+    public async Task<StatusResponse<IEnumerable<Article>>> DeletePageArticles(IEnumerable<Article> articles) 
+    {
+        var statusResponse = StatusResponse<IEnumerable<Article>>.DeleteResponse();
+        try
+        {
+            var trash = articles.Where(a => a.Status == ArticleStatus.Trash && a.IsPage);
+            context.Articles.RemoveRange(trash);
+            await context.SaveChangesAsync();
+            articles = GetArticles();
+            statusResponse.Change = Change.Change;
+            statusResponse.Model = articles.Where(a => a.IsPage);
+            return statusResponse;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error on deleting trash: ");
+            statusResponse.Change = Change.Error;
+            return statusResponse;
+        }
+    }
+
+    public async Task<Article> GetBlogArticle(string title)
     {
         return await context.Articles
           .Include(a => a.Categories)
           .Include(a => a.Tags)
-          .Where(a => string.Equals(a.Title, title) && predicate(a))
+          .Where(a => string.Equals(a.Title, title) && a.IsBlog)
+          .FirstOrDefaultAsync();
+    }
+
+    public async Task<Article> GetPageArticle(string title)
+    {
+        return await context.Articles
+          .Include(a => a.Categories)
+          .Include(a => a.Tags)
+          .Where(a => string.Equals(a.Title, title) && a.IsPage)
           .FirstOrDefaultAsync();
     }
 
@@ -103,7 +134,7 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on removing category from article: ", ex);
+            logger.LogError(ex, "Error on removing category from article: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
@@ -126,7 +157,7 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on add category to article: ", ex);
+            logger.LogError(ex, "Error on add category to article: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
@@ -149,7 +180,7 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on add tag to article: ", ex);
+            logger.LogError(ex, "Error on add tag to article: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
@@ -172,7 +203,7 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on remove tag from article: ", ex);
+            logger.LogError(ex, "Error on remove tag from article: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }
@@ -191,7 +222,7 @@ internal class DefaultArticleRepository : IThorArticleRepository
         }
         catch (Exception ex)
         {
-            logger.LogError("Error on updating artcile: ", ex);
+            logger.LogError(ex, "Error on updating artcile: ");
             statusResponse.Change = Change.Error;
             return statusResponse;
         }

@@ -10,11 +10,13 @@ namespace Thor.DatabaseProvider.Services.Api;
 public interface IThorArticleRepository
 {
     IQueryable<Article> GetArticles();
-    Task<Article> GetArticle(string title, Func<Article, bool> predicate);
+    Task<Article> GetPageArticle(string title);
+    Task<Article> GetBlogArticle(string title);
     Task<Article> GetArticle(int articleId);
     Task<StatusResponse<Article>> UpdateArticle(Article article);
     Task<StatusResponse<Article>> CreateArticle(Article article);
-    Task<StatusResponse<IEnumerable<Article>>> DeleteArticles(IEnumerable<Article> articles, Func<Article, bool> predicate);
+    Task<StatusResponse<IEnumerable<Article>>> DeleteBlogArticles(IEnumerable<Article> articles);
+    Task<StatusResponse<IEnumerable<Article>>> DeletePageArticles(IEnumerable<Article> articles);
     Task<StatusResponse<Article>> AddCategory(Category category, int articleId);
     Task<StatusResponse<Article>> RemoveCategory(Category category, int articleId);
     Task<StatusResponse<Article>> AddTag(Tag tag, int articleId);

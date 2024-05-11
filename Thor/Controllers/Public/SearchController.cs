@@ -13,12 +13,12 @@ namespace Thor.Controllers
   [Route("api/public/[controller]")]
   public class SearchController : ControllerBase
   {
-    private readonly IThorSearchService searchService;
-    private readonly IRestClientService restClient;
-    public SearchController(IThorSearchService searchService, IRestClientService restClient)
+    private readonly IThorSearchService _searchService;
+    private readonly IOAuthService _oAuthService;
+    public SearchController(IThorSearchService searchService, IOAuthService restClient)
     {
-      this.searchService = searchService;
-      this.restClient = restClient;
+      _searchService = searchService;
+      _oAuthService = restClient;
     }
 
     [HttpPost]
@@ -29,12 +29,12 @@ namespace Thor.Controllers
         return BadRequest("The search term cannot be null");
       }
 
-      var result = await searchService.Search(searchRequest);
+      var result = await _searchService.Search(searchRequest);
       if(result is not null)
       {
         if(result.Articles.Count() > 0)
         {
-          await restClient.MapUserIdToUser(result.Articles);
+          await _oAuthService.MapUserIdToUser(result.Articles);
         }
         return Ok(result);
       }

@@ -1,13 +1,15 @@
-using Thor.Models.Attributes;
+using System.Text.Json.Serialization;
 
 namespace Thor.Models.Dto;
 
 public class User
 {
-  [Auth0Field("user_id")]
+  [JsonPropertyName("user_id")]
   public string UserId { get; set; }
-  [Auth0Field("nickname")]
+  
+    [JsonPropertyName("nickname")]
   public string Nickname { get; set; }
-  [Auth0Field("picture")]
+  
+    [JsonPropertyName("picture")]
   public string Picture { get; set; }
 }

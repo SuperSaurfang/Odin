@@ -92,7 +92,7 @@ internal class DefaultPublicService : IThorPublicService
 
     public async Task<Article> GetBlogByTitle(string title)
     {
-        var article = await _articleRepository.GetArticle(title);
+        var article = await _articleRepository.GetBlogArticle(title);
 
         if(article.Status != Models.Database.ArticleStatus.Public || !article.IsBlog) 
         {
@@ -103,7 +103,7 @@ internal class DefaultPublicService : IThorPublicService
 
     public async Task<Article> GetPage(string title)
     {
-        var article = await _articleRepository.GetArticle(title);
+        var article = await _articleRepository.GetPageArticle(title);
         
         if(article.Status != Models.Database.ArticleStatus.Public || !article.IsPage) 
         {
@@ -134,7 +134,7 @@ internal class DefaultPublicService : IThorPublicService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception on creating new user comment: ", ex);
+            _logger.LogError(ex, "Exception on creating new user comment: ");
             return null;
         }
     }

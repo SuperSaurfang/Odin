@@ -1,7 +1,10 @@
+using Lucene.Net.Index;
+using Lucene.Net.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Thor.Models.Dto;
 using Thor.Services.Api;
 
@@ -9,19 +12,17 @@ namespace Thor.Extensions
 {
   public static class UserIdMapper
   {
-    public static async Task<User> MapUserIdToUser(this IRestClientService restClient, Article result)
+    public static async Task<User> MapUserIdToUser(this IOAuthService restClient, Article result)
     {
-      IEnumerable<User> users = await restClient.GetUsers(new List<string>() { "user_id:", result.UserId });
+      var users = await restClient.GetUsers(Fields(), GetUserSearchQuery([result.UserId]));
       var query = users.AsQueryable();
       return (from user in query where user.UserId.Equals(result.UserId) select user).FirstOrDefault();
     }
 
-    public static async Task MapUserIdToUser(this IRestClientService restClient, IEnumerable<Article> result)
+    public static async Task MapUserIdToUser(this IOAuthService restClient, IEnumerable<Article> result)
     {
-      var listOfSearchQuery = new List<string>() { "user_id:" };
       var uniqueUserIds = result.Select(item => item.UserId).Distinct();
-      listOfSearchQuery.AddRange(uniqueUserIds);
-      IEnumerable<User> users = await restClient.GetUsers(listOfSearchQuery);
+      IEnumerable<User> users = await restClient.GetUsers(Fields(), GetUserSearchQuery(uniqueUserIds));
       var query = users.AsQueryable();
 
       foreach (var item in result)
@@ -30,9 +31,8 @@ namespace Thor.Extensions
       }
     }
 
-    public static async Task MapUserIdToUser(this IRestClientService restClient, IEnumerable<Comment> comments)
+    public static async Task MapUserIdToUser(this IOAuthService restClient, IEnumerable<Comment> comments)
     {
-      var listOfSearchQuery = new List<string>() { "user_id:" };
       var uniqueUserIds = SelectUserId(comments).Distinct().ToList();
       uniqueUserIds.Remove("guest");
       //if list is empty after removing the guest id, we don't have to any items to map, so we return here
@@ -41,14 +41,13 @@ namespace Thor.Extensions
         return;
       }
 
-      listOfSearchQuery.AddRange(uniqueUserIds);
-      IEnumerable<User> users = await restClient.GetUsers(listOfSearchQuery);
+      IEnumerable<User> users = await restClient.GetUsers(Fields(), GetUserSearchQuery(uniqueUserIds));
       var query = users.AsQueryable();
 
       SetUserRecursive(query, comments);
     }
 
-    public static async Task MapUserIdToUser(this IRestClientService restClient, Comment comment)
+    public static async Task MapUserIdToUser(this IOAuthService restClient, Comment comment)
     {
       await MapUserIdToUser(restClient, new List<Comment>() { comment });
     }
@@ -81,6 +80,17 @@ namespace Thor.Extensions
       }
     }
 
+    private static string Fields()
+    {
+        return "user_id,nickname,picture";
+    }
+
+        private static string GetUserSearchQuery(IEnumerable<string> userIds)
+        {
+            var rr = string.Join(" ", userIds);
+            var tt = new TermQuery(new Term("user_id", rr));
+            return tt.ToString();
+        }
 
   }
 }

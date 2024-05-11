@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using Thor.DatabaseProvider.Extensions;
 using Thor.DatabaseProvider;
+using Refit;
+using System;
+using Thor.Services.Core;
 
 namespace Thor
 {
@@ -36,7 +39,22 @@ namespace Thor
       services.Configure<RestClientConfig>(Configuration.GetSection("RestClient"));
       services.AddTransient(optione => optione.GetRequiredService<IOptions<RestClientConfig>>().Value);
 
-      services.AddSingleton<IRestClientService, RestClientService>();
+
+            services.AddSingleton<IOAuthTokenProvider, OAuthTokenProvider>();
+            services.AddTransient<OAuthHttpMessageHandler>();
+            services.AddRefitClient<IOAuthTokenService>().ConfigureHttpClient((sp, c) => 
+            {
+                var config = sp.GetRequiredService<RestClientConfig>();
+                c.BaseAddress = new Uri($"https://{config.Domain}");
+            });
+
+      services.AddRefitClient<IOAuthService>()
+            .ConfigureHttpClient((sp, c) => 
+            {
+                var config = sp.GetRequiredService<RestClientConfig>();   
+                c.BaseAddress = new Uri($"https://{config.Domain}");
+            })
+            .AddHttpMessageHandler<OAuthHttpMessageHandler>();
       services.AddTransient<IFileStoreService, FileStoreService>();
       services.AddTransient<IThorPublicService, DefaultPublicService>();
       services.AddTransient<IThorSearchService, DefaultSearchService>();

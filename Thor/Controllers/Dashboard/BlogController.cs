@@ -18,9 +18,9 @@ namespace Thor.Controllers.Dashboard
   {
     private readonly IThorArticleRepository blogService;
 
-    private readonly IRestClientService restClient;
+    private readonly IOAuthService restClient;
 
-    public BlogController(IThorArticleRepository blogService, IRestClientService restClient)
+    public BlogController(IThorArticleRepository blogService, IOAuthService restClient)
     {
       this.blogService = blogService;
       this.restClient = restClient;
@@ -35,7 +35,7 @@ namespace Thor.Controllers.Dashboard
       {
         return BadRequest("Title cannot be null");
       }
-      var result = await blogService.GetArticle(title, x => x.IsBlog);
+      var result = await blogService.GetBlogArticle(title);
       if (result == null)
       {
         return InternalError();
@@ -113,7 +113,7 @@ namespace Thor.Controllers.Dashboard
     public async Task<ActionResult<StatusResponse<IEnumerable<Article>>>> DeleteBlogArticle()
     {
         var trash = blogService.GetArticles().Where(a => a.Status == Models.Database.ArticleStatus.Trash);
-        var status = await blogService.DeleteArticles(trash, x => x.IsBlog);
+        var status = await blogService.DeleteBlogArticles(trash);
         return Ok(status.ToStatusResponseDto());
     }
 
