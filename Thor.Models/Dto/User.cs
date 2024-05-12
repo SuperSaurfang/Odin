@@ -7,9 +7,9 @@ public class User
   [JsonPropertyName("user_id")]
   public string UserId { get; set; }
   
-    [JsonPropertyName("nickname")]
+  [JsonPropertyName("nickname")]
   public string Nickname { get; set; }
   
-    [JsonPropertyName("picture")]
+  [JsonPropertyName("picture")]
   public string Picture { get; set; }
 }

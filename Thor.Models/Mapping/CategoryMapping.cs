@@ -1,6 +1,7 @@
 using CategoryDto = Thor.Models.Dto.Category;
 using CategoryDb = Thor.Models.Database.Category;
 using System.Collections.Generic;
+using Thor.Models.Dto.Responses;
 
 namespace Thor.Models.Mapping;
 
@@ -13,8 +14,12 @@ public static class CategoryMapping
             CategoryId = category.Id,
             Name = category.Name,
             Description = category.Description,
-            ArticleCount = category.Articles.Count,
         };
+
+        if(category.Articles is not null) 
+        {
+            articleDto.ArticleCount = category.Articles.Count;
+        }
 
         if (category.Parent is not null)
         {
@@ -26,7 +31,7 @@ public static class CategoryMapping
 
     public static IEnumerable<CategoryDto> ToCategoryDtos(this IEnumerable<CategoryDb> articles)
     {
-        return articles.ConvertList<CategoryDb, CategoryDto>(a => a.ToCategoryDto());
+        return articles.ConvertList(a => a.ToCategoryDto());
     }
 
     public static CategoryDb ToCategoryDb(this CategoryDto category)
@@ -36,8 +41,6 @@ public static class CategoryMapping
             Id = category.CategoryId,
             Name = category.Name,
             Description = category.Description,
-
-
         };
 
         if (category.Parent is not null)
@@ -46,5 +49,29 @@ public static class CategoryMapping
         }
 
         return categoryDb;
+    }
+
+    public static StatusResponse<CategoryDto> ToUpdateResponse(this CategoryDb category)
+    {
+        var statusResponse = StatusResponse<CategoryDto>.UpdateResponse();
+        statusResponse.Change = category is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = category.ToCategoryDto();
+        return statusResponse;
+    }
+
+    public static StatusResponse<CategoryDto> ToCreateResponse(this CategoryDb category)
+    {
+        var statusResponse = StatusResponse<CategoryDto>.CreateResponse();
+        statusResponse.Change = category is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = category.ToCategoryDto();
+        return statusResponse;
+    }
+
+    public static StatusResponse<IEnumerable<CategoryDto>> ToDeleteResponse(this IEnumerable<CategoryDb> categories)
+    {
+        var statusResponse = StatusResponse<IEnumerable<CategoryDto>>.DeleteResponse();
+        statusResponse.Change = categories is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = categories.ToCategoryDtos();
+        return statusResponse;
     }
 }

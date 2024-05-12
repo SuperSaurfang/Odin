@@ -44,4 +44,31 @@ public class StatusResponse<TModel> where TModel : class
       ResponseType = StatusResponseType.Delete,
     };
   }
+
+    public static StatusResponse<TModel> UpdateErrorResponse()
+    {
+        return new StatusResponse<TModel>
+        {
+            ResponseType = StatusResponseType.Update,
+            Change = Change.Error
+        };
+    }
+
+    public static StatusResponse<TModel> CreateErrorResponse()
+    {
+        return new StatusResponse<TModel>
+        {
+            ResponseType = StatusResponseType.Create,
+            Change = Change.Error
+        };
+    }
+
+    public static StatusResponse<TModel> DeleteErrorResponse()
+    {
+        return new StatusResponse<TModel>
+        {
+            ResponseType = StatusResponseType.Delete,
+            Change = Change.Error
+        };
+    }
 }

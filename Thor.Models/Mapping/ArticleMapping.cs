@@ -56,24 +56,36 @@ public static class ArticleMapping
         return articles.ConvertList(a => a.ToArticleDto());
     }
 
-    public static StatusResponse<ArticleDto> ToStatusResponseDto(this StatusResponse<ArticleDb> statusResponse) 
+    public static StatusResponse<ArticleDto> ToUpdateResponse(this ArticleDb article) 
     {
-        return new StatusResponse<ArticleDto> 
-        {
-            Change = statusResponse.Change,
-            ResponseType = statusResponse.ResponseType,
-            Model = statusResponse.Model.ToArticleDto()
-        };
+        var statusResponse = StatusResponse<ArticleDto>.UpdateResponse();
+        statusResponse.Change = article is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = article.ToArticleDto();
+        return statusResponse;
     }
 
-    public static StatusResponse<IEnumerable<ArticleDto>> ToStatusResponseDto(this StatusResponse<IEnumerable<ArticleDb>> statusResponse) 
+    public static StatusResponse<ArticleDto> ToCreateResponse(this ArticleDb article)
     {
-        return new StatusResponse<IEnumerable<ArticleDto>>
-        {
-            Change = statusResponse.Change,
-            ResponseType = statusResponse.ResponseType,
-            Model = statusResponse.Model.ToArticleDto()
-        };
+        var statusResponse = StatusResponse<ArticleDto>.CreateResponse();
+        statusResponse.Change = article is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = article.ToArticleDto();
+        return statusResponse;
+    }
+
+    public static StatusResponse<ArticleDto> ToDeleteResponse(this ArticleDb article)
+    {
+        var statusResponse = StatusResponse<ArticleDto>.DeleteResponse();
+        statusResponse.Change = article is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = article.ToArticleDto();
+        return statusResponse;
+    }
+
+    public static StatusResponse<IEnumerable<ArticleDto>> ToDeleteResponse(this IEnumerable<ArticleDb> articles) 
+    {
+        var statusResponse = StatusResponse<IEnumerable<ArticleDto>>.DeleteResponse();
+        statusResponse.Change = articles is null ? Change.NoChange : Change.Change;
+        statusResponse.Model = articles.ToArticleDto();
+        return statusResponse;
     }
 
     public static ArticleDb ToBlogArticleDb(this ArticleDto article)

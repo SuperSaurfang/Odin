@@ -8,7 +8,7 @@ namespace Thor.DatabaseProvider.Services.Api;
 public interface IThorCategoryRepository
 {
   IQueryable<Category> GetCategories();
-  Task CreateCategory(Category category);
-  Task UpdateCategory(Category category);
-  Task DeleteCategory(int id);
+  Task<Category> CreateCategory(Category category);
+  Task<Category> UpdateCategory(Category category);
+  Task<IEnumerable<Category>> DeleteCategory(int id);
 }

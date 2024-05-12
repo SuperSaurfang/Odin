@@ -13,12 +13,12 @@ public interface IThorArticleRepository
     Task<Article> GetPageArticle(string title);
     Task<Article> GetBlogArticle(string title);
     Task<Article> GetArticle(int articleId);
-    Task<StatusResponse<Article>> UpdateArticle(Article article);
-    Task<StatusResponse<Article>> CreateArticle(Article article);
-    Task<StatusResponse<IEnumerable<Article>>> DeleteBlogArticles(IEnumerable<Article> articles);
-    Task<StatusResponse<IEnumerable<Article>>> DeletePageArticles(IEnumerable<Article> articles);
-    Task<StatusResponse<Article>> AddCategory(Category category, int articleId);
-    Task<StatusResponse<Article>> RemoveCategory(Category category, int articleId);
-    Task<StatusResponse<Article>> AddTag(Tag tag, int articleId);
-    Task<StatusResponse<Article>> RemoveTag(Tag tag, int articleId);
+    Task<Article> UpdateArticle(Article article);
+    Task<Article> CreateArticle(Article article);
+    Task<IEnumerable<Article>> DeleteBlogArticles(IEnumerable<Article> articles);
+    Task<IEnumerable<Article>> DeletePageArticles(IEnumerable<Article> articles);
+    Task<Article> AddCategory(Category category, int articleId);
+    Task<Article> RemoveCategory(Category category, int articleId);
+    Task<Article> AddTag(Tag tag, int articleId);
+    Task<Article> RemoveTag(Tag tag, int articleId);
 }

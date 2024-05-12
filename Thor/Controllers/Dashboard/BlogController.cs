@@ -80,8 +80,8 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("the article id cannot be zero.");
       }
 
-      var status = await blogService.UpdateArticle(article.ToBlogArticleDb());
-      return Ok(status.ToStatusResponseDto());
+      var result = await blogService.UpdateArticle(article.ToBlogArticleDb());
+      return Ok(result.ToUpdateResponse());
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ namespace Thor.Controllers.Dashboard
       }
 
       var statusResponse = await blogService.CreateArticle(article.ToBlogArticleDb());    
-      return Ok(statusResponse.ToStatusResponseDto());
+      return Ok(statusResponse.ToCreateResponse());
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ namespace Thor.Controllers.Dashboard
     {
         var trash = blogService.GetArticles().Where(a => a.Status == Models.Database.ArticleStatus.Trash);
         var status = await blogService.DeleteBlogArticles(trash);
-        return Ok(status.ToStatusResponseDto());
+        return Ok(status.ToDeleteResponse());
     }
 
     [Produces("application/json")]
@@ -128,7 +128,7 @@ namespace Thor.Controllers.Dashboard
         return BadRequest("Cannot be null.");
       }
       var response = await blogService.AddCategory(category.ToCategoryDb(), id);
-      return Ok(response.ToStatusResponseDto());
+      return Ok(response.ToCreateResponse());
     }
 
     [Produces("application/json")]
@@ -143,7 +143,7 @@ namespace Thor.Controllers.Dashboard
       }
 
       var response = await blogService.RemoveCategory(category.ToCategoryDb(), id);
-      return Ok(response.ToStatusResponseDto());
+      return Ok(response.ToDeleteResponse());
     }
 
     [Produces("application/json")]
@@ -158,7 +158,7 @@ namespace Thor.Controllers.Dashboard
       }
 
       var response = await blogService.AddTag(tag.ToTagDb(), id);
-      return Ok(response.ToStatusResponseDto());
+      return Ok(response.ToCreateResponse());
     }
 
     [Produces("application/json")]
@@ -173,7 +173,7 @@ namespace Thor.Controllers.Dashboard
       }
 
       var response = await blogService.RemoveTag(tag.ToTagDb(), id);
-      return Ok(response.ToStatusResponseDto());
+      return Ok(response.ToDeleteResponse());
     }
 
     private ObjectResult InternalError(string message = "Internal Server Error")
