@@ -3,8 +3,8 @@ import { RestBase } from 'src/app/core/baseClass';
 import { HttpClient, HttpHeaders,  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Article,
-  ArticleCategory,
   ArticleTag,
+  Category,
   StatusResponse,
   StatusResponseType } from 'src/app/core';
 import { map, catchError } from 'rxjs/operators';
@@ -49,16 +49,16 @@ export class RestPostsService extends RestBase {
     );
   }
 
-  public addCategoryToArticle(articleCategory: ArticleCategory): Observable<StatusResponse<ArticleCategory>> {
-    return this.httpClient.post<StatusResponse<ArticleCategory>>(`${this.basePath}/category`, articleCategory).pipe(
-      catchError(this.handleError<StatusResponse<ArticleCategory>>('Failed to add category', this.errorResponse<ArticleCategory>(StatusResponseType.Create, { })))
+  public addCategoryToArticle(artcileId: number, category: Category): Observable<StatusResponse<Article>> {
+    return this.httpClient.post<StatusResponse<Article>>(`${this.basePath}/category/${artcileId}`, category).pipe(
+      catchError(this.handleError<StatusResponse<Article>>('Failed to add category', this.errorResponse<Article>(StatusResponseType.Create, { })))
     );
   }
 
-  public removeCategoryFromArticle(articleCategory: ArticleCategory): Observable<StatusResponse<ArticleCategory[]>> {
-    const options = this.createOptions(articleCategory);
-    return this.httpClient.delete<StatusResponse<ArticleCategory[]>>(`${this.basePath}/category`, options).pipe(
-      catchError(this.handleError<StatusResponse<ArticleCategory[]>>('Failed to remove category', this.errorResponse<ArticleCategory[]>(StatusResponseType.Delete, [])))
+  public removeCategoryFromArticle(artcileId: number, category: Category): Observable<StatusResponse<Article[]>> {
+    const options = this.createOptions(category);
+    return this.httpClient.delete<StatusResponse<Article[]>>(`${this.basePath}/category/${artcileId}`, options).pipe(
+      catchError(this.handleError<StatusResponse<Article[]>>('Failed to remove category', this.errorResponse<Article[]>(StatusResponseType.Delete, [])))
     );
   }
 

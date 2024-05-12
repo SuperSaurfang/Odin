@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ArticleCategory, ArticleTag, Category, ChangeResponse, Status, StatusResponseType, Tag, User } from 'src/app/core';
+import { ArticleTag, Category, ChangeResponse, Status, StatusResponseType, Tag, User } from 'src/app/core';
 import { ArticleEditorService } from 'src/app/core/baseClass';
 import { NotificationService } from '../notification/notification.service';
 import { RestPostsService } from '../rest-posts/rest-posts.service';
@@ -100,8 +100,7 @@ export class PostEditorService extends ArticleEditorService {
     const result = this.article.categories.find(item => item.categoryId === category.categoryId);
 
     if (!result) {
-      const articleCategory = new ArticleCategory(this.article, category);
-      this.restService.addCategoryToArticle(articleCategory).subscribe(response => {
+      this.restService.addCategoryToArticle(this.article.articleId, category).subscribe(response => {
         switch (response.change) {
           case ChangeResponse.Change:
             this.article.categories.push(category);
@@ -126,8 +125,7 @@ export class PostEditorService extends ArticleEditorService {
     const index = this.article.categories.findIndex(item => item.categoryId === category.categoryId);
 
     if (index >= 0) {
-      const articleCategory = new ArticleCategory(this.article, category);
-      this.restService.removeCategoryFromArticle(articleCategory).subscribe(response => {
+      this.restService.removeCategoryFromArticle(this.article.articleId, category).subscribe(response => {
         switch (response.change) {
           case ChangeResponse.Change:
             this.article.categories.splice(index, 1);
